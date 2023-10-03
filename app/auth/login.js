@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import AuthLayout from '../../components/AuthLayout';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
-import { Link, Stack } from 'expo-router';
+import { Link, Stack, router } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 
@@ -58,7 +58,7 @@ export default Login = props => {
            <Text style={styles.navItemText}>Forgot password ?</Text>
            </Link>
            <Button title="Log In" onPress={handleSubmit}/>
-           <Button title="Sign Up" />
+           <Button title="Sign Up" onPress= {() => router.push("/auth/sign-up")}/>
            <Stack.Screen options={{ title: "login" }} />
          </View>
          )}
