@@ -10,12 +10,19 @@ export const unstable_settings = {
 };
 
 const Layout = () => {
+  const [fontsLoaded] = useFonts({
+    'Poppins-Medium': require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+  });
 
-  return (
-    <Stack initialRouteName="index">
-      <Stack.Screen name="index" />
-    </Stack>
-  )
+  if (!fontsLoaded) {
+    return null;
+  }
+  // return (
+  //   <Stack initialRouteName="index">
+  //     <Stack.Screen name="index" />
+  //   </Stack>
+  // )
+  return <Stack />;
 };
 
 export default Layout;
