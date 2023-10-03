@@ -12,6 +12,7 @@ export const unstable_settings = {
 const Layout = () => {
   const [fontsLoaded] = useFonts({
     'Poppins-Medium': require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+    'Poppins-SemiBold': require("../assets/fonts/Poppins/Poppins-SemiBold.ttf"),
   });
 
   if (!fontsLoaded) {

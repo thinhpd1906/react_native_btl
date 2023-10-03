@@ -1,30 +1,37 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import { Link } from 'expo-router';
-
-const AuthLayout = props => (
+import { COLORS } from '../src/constants/theme'; 
+import { router } from 'expo-router';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+const AuthLayout = ({ showBackButton = true, ...props }) => {
+  const handleImageClick = () => {
+    router.back()
+  }
+  return (
   <View style={styles.container}>
     <View style={styles.headerTitle}>
-      {/* <View style={{flexDirection: 'row'}}>
-        {props.showBackButton ? (
-          <Link href style={styles.backButton} >
+      <View style={{flexDirection: 'row'}}>
+        {showBackButton ? (
+          <TouchableOpacity onPress={handleImageClick}>
             <Image
-              source={require('../assets/images/backArrow/backArrow.png')}
-              style={styles.icon}
-            />
-          </Link>
+                source={require('../assets/images/backArrow/backArrow.png')}
+                style={styles.icon}
+              />
+          </TouchableOpacity>
+              
         ) : null}
         <Text style={[styles.headerText]}>{props.title}</Text>
-      </View> */}
+      </View>
     </View>
     <View style={styles.content}>{props.children}</View>
   </View>
-);
+  )
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#8CC33F',
+    backgroundColor: COLORS.white,
   },
   headerTitle: {
     marginTop: 25,
@@ -34,7 +41,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'Poppins-Semibold',
+    fontFamily: 'Poppins-SemiBold',
     letterSpacing: 0,
     justifyContent: 'flex-start',
   },

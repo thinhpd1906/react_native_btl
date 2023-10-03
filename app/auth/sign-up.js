@@ -7,7 +7,7 @@ import AuthLayout from '../../components/AuthLayout';
 
 export default Signup = propps => {
   return (
-    <AuthLayout title="Sign Up" showBackButton>
+    <AuthLayout title="Join Facebook" showBackButton>
       <View style={styles.form}>
         <TextInput
           placeholder="Name"
