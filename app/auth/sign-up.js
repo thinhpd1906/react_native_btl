@@ -1,15 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import TextInput from '../../components/TextInput';
 import Button from '../../components/Button';
 import AuthLayout from '../../components/AuthLayout';
+import { ButtonPrimary } from '../../components/ButtonPrimary';
 
 
 export default Signup = propps => {
+  const screenWidth = Dimensions.get('window').width;
+  const imageWidth = screenWidth * 0.9;
   return (
-    <AuthLayout title="Join Facebook" showBackButton>
+    <AuthLayout title="Join With Us" showBackButton>
       <View style={styles.form}>
-        <TextInput
+        <Image 
+          source={require('../../assets/images/sign_up_commumity_image.jpg')}
+          style = {{width: imageWidth, height:imageWidth*2/3}}
+        />
+        <Text style={{paddingTop: 12, paddingBottom: 12}}>Tạo tài khoản để kết nối cùng bạn bè và gia đình, cộng đồng những người cùng sở thích với bạn</Text>
+        {/* <TextInput
           placeholder="Name"
           icon={require('../../assets/images/mail/mail.png')}
         />
@@ -27,8 +35,9 @@ export default Signup = propps => {
           placeholder="Confirm Password"
           secureTextEntry={true}
           icon={require('../../assets/images/password/password.png')}
-        />
-        <Button title="Sign Up" />
+        /> */}
+        <ButtonPrimary text="start"/>
+        {/* <Button title="Sign Up" /> */}
       </View>
     </AuthLayout>
   );
@@ -37,11 +46,11 @@ const styles = StyleSheet.create({
   form: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 25,
+    paddingTop: 0,
   },
   navItemContainer: {
-    marginTop: 35,
-    marginBottom: 35,
+    // marginTop: 35,
+    // marginBottom: 35,
     alignSelf: 'center',
   },
   navItemText: {
@@ -49,4 +58,9 @@ const styles = StyleSheet.create({
     color: '#696969',
     fontFamily: 'Poppins-Medium',
   },
+  image: {
+    width: '80%',
+    // aspectRatio: 1,
+    objectFit: 'contain',
+  }
 });

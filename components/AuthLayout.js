@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import { COLORS } from '../src/constants/theme'; 
+import { COLORS } from '../constants/theme'; 
 import { router } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const AuthLayout = ({ showBackButton = true, ...props }) => {
@@ -11,7 +11,7 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
   <View style={styles.container}>
     <View style={styles.headerTitle}>
       <View style={{flexDirection: 'row'}}>
-        {showBackButton ? (
+        {/* {showBackButton ? (
           <TouchableOpacity onPress={handleImageClick}>
             <Image
                 source={require('../assets/images/backArrow/backArrow.png')}
@@ -19,7 +19,7 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
               />
           </TouchableOpacity>
               
-        ) : null}
+        ) : null} */}
         <Text style={[styles.headerText]}>{props.title}</Text>
       </View>
     </View>
@@ -31,15 +31,16 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#ffffff',
   },
   headerTitle: {
-    marginTop: 25,
-    padding: 20,
-    flex: 1,
+    marginTop: 0,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    // flex: 1,
   },
   headerText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
     letterSpacing: 0,
@@ -47,15 +48,16 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: '#fff',
-    flex: 4,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    // flex: 4,
+    // borderTopLeftRadius: 50,
+    // borderTopRightRadius: 50,
   },
   icon: {
     width: 21,
     height: 18,
     justifyContent: 'flex-start',
     marginRight: 20,
+    color: "#000000"
   },
   backButton: {alignSelf: 'center', padding: 5, paddingLeft: 0},
 });
