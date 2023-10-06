@@ -2,15 +2,15 @@
 import {View, Text, StyleSheet} from 'react-native';
 import AuthLayout from '../../components/AuthLayout';
 import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
 import { Link, Stack, router } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
+import TextInputGlobal from '../../components/TextInputGlobal';
 
 export default Login = props => {
   // const [userEmail, setUserEmail] = useState("")
   return (
-    <AuthLayout title="Log In">
+    <AuthLayout title="Log In" isLogin = {true}>
       <Formik
         initialValues={{ 
           name: '',
@@ -32,7 +32,7 @@ export default Login = props => {
        >
          {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
            <View style={styles.form}>
-           <TextInput
+           <TextInputGlobal
              placeholder="Email"
              keyboardType="email-address"
              icon={require('../../assets/images/mail/mail.png')}
@@ -43,7 +43,7 @@ export default Login = props => {
             {touched.email && errors.email &&
               <Text style={{ fontSize: 12, color: '#FF0D10' }}>{errors.email}</Text>
             }
-             <TextInput
+             <TextInputGlobal
                placeholder="Password"
                value={values.password}
                onChangeText={handleChange('password')}
@@ -58,7 +58,7 @@ export default Login = props => {
            <Text style={styles.navItemText}>Forgot password ?</Text>
            </Link>
            <Button title="Log In" onPress={handleSubmit}/>
-           <Button title="Sign Up" onPress= {() => router.push("/auth/sign-up")}/>
+           <Button title="Sign Up" onPress= {() => router.push("/auth/signUp/")}/>
            <Stack.Screen options={{ title: "login" }} />
          </View>
          )}
