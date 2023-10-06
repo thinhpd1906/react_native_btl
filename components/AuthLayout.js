@@ -3,10 +3,12 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import { COLORS } from '../constants/theme'; 
 import { Link, router } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ButtonPrimary } from './ButtonPrimary';
 const AuthLayout = ({ showBackButton = true, ...props }) => {
   const handleImageClick = () => {
     router.back()
   }
+  const routerBottom = !props.isLogin? '/auth/login': '/auth/signup/';
   return (
   <View style={[styles.container, props.customStyle]}>
     <View style={styles.headerTitle}>
@@ -25,7 +27,8 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
     </View>
     <View style={styles.content}>{props.children}</View>
     {!props.notHaveBottomNavigation && (
-      <Link href={!props.isLogin? '/auth/login': '/auth/signUp'} style={styles.end}>{!props.isLogin? 'Already have an account?': 'Create new accout'}</Link>
+      // <Link href={!props.isLogin? '/auth/login': '/auth/signup/'} style={styles.end}>{!props.isLogin? 'Already have an account?': 'Create new accout'}</Link>
+      <ButtonPrimary customStyleText= {{color: COLORS.primary}} onPress = {() => router.push(routerBottom)} style={styles.end} text= {!props.isLogin? 'Already have an account?': 'Create new accout'}/>
     )}
   </View>
   )
@@ -35,6 +38,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f2f5',
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   headerTitle: {
     marginTop: 10,

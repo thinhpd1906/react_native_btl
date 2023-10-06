@@ -5,7 +5,7 @@ import AuthLayout from '../../../components/AuthLayout';
 import { ButtonPrimary, ButtonSecondary } from '../../../components/ButtonPrimary';
 
 
-export default Signup = propps => {
+export default SignUp = (props) => {
   const screenWidth = Dimensions.get('window').width;
   const imageWidth = screenWidth * 0.9;
   return (
@@ -16,16 +16,16 @@ export default Signup = propps => {
           style = {{width: imageWidth, height:imageWidth*2/3}}
         />
         <Text style={{paddingTop: 12, paddingBottom: 12}}>Tạo tài khoản để kết nối cùng bạn bè và gia đình, cộng đồng những người cùng sở thích với bạn</Text>
-        <ButtonPrimary text="start" customStyle={{marginBottom: 12}} onPress = {router.push('/auth/signUp/name')}/>
-        <ButtonSecondary text="I already have an account"/>
+        <ButtonPrimary text="start" customStyle={{marginBottom: 12}} onPress = {() =>  router.push('/auth/signup/name')}/>
+        <ButtonSecondary text="I already have an account" onPress = {() =>  router.push('/auth/login')}/>
       </View>
     </AuthLayout>
   );
 };
 const styles = StyleSheet.create({
   form: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    // paddingLeft: 20,
+    // paddingRight: 20,
     paddingTop: 0,
   },
   navItemContainer: {

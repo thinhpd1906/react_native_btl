@@ -4,11 +4,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { InputHaft } from '../../../components/TextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup'
-import { ButtonPrimary } from './../../../components/ButtonPrimary';
-import { router } from 'expo-router';
+import { ButtonPrimary } from '../../../components/ButtonPrimary';
+import { Stack, router } from 'expo-router';
 import { COLORS } from '../../../constants/theme';
 
-export default Signup = propps => {
+export default Name = props => {
 
   return (
     <AuthLayout  title="What's your name?" showBackButton>
@@ -17,7 +17,7 @@ export default Signup = propps => {
           firstName: '',
           lastName: '', 
         }}
-        onSubmit={router.push('/auth/signUp/birthday')}
+        onSubmit={() => router.push('/auth/signup/birthday')}
         validationSchema={yup.object().shape({
           firstName: yup
             .string()
@@ -59,6 +59,7 @@ export default Signup = propps => {
           </View>
             <ButtonPrimary text="Next" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
           </View>
+          {/* <Stack options={{ title: "name" }} /> */}
         </View>
         )}
        </Formik>

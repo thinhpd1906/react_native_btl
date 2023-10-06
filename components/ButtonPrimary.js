@@ -6,7 +6,7 @@ export const ButtonPrimary = (props) => {
 
     return(
         <TouchableOpacity style={[ StyleGlobal.buttonFullPrimary, props.customStyle]} {...props}>
-            <Text style={StyleGlobal.buttonFullPrimaryText}>{props.text}</Text>
+            <Text style={[StyleGlobal.buttonFullPrimaryText, props.customStyleText]}>{props.text}</Text>
         </TouchableOpacity>
     )
 }

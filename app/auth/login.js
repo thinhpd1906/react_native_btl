@@ -7,17 +7,17 @@ import * as yup from 'yup'
 import { Formik } from 'formik'
 import TextInputGlobal from '../../components/TextInputGlobal';
 
-export default Login = props => {
+export default Login = (props) => {
   // const [userEmail, setUserEmail] = useState("")
   return (
-    <AuthLayout title="Log In" isLogin = {true}>
+    <AuthLayout isLogin = {true}>
       <Formik
         initialValues={{ 
           name: '',
           email: '', 
           password: '' 
         }}
-        onSubmit={values => alert(values.email)}
+        // onSubmit={values => alert(values.email)}
         validationSchema={yup.object().shape({
           email: yup
             .string()
@@ -54,12 +54,12 @@ export default Login = props => {
              {touched.password && errors.password &&
               <Text style={{ fontSize: 12, color: '#FF0D10' }}>{errors.password}</Text>
              }
-           <Link href="auth/forgotpassword" underlayColor="#f0f4f7" style={styles.navItemContainer}>
-           <Text style={styles.navItemText}>Forgot password ?</Text>
-           </Link>
            <Button title="Log In" onPress={handleSubmit}/>
-           <Button title="Sign Up" onPress= {() => router.push("/auth/signUp/")}/>
-           <Stack.Screen options={{ title: "login" }} />
+           <Link href="auth/forgotpassword" underlayColor="#f0f4f7" style={styles.navItemContainer}>
+            <Text style={styles.navItemText}>Forgot password ?</Text>
+           </Link>
+           {/* <Button title="Sign Up" onPress= {() => router.push("/auth/signUp/")}/> */}
+           <Stack options={{ title: "login" }} />
          </View>
          )}
        </Formik>
@@ -68,8 +68,8 @@ export default Login = props => {
 };
 const styles = StyleSheet.create({
   form: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    // paddingLeft: 20,
+    // paddingRight: 20,
     paddingTop: 25,
   },
   navItemContainer: {

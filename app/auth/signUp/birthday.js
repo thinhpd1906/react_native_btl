@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup'
 import { ButtonPrimary } from '../../../components/ButtonPrimary';
 
-export default Signup = propps => {
+export default Birthday = (props) => {
 
   return (
     <AuthLayout title="What's your birthday?" showBackButton>
@@ -31,5 +31,4 @@ const styles = StyleSheet.create({
   col: {
     flex: 1,
   }
-
 });
