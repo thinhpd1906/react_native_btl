@@ -8,7 +8,7 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
   const handleImageClick = () => {
     router.back()
   }
-  const routerBottom = !props.isLogin? '/auth/login': '/auth/signup/';
+  const routerBottom = !props.isLogin? '/auth/login': '/auth/signup/'
   return (
   <View style={[styles.container, props.customStyle]}>
     <View style={styles.headerTitle}>
