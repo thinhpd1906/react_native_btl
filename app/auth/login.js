@@ -68,8 +68,6 @@ export default Login = (props) => {
 };
 const styles = StyleSheet.create({
   form: {
-    // paddingLeft: 20,
-    // paddingRight: 20,
     paddingTop: 25,
   },
   navItemContainer: {
