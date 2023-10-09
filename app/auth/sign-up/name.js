@@ -17,7 +17,7 @@ export default Name = props => {
           firstName: '',
           lastName: '', 
         }}
-        onSubmit={() => router.push('/auth/signup/birthday')}
+        onSubmit={() => router.push('/auth/sign-up/birthday')}
         validationSchema={yup.object().shape({
           firstName: yup
             .string()

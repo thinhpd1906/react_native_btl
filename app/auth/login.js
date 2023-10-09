@@ -58,7 +58,6 @@ export default Login = (props) => {
            <Link href="auth/forgotpassword" underlayColor="#f0f4f7" style={styles.navItemContainer}>
             <Text style={styles.navItemText}>Forgot password ?</Text>
            </Link>
-           {/* <Button title="Sign Up" onPress= {() => router.push("/auth/signUp/")}/> */}
            <Stack options={{ title: "login" }} />
          </View>
          )}

@@ -16,7 +16,7 @@ export default SignUp = (props) => {
           style = {{width: imageWidth, height:imageWidth*2/3}}
         />
         <Text style={{paddingTop: 12, paddingBottom: 12}}>Tạo tài khoản để kết nối cùng bạn bè và gia đình, cộng đồng những người cùng sở thích với bạn</Text>
-        <ButtonPrimary text="start" customStyle={{marginBottom: 12}} onPress = {() =>  router.push('/auth/signup/name')}/>
+        <ButtonPrimary text="start" customStyle={{marginBottom: 12}} onPress = {() =>  router.push('/auth/sign-up/name')}/>
         <ButtonSecondary text="I already have an account" onPress = {() =>  router.push('/auth/login')}/>
       </View>
     </AuthLayout>
