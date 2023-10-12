@@ -1,22 +1,28 @@
 import React from 'react';
 import AuthLayout from '../../../components/AuthLayout';
 import { StyleSheet, Text, View } from 'react-native';
-import { InputHaft } from '../../../components/TextInput';
+import { InputHaft, InputHaftPassword } from '../../../components/TextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup'
 import { ButtonPrimary } from '../../../components/ButtonPrimary';
 import { Stack, router } from 'expo-router';
 import { COLORS } from '../../../constants/theme';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserSignInPassword } from '../../../store/auth';
+import Icon from 'react-native-vector-icons/FontAwesome';
 export default Name = props => {
-
+  const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  const dispatch = useDispatch()
   return (
     <AuthLayout  title="What's your password?" showBackButton>
      <Formik
         initialValues={{ 
             password: '',
         }}
-        onSubmit={() => {alert("register success")}}
+        onSubmit={(values) => {
+          dispatch(setUserSignInPassword(values.password))
+          alert("register success:")}
+        }
         validationSchema={yup.object().shape({
             password: yup
             .string()
@@ -28,10 +34,10 @@ export default Name = props => {
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
         <View >
           <Text style= {{marginBottom: 24}}>Enter your password</Text>
-          <View >
+          <View>
             <View style= {styles.row}>
               <View>
-                <InputHaft 
+                <InputHaftPassword 
                   placeholder="Password"
                   value={values.password}
                   onChangeText={handleChange('password')}

@@ -7,9 +7,10 @@ import * as yup from 'yup'
 import { ButtonPrimary } from '../../../components/ButtonPrimary';
 import { Stack, router } from 'expo-router';
 import { COLORS } from '../../../constants/theme';
-
+import { useDispatch } from 'react-redux';
+import {setUserSignInFirstName, setUserSignInLastName} from '../../../store/auth'
 export default Name = props => {
-
+  const dispatch = useDispatch()
   return (
     <AuthLayout  title="What's your name?" showBackButton>
      <Formik
@@ -17,7 +18,11 @@ export default Name = props => {
           firstName: '',
           lastName: '', 
         }}
-        onSubmit={() => router.push('/auth/sign-up/birthday')}
+        onSubmit={(values) => {
+          dispatch(setUserSignInFirstName(values.firstName))
+          dispatch(setUserSignInLastName(values.lastName))
+          router.push('/auth/sign-up/birthday')
+        }}
         validationSchema={yup.object().shape({
           firstName: yup
             .string()

@@ -7,16 +7,21 @@ import * as yup from 'yup'
 import { ButtonPrimary } from '../../../components/ButtonPrimary';
 import { Stack, router } from 'expo-router';
 import { COLORS } from '../../../constants/theme';
+import { useDispatch } from 'react-redux';
+import { setUserSignInEmail } from '../../../store/auth';
 
 export default Name = props => {
-
+  const dispatch = useDispatch()
   return (
     <AuthLayout  title="What's your email?" showBackButton>
      <Formik
         initialValues={{ 
           email: '',
         }}
-        onSubmit={() => router.push('/auth/sign-up/password')}
+        onSubmit={(values) => {
+          dispatch(setUserSignInEmail(values.email))
+          router.push('/auth/sign-up/password')
+        }}
         validationSchema={yup.object().shape({
           email: yup
             .string()

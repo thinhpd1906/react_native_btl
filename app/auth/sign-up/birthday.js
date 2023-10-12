@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AuthLayout from '../../../components/AuthLayout';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { InputHaft } from '../../../components/TextInput';
@@ -9,18 +9,23 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import {router } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserSignInBirthDay, setUserSignInFirstName } from '../../../store/auth';
 export default Birthday = (props) => {
   const inputRef = useRef(null);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const userFirstName = useSelector((state) => state.auth.userInforSignIn.firstName)
+  const dispatch = useDispatch()
+  // useEffect(() => {
+  //   alert(userFirstName);
+  // }, [])
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
   };
-
-
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -29,6 +34,9 @@ export default Birthday = (props) => {
   const showDatepicker = () => {
     showMode('date');
   };
+  const handleNext = () => {
+    dispatch(setUserSignInBirthDay(date.toLocaleString().substring(0, date.toLocaleString().indexOf(','))))
+  }
 
   return (
     <AuthLayout title="What's your birthday?" showBackButton>

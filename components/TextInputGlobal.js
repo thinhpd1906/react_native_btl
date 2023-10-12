@@ -3,11 +3,13 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 
 export  default Login =(props) => {
   const [border,setBorder] =React.useState('#707070')
+  const [isSecure, setIsSecure] = React.useState(false)
   return (
         <View style={[styles.inputWrapper]}>
             <TextInput
@@ -16,12 +18,23 @@ export  default Login =(props) => {
             style={[styles.textInput,{borderColor:border}]}
             onFocus={()=>setBorder('#8CC33F')}
             onBlur={()=>setBorder('#696969')}
+            secureTextEntry={isSecure}
             />
-            {props.icon && 
+            {/* {!props.isPasswordField && props.icon &&
                 <Image
                 source={props.icon}
                 style={styles.icon}
                 />
+            } */}
+            {props.icon &&
+              <TouchableOpacity onPress = {() => {
+                props.isPasswordField && setIsSecure(!isSecure)
+              }}>
+                <Image
+                source={props.icon}
+                style={styles.icon}
+                />
+              </TouchableOpacity>
             }
         </View>
     );

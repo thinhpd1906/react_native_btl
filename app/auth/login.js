@@ -44,11 +44,12 @@ export default Login = (props) => {
               <Text style={{ fontSize: 12, color: '#FF0D10' }}>{errors.email}</Text>
             }
              <TextInputGlobal
+            //  secureTextEntry={!showPassword} 
                placeholder="Password"
                value={values.password}
                onChangeText={handleChange('password')}
                onBlur={() => setFieldTouched('password')}
-               secureTextEntry={true}
+               isPasswordField = {true}
                icon={require('../../assets/images/password/password.png')}
              />
              {touched.password && errors.password &&
