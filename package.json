@@ -8,6 +8,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "^7.2.0",
     "expo": "~49.0.13",
     "expo-constants": "~14.4.2",
     "expo-linking": "~5.0.2",
@@ -22,7 +23,10 @@
     "yup": "^1.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native/eslint-config": "^0.72.2",
+    "eslint": "^8.19.0",
+    "prettier": "^2.4.1"
   },
   "private": true,
   "main": "index.js"

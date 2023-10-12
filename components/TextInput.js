@@ -8,7 +8,6 @@ export const InputHaft = (props) => {
             style={[StyleGlobal.inputHaft,{borderColor:border}, props.customStyle]}
             onFocus={()=>setBorder('#000')}
             onBlur={()=>setBorder('#ccc')}
-            // placeholderTextColor="#696969"
             {...props}
         />
     )

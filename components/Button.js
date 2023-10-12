@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { withTheme } from '../utils/theme/themeProvider';
+import { COLORS } from '../constants/theme';
 
 
 
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
   },
   buttonText: {
-    color: '#8CC33F',
+    color: COLORS.primary,
     fontSize: 18,
     fontFamily: 'Poppins-Medium',
   },

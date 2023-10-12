@@ -8,7 +8,7 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
   const handleImageClick = () => {
     router.back()
   }
-  const routerBottom = !props.isLogin? '/auth/login': '/auth/signup/'
+  const routerBottom = !props.isLogin? '/auth/login': '/auth/sign-up/'
   return (
   <View style={[styles.container, props.customStyle]}>
     <View style={styles.headerTitle}>
@@ -27,7 +27,6 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
     </View>
     <View style={styles.content}>{props.children}</View>
     {!props.notHaveBottomNavigation && (
-      // <Link href={!props.isLogin? '/auth/login': '/auth/signup/'} style={styles.end}>{!props.isLogin? 'Already have an account?': 'Create new accout'}</Link>
       <ButtonPrimary customStyleText= {{color: COLORS.primary}} onPress = {() => router.push(routerBottom)} style={styles.end} text= {!props.isLogin? 'Already have an account?': 'Create new accout'}/>
     )}
   </View>
