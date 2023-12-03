@@ -1,7 +1,7 @@
 import React  from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import StyleGlobal from '../css/cssGlobal'
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 export const ButtonPrimary = (props) => {
 
     return(
