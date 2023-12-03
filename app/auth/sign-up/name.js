@@ -15,8 +15,8 @@ export default Name = props => {
     <AuthLayout  title="What's your name?" showBackButton>
      <Formik
         initialValues={{ 
-          firstName: '',
-          lastName: '', 
+          firstName: 'Phan',
+          lastName: 'Thinh', 
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInFirstName(values.firstName))
