@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import { COLORS } from '../constants/theme'; 
 import { Link, router } from 'expo-router';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ButtonPrimary } from './ButtonPrimary';
 const AuthLayout = ({ showBackButton = true, ...props }) => {
   const handleImageClick = () => {
