@@ -7,6 +7,7 @@ import PostItem from "./getPost/PostItem";
 export default home = () => {
     const ListPost = [
         {
+            id:"1",
             name : "Minh Nguyễn",
             imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
             created: "2023-11-21T04:58:10.288Z",
@@ -33,6 +34,7 @@ export default home = () => {
             comment: "500",         
         },
         {
+            id:"2",
             name : "Minh Phạm",
             imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
             created: "2023-11-21T04:58:10.288Z",
@@ -67,6 +69,7 @@ export default home = () => {
             comment: "5",         
         },
         {
+            id:"3",
             name : "Minh Ngô Văn",
             imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
             created: "2023-11-21T04:58:10.288Z",
@@ -85,6 +88,7 @@ export default home = () => {
             comment: "5",         
         },
         {
+            id:"4",
             name : "Minh Nguyễn",
             imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
             created: "2023-11-21T04:58:10.288Z",
@@ -126,7 +130,7 @@ export default home = () => {
                     <Text style={styles.buttonText}>What's on your mind?</Text>
                 </TouchableOpacity>
                 <Image
-                    source={require('../../assets/images/album.png')}
+                    source={require('../../assets/images/home/album.png')}
                     style={{
                         width: 36,
                         height: 36,

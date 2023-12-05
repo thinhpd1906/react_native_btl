@@ -3,6 +3,7 @@ Note: project use expo; read react native with expo on react-native doc.
 project use expo router to auto dynamic router 
 remember install emulator and follow react native doc to run project.
 After clone and pull project from github, let create another branch to code and put in your branch
+install app and generate apk file: eas build:run -p android
 Step 1: Start the Metro Server
 First, you will need to start Metro, the JavaScript bundler that ships with React Native.
 
@@ -56,3 +57,4 @@ Getting Started - an overview of React Native and how setup your environment.
 Learn the Basics - a guided tour of the React Native basics.
 Blog - read the latest official React Native Blog posts.
 @facebook/react-native - the Open Source; GitHub repository for React Native.
+doc: https://docs.expo.dev/build/setup/

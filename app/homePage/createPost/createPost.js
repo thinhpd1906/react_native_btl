@@ -54,7 +54,7 @@ export default CreatePost = () => {
             <View style = {styles.footter}>
                 <View style = {styles.footterLeft}>
                     <Image
-                        source={require('../../../assets/images/album.png')}
+                        source={require('../../../assets/images/home/album.png')}
                         style={{
                             width: 45,
                             height: 45,
@@ -65,7 +65,7 @@ export default CreatePost = () => {
                 </View>
                 <View style = {styles.footterRight}>
                     <Image
-                        source={require('../../../assets/images/video.png')}
+                        source={require('../../../assets/images/home/video.png')}
                         style={{
                             width: 45,
                             height: 45,

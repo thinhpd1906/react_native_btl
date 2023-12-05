@@ -3,14 +3,202 @@ import {
     Image, StyleSheet, Text, TouchableOpacity, View, Modal
 } from "react-native";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import ThreePicture from "../../../components/ThreePicture";
 import TwoPicture from "../../../components/TwoPicture";
 import FourPicture from "../../../components/FourPicture";
 import FivePicture from "../../../components/FivePicture";
+import CommentPost from "../comment/CommentPost";
 
 export default PostItem = ({ item }) => {
     const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
+    const data = [
+        {
+            mark_content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤ ",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+            {
+                content: "so good",
+                created: "2023-12-01T10:18:37.432Z",
+                poster: {
+                    id: "102",
+                    name: "Minh12345",
+                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+                }
+            },
+            {
+                content: "so good",
+                created: "2023-12-01T10:18:37.432Z",
+                poster: {
+                    id: "102",
+                    name: "Minh12345",
+                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+                }
+            },
+            {
+                content: "so good",
+                created: "2023-12-01T10:18:37.432Z",
+                poster: {
+                    id: "102",
+                    name: "Minh12345",
+                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+                }
+            },
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+   
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+              
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+        {
+            mark_content: "so good",
+            type_of_mark: "1",
+            created: "2023-12-01T17:07:38.901Z",
+            poster: {
+                id: "102",
+                name: "Minh Nguyễn",
+                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
+            },
+            comments: [
+          
+            ]
+        },
+    ];
     const [modalVisible, setModalVisible] = useState(false);
+    const [showComment, setShowComment] = useState(false);
+    const navigation = useNavigation();
 
     const openModal = () => {
         setModalVisible(true);
@@ -21,7 +209,7 @@ export default PostItem = ({ item }) => {
 
     return(
     <View style = {styles.postItem}>
-        <View style = {{paddingLeft: 10, paddingRight:10}}>
+        <View style = {{paddingLeft: 10, paddingRight: 10}}>
             <View style = {styles.author}>
                 <Image
                     style={styles.avatar}
@@ -39,7 +227,7 @@ export default PostItem = ({ item }) => {
                 >
                     <Image
                         style={styles.menuImg}
-                        source={require('../../../assets/images/menu1.png')}
+                        source={require('../../../assets/images/home/menu1.png')}
                     />
                 </TouchableOpacity>
                 <Modal
@@ -153,24 +341,36 @@ export default PostItem = ({ item }) => {
             }}>
             <TouchableOpacity style = {{flexDirection: 'row',}}>
                 <Image
-                    source={require('../../../assets/images/like.png')}
+                    source={require('../../../assets/images/home/like.png')}
                     style = {{height: 30, width: 30, marginLeft: "20%",}}
                 />
                 <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
                     Like
                 </Text>                    
             </TouchableOpacity>
-            <TouchableOpacity style = {{flexDirection: 'row',}}>
-                <Image
-                    source={require('../../../assets/images/comment.png')}
-                    style = {{height: 30, width: 30, marginLeft: "40%",}}
-                />
-                <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                    Comment
-                </Text>                    
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity 
+                    style = {{flexDirection: 'row',}}
+                    onPress={() => setShowComment(true)}
+                >
+                    <Image
+                        source={require('../../../assets/images/home/comment.png')}
+                        style = {{height: 30, width: 30, marginLeft: "40%",}}
+                    />
+                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
+                        Comment
+                    </Text>                    
+                </TouchableOpacity>
+                {showComment && (
+                <CommentPost
+                    visible={showComment}
+                    onClose={() => setShowComment(false)}
+                    comments={data}
+                />                     
+                )}
+                              
+            </View>
         </View>
-
     </View>
     )
 };
