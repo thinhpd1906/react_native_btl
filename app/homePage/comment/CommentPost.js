@@ -45,12 +45,15 @@ export default CommentPost = ({ visible, onClose, comments }) => {
                     renderItem={({ item }) => (
                     <View style={styles.commentContainer}>
                         <Image
-                        source={{ uri: item.poster.avatar }}
-                        style={styles.avatar}
+                            source={{ uri: item.poster.avatar }}
+                            style={styles.avatar}
                         />
                         <View style = {styles.borderAuthor}>
                             <Text style={styles.posterName}>{item.poster.name}</Text>
                             <Text>{item.mark_content}</Text>
+                            <Image
+                                source={{ uri: item.image}}
+                            />
                         </View>
                     </View>
                     )}

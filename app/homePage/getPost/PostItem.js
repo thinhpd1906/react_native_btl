@@ -9,12 +9,15 @@ import TwoPicture from "../../../components/TwoPicture";
 import FourPicture from "../../../components/FourPicture";
 import FivePicture from "../../../components/FivePicture";
 import CommentPost from "../comment/CommentPost";
+import { router } from "expo-router";
 
 export default PostItem = ({ item }) => {
     const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
     const data = [
         {
             mark_content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤ ",
+            image: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg",
+            video: "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4",
             type_of_mark: "1",
             created: "2023-12-01T17:07:38.901Z",
             poster: {
@@ -207,6 +210,10 @@ export default PostItem = ({ item }) => {
         setModalVisible(false);
     };
 
+    const handleEditPost = () => {
+        router.push('/homePage/editPost/editPost');
+    }
+
     return(
     <View style = {styles.postItem}>
         <View style = {{paddingLeft: 10, paddingRight: 10}}>
@@ -239,11 +246,44 @@ export default PostItem = ({ item }) => {
                     <View style={styles.overlay} />
                     <View style={styles.modalContainer}>
                         <TouchableOpacity onPress={closeModal}>
-                            <Text style={styles.closeModalText}>Close Modal</Text>
+                            <Image
+                                source={require("../../../assets/images/home/dash.png")}
+                                style={styles.closeModal}
+                            />
                         </TouchableOpacity>
-                        <Text>Edit</Text>
-                        <Text>Delete</Text>
-                        <Text>Report</Text>
+                        <TouchableOpacity onPress={handleEditPost}>
+                            <View style = {{flexDirection: "row"}}>
+                                <Image
+                                    source={require("../../../assets/images/home/edit.png")}
+                                    style={styles.imgEdit}
+                                />                                 
+                                <Text style = {styles.textEdit}>
+                                    Edit
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <View style = {{flexDirection: "row"}}>
+                                <Image
+                                    source={require("../../../assets/images/home/delete.png")}
+                                    style={styles.imgDelete}
+                                />                                 
+                                <Text style = {styles.textDelete}>
+                                    Delete
+                                </Text>  
+                            </View>                         
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <View style = {{flexDirection: "row"}}>
+                                <Image
+                                    source={require("../../../assets/images/home/report.png")}
+                                    style={styles.imgReport}
+                                />                                
+                                <Text style = {styles.textReport}>
+                                    Report
+                                </Text>
+                            </View>                          
+                        </TouchableOpacity>
                     </View>
                 </Modal>               
             </View>
@@ -408,16 +448,13 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     modalContainer: {
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
-        height: "20%",
+        height: "18%",
         marginTop: "auto"
     },
-    
-    closeModalText: {
-        color: 'black',
-        fontSize: 20,
+    closeModal: {
+        height: 10,
         marginBottom: 10,
     },
     overlay: {
@@ -429,4 +466,45 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
     },
+    textEdit: {
+        fontSize: 20,
+        fontWeight: "600",
+        color: "black",
+        padding: 5,
+        marginRight: 20,
+    },
+    imgEdit:{
+        width: 25, 
+        height: 25, 
+        marginBottom:5,
+        marginTop: 5,
+        marginRight: 5,
+    },
+    textDelete: {
+        fontSize: 20,
+        fontWeight: "600",
+        color: "black",
+        padding: 5,
+        marginRight: 5,
+    },
+    imgDelete:{
+        width: 30, 
+        height: 30, 
+        marginBottom:5,
+        marginTop: 3,
+        marginRight: 5,
+    },
+    textReport: {
+        fontSize: 20,
+        fontWeight: "600",
+        color: "black",
+        padding: 5,
+    },
+    imgReport:{
+        width: 25, 
+        height: 25, 
+        marginBottom:5,
+        marginTop: 4,
+        marginRight: 5
+    }
 });
