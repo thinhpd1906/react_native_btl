@@ -10,7 +10,7 @@ import { COLORS } from '../../../constants/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserSignInPassword } from '../../../store/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { signUp } from '../../../api/auth/auth';
+import { checkVerifyCode, signUp } from '../../../api/auth/auth';
 export default Name = props => {
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
   let email = signUpInfor.email
@@ -34,8 +34,14 @@ export default Name = props => {
 
             signUp(data)
               .then((res) => {
-                // console.log("res", res)
-                Alert.alert(
+                console.log("sign up success", res)
+                checkVerifyCode({
+                  email: email,
+                  code_verify: res.data.verify_code
+                })
+                .then((res) => {
+                  console.log("check code success", res)
+                  Alert.alert(
                   "Success", // Tiêu đề của cửa sổ thông báo
                   "register success", // Nội dung của cửa sổ thông báo
                   [{
@@ -43,10 +49,16 @@ export default Name = props => {
                     onPress: () => router.push('/auth/login'), // Hàm này sẽ được gọi khi người dùng nhấn "OK"
                   }, ],
                 );
+                })
+                .catch((err) => {
+                    console.log("error check code", err);
+                })
+                // console.log("res", res)
+                
                 
               })
               .catch((err) => {
-                  console.log("err", err)
+                  console.log("err sign up", err)
           })
           // alert("register success:")
           }
