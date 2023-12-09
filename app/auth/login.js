@@ -6,20 +6,22 @@ import { Link, Stack, router } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import TextInputGlobal from '../../components/TextInputGlobal';
-import { login } from '../../api/auth/auth';
+import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getInfor } from '../../api/profile/profile';
+import { useSelector } from 'react-redux';
 
 
 export default Login = (props) => {
+  const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
   // const [userEmail, setUserEmail] = useState("")
   return (
     <AuthLayout isLogin = {true}>
       <Formik
         initialValues={{ 
           name: '',
-          email: 'example1111222222@email.com', 
-          password: 'Abcd1234' 
+          email: signUpInfor.email, 
+          password: signUpInfor.password 
         }}
         onSubmit={ (values) => {
             let data = {
@@ -29,21 +31,37 @@ export default Login = (props) => {
             }
             login(data)
             .then(async res => {
-              console.log("res", res)
+              console.log("res login", res)
               await AsyncStorage.setItem('token',"Bearer " + res.data.token);
-              getInfor({user_id: res.data.id})
-              .then((res) => {
-                console.log("res", res)
-              })
-              .catch((err) => {
-                console.log("err get infor", err)
-              })
+              // getInfor({user_id: res.data.id})
+              // .then((res) => {
+              //   console.log("res", res)
+              // })
+              // .catch((err) => {
+              //   console.log("err get infor", err)
+              // })
               Alert.alert(
                   "Success", // Tiêu đề của cửa sổ thông báo
                   "login success", // Nội dung của cửa sổ thông báo
                   [{
                     text: 'OK',
-                    onPress: () => console.log("ok"), // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+                    onPress: () => {
+                      if(res.data.username !== "") {
+                            changeProfileAfterSignUp({
+                              username: signUpInfor.firstName + signUpInfor.lastName
+                            })
+                            .then(res => {
+                              router.push('/homePage/home');
+                            })
+                            .catch(err => {
+                              
+                            })
+                      } else {
+                            router.push('/homePage/home');
+                      }
+                    },
+                   
+                     // Hàm này sẽ được gọi khi người dùng nhấn "OK"
                   }, ],
                 );
             })
