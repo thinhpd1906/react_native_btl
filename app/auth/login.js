@@ -47,15 +47,16 @@ export default Login = (props) => {
                     text: 'OK',
                     onPress: () => {
                       if(res.data.username !== "") {
-                            changeProfileAfterSignUp({
-                              username: signUpInfor.firstName + signUpInfor.lastName
-                            })
-                            .then(res => {
-                              router.push('/homePage/home');
-                            })
-                            .catch(err => {
+                            // changeProfileAfterSignUp({
+                            //   username: signUpInfor.firstName + signUpInfor.lastName
+                            // })
+                            // .then(res => {
+                            //   router.push('/homePage/home');
+                            // })
+                            // .catch(err => {
                               
-                            })
+                            // })
+                            router.push('/homePage/home');
                       } else {
                             router.push('/homePage/home');
                       }
