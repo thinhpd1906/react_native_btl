@@ -27,7 +27,7 @@ export default Login = (props) => {
             let data = {
               email: values.email,
               password: values.password,
-              uuid: "string"
+              uuid: "string",
             }
             login(data)
             .then(async res => {

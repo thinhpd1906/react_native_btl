@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
     FlatList, Image, Text, StyleSheet, View, Modal, TouchableOpacity, BackHandler, TextInput 
 } from "react-native";
-
+import { Video } from "expo-av";
 export default CommentPost = ({ visible, onClose, comments }) => {
 
     const [textComment, setTextCtextComment] = useState('');
@@ -51,9 +51,26 @@ export default CommentPost = ({ visible, onClose, comments }) => {
                         <View style = {styles.borderAuthor}>
                             <Text style={styles.posterName}>{item.poster.name}</Text>
                             <Text>{item.mark_content}</Text>
-                            <Image
-                                source={{ uri: item.image}}
-                            />
+                            {item.image ? (
+                                <Image
+                                    source={{ uri: item.image}}
+                                    style={styles.image}
+                                />
+                            ): item.video ? (
+                                <Video
+                                source={{ uri: item.video }}
+                                rate={1.0}
+                                volume={0.0}
+                                isMuted={true}
+                                resizeMode="cover"
+                                shouldPlay
+                                isLooping
+                                style={{ width:150, height: 100 }}
+                                />
+                            ):(
+                                ""
+                            )}
+
                         </View>
                     </View>
                     )}
@@ -67,6 +84,10 @@ export default CommentPost = ({ visible, onClose, comments }) => {
                         placeholderStyle={styles.placeholder}
                         value={textComment}
                         onChangeText={(inputText) => setTextCtextComment(inputText)}
+                    />
+                    <Image
+                        source={require("../../../assets/images/home/camera.png")}
+                        style = {styles.cameraComment}
                     />                    
                 </View>
             </View>
@@ -129,6 +150,7 @@ const styles = StyleSheet.create({
 
     },
     inputContainer:{
+        flexDirection: "row",
         justifyContent: "center", 
         alignItems: "center",
         borderTopWidth: 0.6, 
@@ -137,10 +159,19 @@ const styles = StyleSheet.create({
         paddingBottom:10,
     },
     textInput: {
-        width: "90%",
+        width: "80%",
         height: 40,
         backgroundColor: "#ddd",
         borderRadius: 15,
         padding: 10,
     },
+    cameraComment: {
+        width: 40,
+        height: 40,
+        marginLeft: 10,
+    },
+    image: {
+        width: 150,
+        height: 150,
+    }
 });

@@ -12,12 +12,11 @@ import CommentPost from "../comment/CommentPost";
 import { router } from "expo-router";
 
 export default PostItem = ({ item }) => {
-    const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
     const data = [
         {
             mark_content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤ ",
-            image: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg",
-            video: "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4",
+            // image: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg",
+            
             type_of_mark: "1",
             created: "2023-12-01T17:07:38.901Z",
             poster: {
@@ -57,6 +56,7 @@ export default PostItem = ({ item }) => {
         },
         {
             mark_content: "so good",
+            // video: "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4",
             type_of_mark: "1",
             created: "2023-12-01T17:07:38.901Z",
             poster: {
@@ -211,6 +211,7 @@ export default PostItem = ({ item }) => {
     };
 
     const handleEditPost = () => {
+        setModalVisible(false);
         router.push('/homePage/editPost/editPost');
     }
 
@@ -220,11 +221,11 @@ export default PostItem = ({ item }) => {
             <View style = {styles.author}>
                 <Image
                     style={styles.avatar}
-                    source={{ uri: imageUrl }}
+                    source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}}
                 />
                 <View>
                     <Text style = {{fontWeight: 600, fontSize: 20}}>
-                        {item.name}
+                        {item.author.name}
                     </Text>
                     <Text style = {{fontSize: 13, color: "#65676B"}}>{item.created}</Text>                      
                 </View>                
@@ -287,14 +288,19 @@ export default PostItem = ({ item }) => {
                     </View>
                 </Modal>               
             </View>
-            
-            <Text 
-                style = {{
-                    fontWeight: 500,
-                    fontSize: 16,
-                }}>
-                {item.described}
-            </Text>                
+            {item.described ? (
+                <Text 
+                    style = {{
+                        fontWeight: 500,
+                        fontSize: 16,
+                        marginBottom: 10,
+                    }}>
+                    {item.described}
+                </Text>  
+            ):(
+                ""
+            )}
+              
         </View>
 
         {item.video && item.video.url ? (
@@ -369,10 +375,10 @@ export default PostItem = ({ item }) => {
             borderBottomColor: "#8D949E",
         }}>
             <Text style = {{paddingLeft: 10, color: "#65676B"}}>
-                Feel: {item.like}
+                Feel: {item.feel}
             </Text>
             <Text style = {{marginLeft: "50%", color: "#65676B"}}>
-                {item.comment} comments
+                {item.comment_mark} comments
             </Text>                
         </View>
         <View style = {{
@@ -446,6 +452,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 350,
         overflow: "hidden",
+        marginTop:0,
     },
     modalContainer: {
         alignItems: 'center',
