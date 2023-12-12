@@ -42,6 +42,7 @@ service.interceptors.request.use(
       // console.log("response config error",error.response); 
       if(error.response) {
         const message = error.response.data.message
+        console.log(message)
         const errorCustom = {status: error.response.status, message: error.response.data.message}
           switch(error.response.status) {
             case 400:

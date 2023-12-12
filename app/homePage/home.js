@@ -1,123 +1,74 @@
 import { router } from "expo-router";
 import { 
+    ActivityIndicator,
     FlatList, Image, StyleSheet, Text, TouchableOpacity, View 
 } from "react-native"
 import PostItem from "./getPost/PostItem";
+import { useEffect, useState } from "react";
+import { getListPosts } from "../../api/post/post";
+import { getInfor } from "../../api/profile/profile";
+import { useSelector } from "react-redux";
 
 export default home = () => {
-    const ListPost = [
-        {
-            id:"1",
-            name : "Minh Nguyễn",
-            imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
-            created: "2023-11-21T04:58:10.288Z",
-            title: "Đa nền tảng",
-            described: "This is text\nThis is https://chat.zalo.me\nThis is 😀 😞 🙂\nThis is #hashtag\n",
-            image: [
-                {
-                    "id": "1",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "2",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "3",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-            ],
-            video: {
-                // "url": "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4"
-            },
-            like: "2",
-            comment: "500",         
-        },
-        {
-            id:"2",
-            name : "Minh Phạm",
-            imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
-            created: "2023-11-21T04:58:10.288Z",
-            title: "Đa nền tảng",
-            described: "This is text\nThis is https://chat.zalo.me\nThis is 😀 😞 🙂\nThis is #hashtag\n",
-            image: [
-                {
-                    "id": "1",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "2",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "3",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "4",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "5",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                }
-            ],
-            video: {
-                // "url": "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4"
-            },
-            like: "2",
-            comment: "5",         
-        },
-        {
-            id:"3",
-            name : "Minh Ngô Văn",
-            imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
-            created: "2023-11-21T04:58:10.288Z",
-            title: "Đa nền tảng",
-            described: "This is text\nThis is https://chat.zalo.me\nThis is 😀 😞 🙂\nThis is #hashtag\n",
-            image: [
-                {
-                    "id": "1",
-                    "url": "https://it4788.catan.io.vn/files/image-1700721206218-638107588.jpg"
-                },
-            ],
-            video: {
-                // "url": "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4"
-            },
-            like: "2",
-            comment: "5",         
-        },
-        {
-            id:"4",
-            name : "Minh Nguyễn",
-            imageAvatar: "https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg",
-            created: "2023-11-21T04:58:10.288Z",
-            title: "Đa nền tảng",
-            described: "This is text\nThis is https://chat.zalo.me\nThis is 😀 😞 🙂\nThis is #hashtag\n",
-            image: [
-                {
-                    "id": "1",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-                {
-                    "id": "2",
-                    "url": "https://recmiennam.com/wp-content/uploads/2018/01/hinh-nen-sieu-xe-dep-12.jpg"
-                },
-            ],
-            video: {
-                // "url": "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4"
-            },
-            like: "2",
-            comment: "500",         
-        },
-    ]
+    const user = useSelector((state) => state.auth.login.currentUser)
+    console.log(user)
+    const imageUrl = user.avatar;
+    const [postData, setPostData] = useState([]);
+    const [requestData, setRequestData] = useState({
+        in_campaign: "1",
+        campaign_id: "1",
+        latitude: "1.0",
+        longitude: "1.0",
+        index: "0",
+        count: "20",
+    });
+    const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
 
-    const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
-    
     const handlePress = () => {
-        router.push('/homePage/createPost/createPost')
-        
+        router.push('/homePage/createPost/createPost')  
     };
+
+    // useEffect(() => {
+    //     getInfor();
+    // },[])
+
+    const handleGetListPost = async () => {
+        try {
+            setLoading(true);
+            const result = await getListPosts(requestData);
+            setPostData([...postData, ...result]);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEndReached = () => {
+        if (!loadingMore) {
+          setLoadingMore(true);
+    
+          // Cập nhật index để load thêm
+          setRequestData((prevRequestData) => ({
+            ...prevRequestData,
+            index: (parseInt(prevRequestData.index) + parseInt(prevRequestData.count)).toString(),
+          }));
+        }
+    };
+
+    useEffect(() => {
+        handleGetListPost();
+    }, [requestData]);
+    
+    // Xử lý khi đã load thêm thành công
+    useEffect(() => {
+        if (loadingMore) {
+            handleGetListPost(); // Gọi lại hàm handleFetchData để load thêm bài viết
+            setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
+        }
+    }, [loadingMore]);
+    
 
     return (  
         <View style={styles.container}>
@@ -140,9 +91,12 @@ export default home = () => {
 
             <View style = {styles.content}>
                 <FlatList
-                    data={ListPost}
+                    data={postData}
                     keyExtractor={(item, index) => index.toString()} 
                     renderItem={({ item }) => <PostItem item={item} />}
+                    onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang
+                    onEndReachedThreshold={0.1}
+                    ListFooterComponent={loadingMore && <ActivityIndicator style={styles.loadingIndicator} />}
                 />  
             </View>
         </View>
@@ -184,6 +138,9 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
+    },
+    loadingIndicator: {
+        marginVertical: 10,
     },
   });
  

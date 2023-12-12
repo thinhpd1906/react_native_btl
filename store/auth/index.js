@@ -5,6 +5,9 @@ const INIT =  {
     userInforSignIn: {
         
     },
+    login:{
+        currentUser:null,
+    },
     token: "",
 }
 
@@ -38,11 +41,23 @@ export const auth = createSlice({
     setToken: (state,action) => {
       state.token = action.payload;
       return state;
-  },
+    },
+    loginSuccess: (state,action) => {
+        state.login.currentUser = action.payload;
+        return state;
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { getUserInforSignIn, setUserSignInEmail, setUserSignInPassword, setUserSignInFirstName, setUserSignInLastName, setUserSignInBirthDay, setToken } = auth.actions
+export const { 
+    getUserInforSignIn,
+    setUserSignInEmail,
+    setUserSignInPassword,
+    setUserSignInFirstName,
+    setUserSignInLastName, setUserSignInBirthDay,
+    setToken ,
+    loginSuccess
+} = auth.actions
 
 export default auth.reducer

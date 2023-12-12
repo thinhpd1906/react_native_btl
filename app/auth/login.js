@@ -9,11 +9,13 @@ import TextInputGlobal from '../../components/TextInputGlobal';
 import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getInfor } from '../../api/profile/profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../../store/auth';
 
 
 export default Login = (props) => {
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  const dispatch = useDispatch();
   // const [userEmail, setUserEmail] = useState("")
   return (
     <AuthLayout isLogin = {true}>
@@ -27,11 +29,12 @@ export default Login = (props) => {
             let data = {
               email: values.email,
               password: values.password,
-              uuid: "string"
+              uuid: "string",
             }
             login(data)
             .then(async res => {
-              console.log("res login", res)
+              console.log("res login", res.data)
+              dispatch(loginSuccess(res.data))
               await AsyncStorage.setItem('token',"Bearer " + res.data.token);
               // getInfor({user_id: res.data.id})
               // .then((res) => {
@@ -47,15 +50,16 @@ export default Login = (props) => {
                     text: 'OK',
                     onPress: () => {
                       if(res.data.username !== "") {
-                            changeProfileAfterSignUp({
-                              username: signUpInfor.firstName + signUpInfor.lastName
-                            })
-                            .then(res => {
-                              router.push('/homePage/home');
-                            })
-                            .catch(err => {
+                            // changeProfileAfterSignUp({
+                            //   username: signUpInfor.firstName + signUpInfor.lastName
+                            // })
+                            // .then(res => {
+                            //   router.push('/homePage/home');
+                            // })
+                            // .catch(err => {
                               
-                            })
+                            // })
+                            router.push('/homePage/home');
                       } else {
                             router.push('/homePage/home');
                       }
