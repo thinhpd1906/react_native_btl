@@ -6,12 +6,12 @@ import {
 import PostItem from "./getPost/PostItem";
 import { useEffect, useState } from "react";
 import { getListPosts } from "../../api/post/post";
-import { getInfor } from "../../api/profile/profile";
 import { useSelector } from "react-redux";
+import { Ionicons } from '@expo/vector-icons';
 
 export default home = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
-    console.log(user)
+    // console.log(user)
     const imageUrl = user.avatar;
     const [postData, setPostData] = useState([]);
     const [requestData, setRequestData] = useState({
@@ -72,6 +72,39 @@ export default home = () => {
 
     return (  
         <View style={styles.container}>
+            <View style = {styles.navbar}>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="home" size={32} color="#333" />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="tv" size={32} color="#333" />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="people" size={32} color="#333" />
+                    </View>                    
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="search" size={32} color="#333" />
+                    </View>                    
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="notifications" size={32} color="#333" />
+                    </View>                    
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="menu" size={32} color="#333" />
+                    </View>                     
+                </TouchableOpacity>            
+            </View>
+
             <View style = {styles.header}>
                 <Image
                     source={{ uri: imageUrl }}
@@ -106,10 +139,24 @@ export default home = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-
+    },
+    navbar:{
+        flexDirection: "row", 
+        paddingTop: 10, 
+        paddingLeft: 20, 
+        paddingRight:20,
+        paddingBottom: 5, 
+        justifyContent: "center",
+        borderBottomColor: "#ddd",
+        borderBottomWidth: 0.7,
+    },
+    iconContainer:{
+        paddingLeft: 15,
+        paddingRight: 15,
     },
     header: {
-        padding: 12,
+        padding: 10,
+        paddingTop: 8,
         flexDirection: 'row', 
         alignItems: 'center',
         borderBottomWidth: 8,

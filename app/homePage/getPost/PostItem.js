@@ -293,9 +293,18 @@ export default PostItem = ({ item }) => {
                     source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}}
                 />
                 <View>
-                    <Text style = {{fontWeight: 600, fontSize: 20}}>
-                        {item.author.name}
-                    </Text>
+                    <View style = {{flexDirection:"row"}}>
+                        <Text style = {{fontWeight: 600, fontSize: 20}}>
+                            {item.author.name}
+                        </Text>
+                        {item.state == "" ? (
+                            ""
+                        ):(
+                            <Text style = {{marginLeft: 5, marginTop:5}}>
+                                is feeling {item.state}
+                            </Text>                             
+                        )}
+                    </View>
                     <Text style = {{fontSize: 13, color: "#65676B"}}>{formattedTimeAgo}</Text>                      
                 </View>                
                 <TouchableOpacity 
@@ -480,7 +489,7 @@ export default PostItem = ({ item }) => {
                 <CommentPost
                     visible={showComment}
                     onClose={() => setShowComment(false)}
-                    comments={data}
+                    comments={commentData}
                 />                     
                 )}
                               
