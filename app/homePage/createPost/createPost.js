@@ -2,12 +2,34 @@ import { useState } from "react";
 import { 
     Image, StyleSheet, Text, View, TouchableOpacity, TextInput
 }from "react-native";
+import { useSelector } from "react-redux";
+import { createAPost, getListPosts } from "../../../api/post/post";
+import { router } from "expo-router";
 
 
 export default CreatePost = () => {
-    const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
-    const [textTitle, setTextTitle] = useState('');
-    const [textDescribed, setTextDescribed] = useState('');
+    const user = useSelector((state) => state.auth.login.currentUser)
+    // console.log(user)
+    const imageUrl = user.avatar;
+    const [status, setStatus] = useState('');
+    const [described, setDescribed] = useState('');
+
+    const handeleCreatePost = () => {
+        const newData = {
+            described,
+            status,
+        }
+        createAPost(newData)
+            .then(()=>{
+                console.log('Home: Post created successfully');
+                setDescribed('');
+                setStatus('');
+                router.push("/homePage/home")
+            })
+            .catch((err) => {
+                console.log('Error creating student:', err);
+            });
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -16,39 +38,35 @@ export default CreatePost = () => {
                     style={styles.image}
                 />
                 <Text style = {styles.text}>
-                    Nguyễn Văn An    
+                    {user.username}    
                 </Text>
-                <TouchableOpacity style={styles.button} >
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={handeleCreatePost} 
+                >
                     <Text style={styles.textButton}>POST</Text>
                 </TouchableOpacity>                               
             </View>
 
             <View style = {styles.slider}>
-                {/* <Text style = {{fontSize: 15, fontWeight: 500, marginRight: "85%"}}>
-                    Title
-                </Text> */}
                 <TextInput 
                     style = {styles.textInput}
                     multiline={true}
-                    numberOfLines={4} // Số dòng mặc định hiển thị (tùy chọn)
+                    numberOfLines={4} 
                     placeholder="How are you feeling?"
                     placeholderStyle={styles.placeholder}
-                    value={textTitle}
-                    onChangeText={(inputText) => setTextTitle(inputText)}
+                    value={status}
+                    onChangeText={(inputText) => setStatus(inputText)}
                 />
-                {/* <Text style = {{fontSize: 15, fontWeight: 500, marginRight: "75%"}}>
-                    Described
-                </Text> */}
                 <TextInput 
                     style = {styles.textInputs}
                     multiline={true}
                     numberOfLines={4} 
                     placeholder="What's on your mind?"
                     placeholderStyle={styles.placeholder}
-                    value={textDescribed}
-                    onChangeText={(inputText) => setTextDescribed(inputText)}
+                    value={described}
+                    onChangeText={(inputText) => setDescribed(inputText)}
                 />               
-                    
             </View>
 
             <View style = {styles.footter}>
