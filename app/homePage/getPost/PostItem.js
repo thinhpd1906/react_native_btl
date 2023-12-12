@@ -3,6 +3,7 @@ import {
     Image, StyleSheet, Text, TouchableOpacity, View, Modal
 } from "react-native";
 import { useEffect, useState } from "react";
+import moment from 'moment';
 import ThreePicture from "../../../components/ThreePicture";
 import TwoPicture from "../../../components/TwoPicture";
 import FourPicture from "../../../components/FourPicture";
@@ -26,7 +27,7 @@ export default PostItem = ({ item }) => {
             },
             comments: [
             {
-                content: "so good",
+                content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤",
                 created: "2023-12-01T10:18:37.432Z",
                 poster: {
                     id: "102",
@@ -258,6 +259,30 @@ export default PostItem = ({ item }) => {
         }
     }, [loadingMore]);
     
+    const getFormattedTimeAgo = (createdAt) => {
+        const now = moment();
+        const postTime = moment(createdAt);
+        const duration = moment.duration(now.diff(postTime));
+      
+        const years = duration.years();
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+      
+        if (years > 0) {
+          return `${years} năm trước`;
+        } else if (months > 0) {
+          return `${months} tháng trước`;
+        } else if (days > 0) {
+          return `${days} ngày trước`;
+        } else if (hours > 0) {
+          return `${hours} giờ trước`;
+        } else {
+          return `${minutes} phút trước`;
+        }
+      };
+    const formattedTimeAgo = getFormattedTimeAgo(item.created);
 
     return(
     <View style = {styles.postItem}>
@@ -271,7 +296,7 @@ export default PostItem = ({ item }) => {
                     <Text style = {{fontWeight: 600, fontSize: 20}}>
                         {item.author.name}
                     </Text>
-                    <Text style = {{fontSize: 13, color: "#65676B"}}>{item.created}</Text>                      
+                    <Text style = {{fontSize: 13, color: "#65676B"}}>{formattedTimeAgo}</Text>                      
                 </View>                
                 <TouchableOpacity 
                     onPress={openModal}
@@ -455,7 +480,7 @@ export default PostItem = ({ item }) => {
                 <CommentPost
                     visible={showComment}
                     onClose={() => setShowComment(false)}
-                    comments={commentData}
+                    comments={data}
                 />                     
                 )}
                               

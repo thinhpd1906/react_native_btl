@@ -16,6 +16,7 @@ export function login(data) {
   });
 }
 
+
 export function checkVerifyCode(data) {
   return service({
     url: "/check_verify_code",

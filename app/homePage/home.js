@@ -6,9 +6,13 @@ import {
 import PostItem from "./getPost/PostItem";
 import { useEffect, useState } from "react";
 import { getListPosts } from "../../api/post/post";
+import { getInfor } from "../../api/profile/profile";
+import { useSelector } from "react-redux";
 
 export default home = () => {
-    const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
+    const user = useSelector((state) => state.auth.login.currentUser)
+    console.log(user)
+    const imageUrl = user.avatar;
     const [postData, setPostData] = useState([]);
     const [requestData, setRequestData] = useState({
         in_campaign: "1",
@@ -16,7 +20,7 @@ export default home = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "10",
+        count: "20",
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -24,6 +28,10 @@ export default home = () => {
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
     };
+
+    // useEffect(() => {
+    //     getInfor();
+    // },[])
 
     const handleGetListPost = async () => {
         try {

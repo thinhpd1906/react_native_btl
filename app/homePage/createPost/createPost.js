@@ -31,7 +31,7 @@ export default CreatePost = () => {
                     style = {styles.textInput}
                     multiline={true}
                     numberOfLines={4} // Số dòng mặc định hiển thị (tùy chọn)
-                    placeholder="Nhập nội dung ở đây..."
+                    placeholder="How are you feeling?"
                     placeholderStyle={styles.placeholder}
                     value={textTitle}
                     onChangeText={(inputText) => setTextTitle(inputText)}

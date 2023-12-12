@@ -2,18 +2,21 @@
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import AuthLayout from '../../components/AuthLayout';
 import Button from '../../components/Button';
-import { Link, Stack, router } from 'expo-router';
+import { Link, Stack, router, useNavigation } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import TextInputGlobal from '../../components/TextInputGlobal';
-import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
+import { changeProfileAfterSignUp, login, loginUser } from '../../api/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getInfor } from '../../api/profile/profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../../store/auth';
 
 
 export default Login = (props) => {
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   // const [userEmail, setUserEmail] = useState("")
   return (
     <AuthLayout isLogin = {true}>
@@ -31,7 +34,8 @@ export default Login = (props) => {
             }
             login(data)
             .then(async res => {
-              console.log("res login", res)
+              console.log("res login", res.data)
+              dispatch(loginSuccess(res.data))
               await AsyncStorage.setItem('token',"Bearer " + res.data.token);
               // getInfor({user_id: res.data.id})
               // .then((res) => {
