@@ -4,10 +4,28 @@ import {
 } from "react-native";
 import { Video } from "expo-av";
 import moment from "moment";
-export default CommentPost = ({ visible, onClose, comments }) => {
+import { setMarkComment } from "../../../api/post/comment";
+export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
 
     const [textComment, setTextCtextComment] = useState('');
-    // const [showReply, setshowReply] = useState(false);
+
+    const handleSetMarkComment = async () => {
+        try {
+          const newComment = {
+            id: post_Id,
+            content: textComment,
+            index: "0",
+            count: "20",
+            type: "1"
+          };
+      
+          await setMarkComment(newComment);
+          setMarkComment('');
+          console.log("Comment: successfully");
+        } catch (err) {
+          console.error('Error setting mark for comment:', err); 
+        }
+    };
 
     React.useEffect(() => {
         const backAction = () => {
@@ -72,7 +90,7 @@ export default CommentPost = ({ visible, onClose, comments }) => {
                     renderItem={({ item }) => (
                     <View style={styles.commentContainer}>
                         <Image
-                            source={{ uri: item.poster.avatar }}
+                            source={{ uri: item.poster.avatar || 'https://example.com/default-image.jpg'}}
                             style={styles.avatar}
                         />
                         <View>
@@ -152,10 +170,12 @@ export default CommentPost = ({ visible, onClose, comments }) => {
                         value={textComment}
                         onChangeText={(inputText) => setTextCtextComment(inputText)}
                     />
-                    <Image
-                        source={require("../../../assets/images/home/camera.png")}
-                        style = {styles.cameraComment}
-                    />                    
+                    <TouchableOpacity onPress={handleSetMarkComment}>
+                        <Image
+                            source={require("../../../assets/images/home/camera.png")}
+                            style = {styles.cameraComment}
+                        />                        
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

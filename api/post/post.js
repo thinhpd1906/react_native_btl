@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createImageFormData } from "../../components/createImageFormData";
 
 const baseURL = process.env.EXPO_PUBLIC_BASE_API_URL;
 
@@ -26,27 +27,17 @@ export const getListPosts = async(requestData) => {
 
 }
 
-export const createAPost = async (newData) => {
+export const createAPost = async (formData) => {
   try {
-    if (!newData) {
-      console.log("No data");
-      return;
-    } else {
-      console.log(newData);
-    }
+    // if (!formData) {
+    //   console.log("No data");
+    //   return;
+    // } else {
+    //   console.log("form data",formData);
+    // }
 
-    const authToken = await AsyncStorage.getItem('token');
-    
-    // Tạo đối tượng FormData để chứa dữ liệu
-    const formData = new FormData();
-
-    // Thêm dữ liệu vào FormData, newData là một đối tượng có chứa các trường dữ liệu, bao gồm cả file nếu có
-    for (const key in newData) {
-      if (newData[key] !== undefined) {
-        formData.append(key, newData[key]);
-      }
-    }
-
+    const authToken = await AsyncStorage.getItem('token');  
+      
     const response = await fetch(`${baseURL}add_post`, {
       method: 'POST',
       headers: {
@@ -61,9 +52,11 @@ export const createAPost = async (newData) => {
       throw new Error('Error in response');
     } else {
       console.log('API: Post created successfully');
+      const responseData = await response.json();
+      return responseData;
     }
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('API Error creating post:', error);
     throw error;
   }
 };

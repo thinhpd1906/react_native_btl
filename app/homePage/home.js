@@ -28,10 +28,9 @@ export default home = () => {
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
     };
-
-    // useEffect(() => {
-    //     getInfor();
-    // },[])
+    const handleWatch = () => {
+        router.push("homePage/getVideos/getVideos")
+    }
 
     const handleGetListPost = async () => {
         try {
@@ -78,7 +77,7 @@ export default home = () => {
                         <Ionicons name="home" size={32} color="#333" />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleWatch}>
                     <View style={styles.iconContainer}>
                         <Ionicons name="tv" size={32} color="#333" />
                     </View>
@@ -107,7 +106,7 @@ export default home = () => {
 
             <View style = {styles.header}>
                 <Image
-                    source={{ uri: imageUrl }}
+                    source={{ uri: imageUrl || 'https://example.com/default-image.jpg'}}
                     style={styles.avatar}
                 />
                 <TouchableOpacity onPress={handlePress} style={styles.button}>
@@ -126,7 +125,12 @@ export default home = () => {
                 <FlatList
                     data={postData}
                     keyExtractor={(item, index) => index.toString()} 
-                    renderItem={({ item }) => <PostItem item={item} />}
+                    renderItem={({ item }) => (
+                        <PostItem 
+                            item={item} 
+                            user={user}
+                        />
+                    )}
                     onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang
                     onEndReachedThreshold={0.1}
                     ListFooterComponent={loadingMore && <ActivityIndicator style={styles.loadingIndicator} />}
