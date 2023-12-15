@@ -11,195 +11,9 @@ import FivePicture from "../../../components/FivePicture";
 import CommentPost from "../comment/CommentPost";
 import { router } from "expo-router";
 import { getMarkComment } from "../../../api/post/comment";
+import { setFell } from "../../../api/post/like";
 
-export default PostItem = ({ item }) => {
-    const data = [
-        {
-            mark_content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤ ",
-            // image: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg",
-            
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-            {
-                content: "Hôm nay lướt qua Facebook thấy bài này...sâu lắng..từng câu từ..từng chữ.. Thấm..nghe qua một lần nghiện luôn  Cảm ơn Only C.. Ko ra thì thôi..ra bài nào cũng đẳng cấp và Thấm❤",
-                created: "2023-12-01T10:18:37.432Z",
-                poster: {
-                    id: "102",
-                    name: "Minh12345",
-                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-                }
-            },
-            {
-                content: "so good",
-                created: "2023-12-01T10:18:37.432Z",
-                poster: {
-                    id: "102",
-                    name: "Minh12345",
-                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-                }
-            },
-            {
-                content: "so good",
-                created: "2023-12-01T10:18:37.432Z",
-                poster: {
-                    id: "102",
-                    name: "Minh12345",
-                    avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-                }
-            },
-            ]
-        },
-        {
-            mark_content: "so good",
-            // video: "https://it4788.catan.io.vn/files/video-1701153345274-798896164.mp4",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-   
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-              
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-        {
-            mark_content: "so good",
-            type_of_mark: "1",
-            created: "2023-12-01T17:07:38.901Z",
-            poster: {
-                id: "102",
-                name: "Minh Nguyễn",
-                avatar: "https://it4788.catan.io.vn/files/avatar-1701153643437-841715809.jpg"
-            },
-            comments: [
-          
-            ]
-        },
-    ];
+export default PostItem = ({ item , user}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [showComment, setShowComment] = useState(false);
     const [commentData, setCommentData] = useState([]);
@@ -210,6 +24,7 @@ export default PostItem = ({ item }) => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [isFeel, setIsFeel] = useState('');
 
     const openModal = () => {
         setModalVisible(true);
@@ -221,6 +36,21 @@ export default PostItem = ({ item }) => {
     const handleEditPost = () => {
         setModalVisible(false);
         router.push('/homePage/editPost/editPost');
+    }
+
+    const handleFell = async() => {
+        const feelData = {
+            id: item.id,
+            type: "1"
+        }
+        try {
+            const result =  await setFell(feelData);
+            setIsFeel(result);
+            console.log("Feel: Successfully", result);
+        } catch (error) {
+          console.error('Error setting mark for comment:', error); 
+            
+        }
     }
 
     const handleGetMark = async() => {
@@ -330,28 +160,35 @@ export default PostItem = ({ item }) => {
                                 style={styles.closeModal}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleEditPost}>
-                            <View style = {{flexDirection: "row"}}>
-                                <Image
-                                    source={require("../../../assets/images/home/edit.png")}
-                                    style={styles.imgEdit}
-                                />                                 
-                                <Text style = {styles.textEdit}>
-                                    Edit
-                                </Text>
+                        {user.id == item.author.id ? (
+                            <View>
+                                <TouchableOpacity onPress={handleEditPost}>
+                                    <View style = {{flexDirection: "row"}}>
+                                        <Image
+                                            source={require("../../../assets/images/home/edit.png")}
+                                            style={styles.imgEdit}
+                                        />                                 
+                                        <Text style = {styles.textEdit}>
+                                            Edit
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <View style = {{flexDirection: "row"}}>
+                                        <Image
+                                            source={require("../../../assets/images/home/delete.png")}
+                                            style={styles.imgDelete}
+                                        />                                 
+                                        <Text style = {styles.textDelete}>
+                                            Delete
+                                        </Text>  
+                                    </View>                         
+                                </TouchableOpacity>                                
                             </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <View style = {{flexDirection: "row"}}>
-                                <Image
-                                    source={require("../../../assets/images/home/delete.png")}
-                                    style={styles.imgDelete}
-                                />                                 
-                                <Text style = {styles.textDelete}>
-                                    Delete
-                                </Text>  
-                            </View>                         
-                        </TouchableOpacity>
+                        ) : (
+                            ''
+                        )}
+
                         <TouchableOpacity>
                             <View style = {{flexDirection: "row"}}>
                                 <Image
@@ -463,15 +300,37 @@ export default PostItem = ({ item }) => {
                 flexDirection: 'row',
                 padding: 8,
             }}>
-            <TouchableOpacity style = {{flexDirection: 'row',}}>
-                <Image
-                    source={require('../../../assets/images/home/like.png')}
-                    style = {{height: 30, width: 30, marginLeft: "20%",}}
-                />
-                <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                    Like
-                </Text>                    
-            </TouchableOpacity>
+            {item.is_felt == "1" ? (
+                <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleFell}> 
+                    <Image
+                        source={require('../../../assets/images/home/like-blue.png')}
+                        style = {{height: 30, width: 30, marginLeft: "20%"}}
+                    />
+                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#0866FF"}}>
+                        Like
+                    </Text>                    
+                </TouchableOpacity> 
+            ) : item.is_felt == "0" ? (
+                <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleFell}> 
+                    <Image
+                        source={require('../../../assets/images/home/sad.png')}
+                        style = {{height: 30, width: 30, marginLeft: "20%"}}
+                    />
+                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#F7B125"}}>
+                        Sad
+                    </Text>                    
+                </TouchableOpacity> 
+            ) : (
+                <TouchableOpacity style = {{flexDirection: 'row',}} onPress={handleFell}> 
+                    <Image
+                        source={require('../../../assets/images/home/like.png')}
+                        style = {{height: 30, width: 30, marginLeft: "20%",}}
+                    />
+                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
+                        Like
+                    </Text>                    
+                </TouchableOpacity>                
+            )}
             <View>
                 <TouchableOpacity 
                     style = {{flexDirection: 'row',}}
@@ -490,6 +349,7 @@ export default PostItem = ({ item }) => {
                     visible={showComment}
                     onClose={() => setShowComment(false)}
                     comments={commentData}
+                    post_Id = {item.id}
                 />                     
                 )}
                               

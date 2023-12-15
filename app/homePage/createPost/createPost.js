@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { 
     Image, StyleSheet, Text, View, TouchableOpacity, TextInput
 }from "react-native";
 import { useSelector } from "react-redux";
 import { createAPost, getListPosts } from "../../../api/post/post";
 import { router } from "expo-router";
-
+import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -13,23 +15,139 @@ export default CreatePost = () => {
     const imageUrl = user.avatar;
     const [status, setStatus] = useState('');
     const [described, setDescribed] = useState('');
+    const [image, setImage] = useState(null);
+    const [video, setVideo] = useState(null);
 
-    const handeleCreatePost = () => {
-        const newData = {
-            described,
-            status,
-        }
-        createAPost(newData)
-            .then(()=>{
-                console.log('Home: Post created successfully');
-                setDescribed('');
-                setStatus('');
-                router.push("/homePage/home")
-            })
-            .catch((err) => {
-                console.log('Error creating student:', err);
+    // const [selectedImage, setSelectedImage] = useState(null);
+
+    // const handleChoosePhoto = async () => {
+    //   try {
+    //     const result = await ImagePicker.launchImageLibraryAsync({
+    //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //       allowsEditing: true,
+    //       aspect: null,
+    //       quality: 1,
+    //     });
+  
+    //     if (!result.canceled) {
+    //       setSelectedImage(result);
+    //     //   console.log("Resul", result)
+    //     }
+    //   } catch (error) {
+    //     console.error('Error choosing photo:', error);
+    //   }
+    // };
+  
+    // const handleUpload = async () => {
+    //   if (selectedImage) {
+    //     const formData = new FormData();
+    //     formData.append('image', {
+    //       uri: selectedImage.uri,
+    //       type: 'image/jpeg',
+    //       name: 'photo.jpg',
+    //     });
+    //     console.log("form data", formData)
+    //     try {
+    //         const authToken = await AsyncStorage.getItem('token');
+    //       const response = await fetch('https://it4788.catan.io.vn/add_post', {
+    //         method: 'POST',
+    //         body: formData,
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         'Authorization': `${authToken}`,
+
+    //         },
+    //       });
+  
+    //       const responseData = await response.json();
+  
+    //       console.log('Upload successful:', responseData);
+    //     } catch (error) {
+    //       console.error('Error uploading image:', error);
+    //     }
+    //   }
+    // };
+
+    useEffect(() => {
+        (async () => {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Permission to access media library is required!');
+          }
+        })();
+    }, []);
+
+    const handleImagePicker = async () => { 
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: null,
+              quality: 1,
             });
+      
+            if (!result.canceled) {
+                console.log("IMGData" ,result.assets[0])
+                setImage(result.assets[0]);
+            }
+          } catch (error) {
+            console.error('Error choosing image:', error);
+          }
+    };
+    const pickVideo = async () => {
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+              allowsEditing: true,
+              aspect: null,
+              quality: 1,
+            });
+      
+            if (!result.canceled) {
+                console.log("videoData" ,result.assets[0])
+                setVideo(result.assets[0]);  
+            }
+          } catch (error) {
+            console.error('Error choosing video:', error);
+          }
+    };
+    
+     
+    const handeleCreatePost = async() => {
+        const formData = new FormData();
+
+        if (image) {
+          formData.append('image', {
+            uri: image.uri,
+            type: 'image/jpeg',
+            name: 'image.jpg',
+          });
+        }
+  
+        if (video) {
+          formData.append('video', {
+            uri: video.uri,
+            type: 'video/mp4',
+            name: 'video.mp4',
+          });
+        }
+   
+        if (described) {
+            formData.append('described', described);
+        }
+        
+        if (status) {
+            formData.append('status', status);
+        }
+  
+        try {
+          const responseData = await createAPost(formData);
+          console.log('Upload successful:', responseData); 
+        } catch (error) {
+          console.error('Error uploading media:', error);  
+        }
     }
+
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -66,38 +184,40 @@ export default CreatePost = () => {
                     placeholderStyle={styles.placeholder}
                     value={described}
                     onChangeText={(inputText) => setDescribed(inputText)}
-                />               
+                />
+                {/* {image && <Image source={{uri: image.uri}}  style = {{width: 50, height:50}} />}                */}
             </View>
 
             <View style = {styles.footter}>
                 <View style = {styles.footterLeft}>
-                    <Image
-                        source={require('../../../assets/images/home/album.png')}
-                        style={{
-                            width: 45,
-                            height: 45,
-                            margin: 7,
-                            marginRight: 80
-                        }}
-                    />                    
+                    <TouchableOpacity onPress={handleImagePicker}>
+                        <Image
+                            source={require('../../../assets/images/home/album.png')}
+                            style={{
+                                width: 45,
+                                height: 45,
+                                margin: 7,
+                                marginRight: 80
+                            }}
+                        />                         
+                    </TouchableOpacity>
                 </View>
                 <View style = {styles.footterRight}>
-                    <Image
-                        source={require('../../../assets/images/home/video.png')}
-                        style={{
-                            width: 45,
-                            height: 45,
-                            margin: 7,
-                            marginLeft: 80
-                        }}
-                    />                   
+                    <TouchableOpacity onPress={pickVideo}>
+                        <Image
+                            source={require('../../../assets/images/home/video.png')}
+                            style={{
+                                width: 45,
+                                height: 45,
+                                margin: 7,
+                                marginLeft: 80
+                            }}
+                        />                         
+                    </TouchableOpacity>
                 </View>
-
             </View>
-
         </View>        
     )
-
 };
 
 const styles = StyleSheet.create({
