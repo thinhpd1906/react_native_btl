@@ -15,7 +15,7 @@ export default getVideos = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "20",
+        count: "5",
     });
 
     const handleHome = () =>{

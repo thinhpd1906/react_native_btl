@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createImageFormData } from "../../components/createImageFormData";
 
 const baseURL = process.env.EXPO_PUBLIC_BASE_API_URL;
 

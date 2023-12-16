@@ -228,7 +228,7 @@ export default PostItem = ({ item , user}) => {
             resizeMode="cover"
             shouldPlay
             isLooping
-            style={{ width: "100%", height: 300 }}
+            style={{ width: "100%", height: 400 }}
             />            
             <View>
                 {item.image.length > 4 ?(
