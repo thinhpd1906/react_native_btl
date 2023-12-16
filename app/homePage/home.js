@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getListPosts } from "../../api/post/post";
 import { useSelector } from "react-redux";
 import { Ionicons } from '@expo/vector-icons';
+import Menu from "../../components/menu";
 
 export default home = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -20,10 +21,11 @@ export default home = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "20",
+        count: "10",
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
 
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
@@ -97,11 +99,19 @@ export default home = () => {
                         <Ionicons name="notifications" size={32} color="#333" />
                     </View>                    
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="menu" size={32} color="#333" />
-                    </View>                     
-                </TouchableOpacity>            
+                <View>
+                    <TouchableOpacity onPress={()=> setShowMenu(true)}>
+                        <View style={styles.iconContainer}>
+                            <Ionicons name="menu" size={32} color="#333" />
+                        </View>                     
+                    </TouchableOpacity>
+                    {showMenu && (
+                    <Menu
+                        visible={showMenu}
+                        onClose={() => setShowMenu(false)}
+                    />                         
+                    )} 
+                </View>
             </View>
 
             <View style = {styles.header}>
