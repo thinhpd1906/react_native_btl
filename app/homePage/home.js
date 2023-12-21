@@ -33,6 +33,9 @@ export default home = () => {
     const handleWatch = () => {
         router.push("homePage/getVideos/getVideos")
     }
+    const handleNotificationPress = () => {
+        router.push('notifications/notification');
+    };
 
     const handleGetListPost = async () => {
         try {
@@ -94,7 +97,7 @@ export default home = () => {
                         <Ionicons name="search" size={32} color="#333" />
                     </View>                    
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleNotificationPress}>
                     <View style={styles.iconContainer}>
                         <Ionicons name="notifications" size={32} color="#333" />
                     </View>                    
