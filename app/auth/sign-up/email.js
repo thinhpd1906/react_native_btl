@@ -16,7 +16,7 @@ export default Name = props => {
     <AuthLayout  title="What's your email?" showBackButton>
      <Formik
         initialValues={{ 
-          email: '',
+          email: 'phanthinh123@gmail.com',
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInEmail(values.email))

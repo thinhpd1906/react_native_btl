@@ -1,23 +1,78 @@
 // import React, { useState } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import AuthLayout from '../../components/AuthLayout';
 import Button from '../../components/Button';
 import { Link, Stack, router } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import TextInputGlobal from '../../components/TextInputGlobal';
+import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getInfor } from '../../api/profile/profile';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../../store/auth';
+
 
 export default Login = (props) => {
+  const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  const dispatch = useDispatch();
   // const [userEmail, setUserEmail] = useState("")
   return (
     <AuthLayout isLogin = {true}>
       <Formik
         initialValues={{ 
           name: '',
-          email: '', 
-          password: '' 
+          email: signUpInfor.email, 
+          password: signUpInfor.password 
         }}
-        // onSubmit={values => alert(values.email)}
+        onSubmit={ (values) => {
+            let data = {
+              email: values.email,
+              password: values.password,
+              uuid: "string",
+            }
+            login(data)
+            .then(async res => {
+              console.log("res login", res.data)
+              dispatch(loginSuccess(res.data))
+              await AsyncStorage.setItem('token',"Bearer " + res.data.token);
+              // getInfor({user_id: res.data.id})
+              // .then((res) => {
+              //   console.log("res", res)
+              // })
+              // .catch((err) => {
+              //   console.log("err get infor", err)
+              // })
+              Alert.alert(
+                  "Success", // Tiêu đề của cửa sổ thông báo
+                  "login success", // Nội dung của cửa sổ thông báo
+                  [{
+                    text: 'OK',
+                    onPress: () => {
+                      if(res.data.username !== "") {
+                            // changeProfileAfterSignUp({
+                            //   username: signUpInfor.firstName + signUpInfor.lastName
+                            // })
+                            // .then(res => {
+                            //   router.push('/homePage/home');
+                            // })
+                            // .catch(err => {
+                              
+                            // })
+                            router.push('/homePage/home');
+                      } else {
+                            router.push('/homePage/home');
+                      }
+                    },
+                   
+                     // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+                  }, ],
+                );
+            })
+            .catch((err) => {
+                console.log("err", err)
+            })
+        }}
         validationSchema={yup.object().shape({
           email: yup
             .string()
@@ -25,9 +80,9 @@ export default Login = (props) => {
             .required('Please, provide your email!'),
           password: yup
             .string()
-            .min(6, "password at least 6 characters")
+            .min(8, "password at least 8 characters")
             .required('password is required')
-            .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, "must include uppercase, lowercase, number and special character"),
+            .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]+$/, "must include uppercase, lowercase, number and special character"),
         })}
        >
          {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (

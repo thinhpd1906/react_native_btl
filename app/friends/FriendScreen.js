@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { getUserFriends } from '../../api/friends/Friend';
+import { router } from 'expo-router';
 
-const data = [
+const dataFake = [
   {
     avatar:
       'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
@@ -75,31 +78,31 @@ const data = [
 ];
 
 const FriendScreen = () => {
+  const user = useSelector((state) => state.auth.login.currentUser)
+  // console.log(user.id)
   const [friendData, setFriendData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [totalFriend, setTotalFriend] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [requestData, setRequestData] = useState({
+    index: "0",
+    count: "50",
+    user_id: user.id,
+  });
+
+  const handleGetFriend = async () => {
+    try {
+      const result = await getUserFriends(requestData);
+      setFriendData([...friendData, ...result.friends]);
+      setTotalFriend(result.total);
+      console.log("sucessfully");
+    } catch(error) {
+      console.log("err",error);
+    }
+  }
 
   useEffect(() => {
-    const getUserFriends = async () => {
-      try {
-        const response = await axios.post('https://it4788.catan.io.vn/#/Friend/FriendController_getUserFriends');
-        
-        if (response.data.code === '200') {
-          setFriendData(response.data.data)
-        } else if (response.data.code === '401') {
-           console.log('No access')
-        } else {
-          console.log(response.data.message)
-        }
-        
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching user friends: ', error)
-        setLoading(false)
-      }
-    }
-
-    getUserFriends();
-  }, []);
+    handleGetFriend();
+  }, [requestData]);
 
   return (
     <View style={styles.container}>
@@ -126,13 +129,13 @@ const FriendScreen = () => {
         <View style={styles.headerButton}>
           <TouchableOpacity 
             style={styles.button}
-            onPress={() => navigation.navigate('SuggestionFriend')}
+            onPress={() => router.push('/friends/SuggestionFriend')}
           >
             <Text>Gợi ý</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.button}
-            onPress={() => navigation.navigate('FriendInvite')}
+            onPress={() => router.push('/friends/FriendInvite')}
           >
             <Text>Lời mời</Text>
           </TouchableOpacity>
@@ -149,11 +152,12 @@ const FriendScreen = () => {
               <ActivityIndicator size="large" color="#0000ff" />
             ) : (
               // Hiển thị danh sách bạn bè từ dữ liệu API
-              friendData.map((friend, index) => (
+              dataFake.map((friend, index) => (
                 <View key={index} style={styles.friendItem}>
                   <Image source={{uri: friend.avatar}} style={styles.avatar} />
                   <View style={styles.userInfo}>
                     <Text style={styles.name}>{friend.name}</Text>
+                    {/* <Text>{totalFriend} bạn chung</Text> */}
                     <Text>{friend.mutualFriend} bạn chung</Text>
                   </View>
                   <Entypo

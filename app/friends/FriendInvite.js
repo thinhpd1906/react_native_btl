@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import {Ionicons, Entypo} from '@expo/vector-icons';
+import { getRequestedFriends } from '../../api/friends/Friend';
 
 const data = [
   {
@@ -72,7 +73,29 @@ const data = [
   },
 ];
 
-const FriendInvite = () => {
+const RequestedFriend = () => {
+  const [requestedFriendData, setRequestedFriendData] = useState([])
+  const [requestData, setRequestData] = useState({
+    index: "0",
+    count: "10"
+  })
+  const [totalData, setTotalData] = useState(0)
+  
+  const handleGetRequestedFriend = async() => {
+    try {
+      const result = await getRequestedFriends(requestData)
+      setRequestedFriendData([...requestedFriendData, ...result.requests])
+      setTotalData(result.total);
+      console.log("sucessfully")
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
+  useEffect(() => {
+    handleGetRequestedFriend();
+  }, [requestData]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -99,17 +122,17 @@ const FriendInvite = () => {
       <ScrollView style={styles.body}>
         <View style={styles.invite}>
           <Text style={styles.textInvite}>
-            Lời mời kết bạn <Text style={{color: 'red', fontSize: 22}}>99</Text>
+            Lời mời kết bạn <Text style={{color: 'red', fontSize: 22}}>{totalData}</Text>
           </Text>
         </View>
         <View style={styles.listFriend}>
           <ScrollView showsHorizontalScrollIndicator={false}>
-            {data.map((friend, index) => (
+            {requestedFriendData.map((friend, index) => (
               <View key={index} style={styles.friendItem}>
-                <Image source={{uri: friend.avatar}} style={styles.avatar} />
+                <Image source={{uri: friend.avatar || 'https://example.com/default-image.jpg'}} style={styles.avatar} />
                 <View style={styles.userInfo}>
-                  <Text style={styles.name}>{friend.name}</Text>
-                  <Text>{friend.mutualFriend} bạn chung</Text>
+                  <Text style={styles.name}>{friend.username}</Text>
+                  <Text>{friend.same_friends} bạn chung</Text>
                   <View style={styles.buttonContainer}>
                     {/* Nút Chấp nhận */}
                     <TouchableOpacity style={[styles.button, styles.acceptButton]}>
@@ -205,4 +228,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default FriendInvite;
+export default RequestedFriend;

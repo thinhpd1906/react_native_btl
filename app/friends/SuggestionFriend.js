@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getSuggestedFriends, setRequestFriend } from '../../api/friends/Friend';
 
 const data = [
   {
@@ -73,6 +74,36 @@ const data = [
 ];
 
 const SuggestionFriend = () => {
+  const [suggestedFriendData, setSuggestedFriendData] = useState([])
+  const [requestData, setRequestData] = useState({
+    index: "0",
+    count: "10"
+  })
+  
+  const handleGetSuggestedFriend = async() => {
+    try {
+      const result = await getSuggestedFriends(requestData)
+      setSuggestedFriendData([...suggestedFriendData, ...result])
+      console.log("sucessfully")
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
+  useEffect(() => {
+    handleGetSuggestedFriend();
+  }, [requestData]);
+
+  const handleSetRequestFriend = async(friendId) => {
+    try {
+      const result = await setRequestFriend()
+      // setSuggestedFriendData([...suggestedFriendData, ...result])
+      console.log("sucessfully")
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -103,19 +134,24 @@ const SuggestionFriend = () => {
         </View>
         <View style={styles.listFriend}>
           <ScrollView showsHorizontalScrollIndicator={false}>
-            {data.map((friend, index) => (
+            {suggestedFriendData.map((friend, index) => (
               <View key={index} style={styles.friendItem}>
-                <Image source={{uri: friend.avatar}} style={styles.avatar} />
+                <Image source={{uri: friend.avatar || 'https://example.com/default-image.jpg'}} style={styles.avatar} />
                 <View style={styles.userInfo}>
-                  <Text style={styles.name}>{friend.name}</Text>
-                  <Text>{friend.mutualFriend} bạn chung</Text>
+                  <Text style={styles.name}>{friend.username}</Text>
+                  <Text>{friend.same_friends} bạn chung</Text>
                   <View style={styles.buttonContainer}>
                     {/* Nút Chấp nhận */}
-                    <TouchableOpacity style={[styles.button, styles.acceptButton]}>
+                    <TouchableOpacity 
+                      style={[styles.button, styles.acceptButton]}
+                      onPress={() => handleSetRequestFriend(friend.id)}
+                    >
                         <Text style={styles.buttonText}>Thêm bạn bè</Text>
                     </TouchableOpacity>
                     {/* Nút Xóa */}
-                    <TouchableOpacity style={[styles.button, styles.deleteButton]}>
+                    <TouchableOpacity 
+                      style={[styles.button, styles.deleteButton]}
+                    >
                         <Text style={styles.buttonText}>Gỡ</Text>
                     </TouchableOpacity>
                   </View>
