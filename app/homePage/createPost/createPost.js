@@ -2,21 +2,31 @@ import { useEffect, useState } from "react";
 import { 
     Image, StyleSheet, Text, View, TouchableOpacity, TextInput
 }from "react-native";
-import { useSelector } from "react-redux";
-import { createAPost, getListPosts } from "../../../api/post/post";
+import { useDispatch, useSelector } from "react-redux";
+import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
 import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
+import { getAllPostSuccess } from "../../../store/post";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
     // console.log(user)
     const imageUrl = user.avatar;
+    const dispatch = useDispatch();
     const [status, setStatus] = useState('');
     const [described, setDescribed] = useState('');
     const [image, setImage] = useState([]);
     const [video, setVideo] = useState(null);
     const [showImagePicker, setShowImagePicker] = useState(false);
+    const [requestData, setRequestData] = useState({      
+        in_campaign: "1",
+        campaign_id: "1",
+        latitude: "1.0",
+        longitude: "1.0",
+        index: "0",
+        count: "10",
+    });
   
     useEffect(() => {
         (async () => {
@@ -100,11 +110,15 @@ export default CreatePost = () => {
           const responseData = await createAPost(formData);
           console.log('Upload successful:', responseData); 
           
+          await getListPosts(requestData, dispatch); 
+
           setImage([]); 
           setVideo(null);
           setDescribed('');
           setStatus('');
+
           router.push('/homePage/home');
+
         } catch (error) {
           console.error('Error uploading media:', error);  
         }
@@ -254,6 +268,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginTop: -30,
         zIndex: 9,
-      },
+    },
 
 })

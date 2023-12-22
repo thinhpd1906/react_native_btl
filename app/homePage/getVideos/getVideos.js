@@ -6,6 +6,7 @@ import GetListVideos from "./getListVideos";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { getListVideos } from "../../../api/post/video";
+import Navbar from "../../../components/Navbar";
 
 export default getVideos = () => {
     const [commentData, setCommentData] = useState([]);
@@ -38,36 +39,7 @@ export default getVideos = () => {
     return (
         <View style={styles.container}>
             <View style = {styles.navbar}>
-                <TouchableOpacity onPress={handleHome}>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="home" size={32} color="#333" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="tv" size={32} color="#333" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="people" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="search" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="notifications" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="menu" size={32} color="#333" />
-                    </View>                     
-                </TouchableOpacity>            
+                <Navbar/>            
             </View>
             <FlatList
                 data = {commentData}

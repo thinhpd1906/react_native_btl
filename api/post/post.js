@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAllPostSuccess, getNewPostSuccess } from "../../store/post";
 
 const baseURL = process.env.EXPO_PUBLIC_BASE_API_URL;
 
-export const getListPosts = async(requestData) => {
+export const getListPosts = async(requestData, dispatch) => {
 
   try {
     const authToken = await AsyncStorage.getItem('token');
@@ -17,7 +18,33 @@ export const getListPosts = async(requestData) => {
 
     const data = await response.json();
     // console.log(data)
+    dispatch(getAllPostSuccess(data.data.post))
     return data.data.post;
+
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }  
+
+}
+
+export const getNewPosts = async(requestData, dispatch) => {
+
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}get_new_posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(requestData), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    console.log(data)
+    dispatch(getNewPostSuccess(data.data.post))
+    // return data.data.post;
 
   } catch (error) {
       console.error('Error fetching data:', error);
@@ -28,13 +55,6 @@ export const getListPosts = async(requestData) => {
 
 export const createAPost = async (formData) => {
   try {
-    // if (!formData) {
-    //   console.log("No data");
-    //   return;
-    // } else {
-    //   console.log("form data",formData);
-    // }
-
     const authToken = await AsyncStorage.getItem('token');  
       
     const response = await fetch(`${baseURL}add_post`, {
