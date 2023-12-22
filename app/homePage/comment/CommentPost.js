@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import {
     FlatList, Image, Text, StyleSheet, View, Modal, TouchableOpacity, BackHandler, TextInput 
 } from "react-native";
-import { Video } from "expo-av";
 import moment from "moment";
 import { setMarkComment } from "../../../api/post/comment";
 export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
-
     const [textComment, setTextCtextComment] = useState('');
+    const [showMarkId, setShowMarkId] = useState('');
 
     const handleSetMarkComment = async () => {
         try {
@@ -15,12 +14,13 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
             id: post_Id,
             content: textComment,
             index: "0",
-            count: "20",
+            count: "10",
+            mark_id: showMarkId,  
             type: "1"
           };
       
           await setMarkComment(newComment);
-          setMarkComment('');
+          setTextCtextComment('');
           console.log("Comment: successfully");
         } catch (err) {
           console.error('Error setting mark for comment:', err); 
@@ -94,29 +94,11 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                             style={styles.avatar}
                         />
                         <View>
-                            <View style = {styles.borderAuthor}>
-                                <Text style={styles.posterName}>{item.poster.name}</Text>
-                                <Text style = {{fontSize: 16}}>{item.mark_content}</Text>
-                                {item.image ? (
-                                    <Image
-                                        source={{ uri: item.image}}
-                                        style={styles.image}
-                                    />
-                                ): item.video ? (
-                                    <Video
-                                    source={{ uri: item.video }}
-                                    rate={1.0}
-                                    volume={0.0}
-                                    isMuted={true}
-                                    resizeMode="cover"
-                                    shouldPlay
-                                    isLooping
-                                    style={{ width:150, height: 100 }}
-                                    />
-                                ):(
-                                    ""
-                                )}
-
+                            <View>
+                                <View style = {styles.borderAuthor}>
+                                    <Text style={styles.posterName}>{item.poster.name}</Text>
+                                    <Text style = {{fontSize: 16}}>{item.mark_content}</Text>
+                                </View>                                
                             </View>
 
                             <View style = {{flexDirection: "row", marginBottom: 10}}>
@@ -124,7 +106,7 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                                     {getFormattedTimeAgo(item.created)}
                                 </Text>
                                 <Text style = {styles.like}>Like</Text>
-                                <TouchableOpacity >
+                                <TouchableOpacity onPress={()=>setShowMarkId(item.id)}>
                                     <Text style = {styles.reply}>Reply</Text> 
                                 </TouchableOpacity>
                             </View>  
@@ -139,7 +121,7 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                                             style={styles.avatarReply}
                                         />
                                         <View>
-                                            <View style = {styles.borderAuthor}>
+                                            <View style = {styles.borderAuthors}>
                                                 <Text style={styles.posterName}>{item.poster.name}</Text>
                                                 <Text>{item.content}</Text>  
                                             </View> 
@@ -153,6 +135,16 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                                     </View>
                                 )}
                             />
+
+                        {/* <TextInput
+                            style = {styles.textInput}
+                            multiline={true}
+                            numberOfLines={1} 
+                            placeholder="Write a public comment..."
+                            placeholderStyle={styles.placeholder}
+                            value={textComment}
+                            onChangeText={(inputText) => setTextCtextComment(inputText)}
+                        />                            */}
                           
                         </View>
 
@@ -164,17 +156,24 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                     <TextInput
                         style = {styles.textInput}
                         multiline={true}
-                        numberOfLines={4} // Số dòng mặc định hiển thị (tùy chọn)
+                        numberOfLines={1} 
                         placeholder="Write a public comment..."
                         placeholderStyle={styles.placeholder}
                         value={textComment}
                         onChangeText={(inputText) => setTextCtextComment(inputText)}
                     />
                     <TouchableOpacity onPress={handleSetMarkComment}>
+                        {textComment ? (
                         <Image
-                            source={require("../../../assets/images/home/camera.png")}
+                            source={require("../../../assets/images/home/send-blue.png")}
                             style = {styles.cameraComment}
-                        />                        
+                        />
+                        ):(
+                        <Image
+                            source={require("../../../assets/images/home/send-white.png")}
+                            style = {styles.cameraComment}
+                        />                             
+                        )}                      
                     </TouchableOpacity>
                 </View>
             </View>
@@ -186,22 +185,16 @@ const styles = StyleSheet.create({
     modalContainer: {
       backgroundColor: "#fff",
       borderRadius: 10,
-    //   padding: 15,
       paddingTop: 2,
-      height: "93%",
-      marginTop: "15%"
+      height: "95%",
+      marginTop: "14%"
     },
     commentContainer: {
+      flex:1,
       flexDirection: "row",
       marginLeft: 15,
-    //   marginRight: 50,
       marginBottom: 15,
-      width: "80%"
-    },
-    replyMark:{
-        flexDirection: "row",
-        marginBottom: 10,
-        width: "83%",
+      width: "80%",
     },
     avatar: {
       width: 40,
@@ -216,12 +209,27 @@ const styles = StyleSheet.create({
         marginRight: 10,
       },
     borderAuthor: {
+        // maxWidth: 200,  
         backgroundColor: "#ddd",
         borderRadius: 10,
         paddingTop: 1,
         paddingBottom: 5,
         paddingLeft: 10,
         paddingRight: 10,
+    },
+    borderAuthors: {
+        backgroundColor: "#ddd",
+        borderRadius: 10,
+        paddingTop: 1,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    replyMark:{
+        flexDirection: "row",
+        marginBottom: 10,
+        width: "83%",
+        // backgroundColor: "#ccc"
     },
     posterName: {
       fontWeight: "bold",
@@ -250,13 +258,14 @@ const styles = StyleSheet.create({
         justifyContent: "center", 
         alignItems: "center",
         borderTopWidth: 0.6, 
+        borderBottomWidth: 0.6, 
         borderTopColor: "#8D949E", 
         paddingTop: 5,
-        paddingBottom:10,
+        paddingBottom:30,
     },
     textInput: {
         width: "80%",
-        height: 40,
+        height: "auto",
         backgroundColor: "#ddd",
         borderRadius: 15,
         padding: 10,
@@ -265,6 +274,7 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         marginLeft: 10,
+        zIndex: 100,
     },
     image: {
         width: 150,

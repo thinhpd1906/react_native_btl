@@ -5,15 +5,20 @@ import {
 } from "react-native"
 import PostItem from "./getPost/PostItem";
 import { useEffect, useState } from "react";
-import { getListPosts } from "../../api/post/post";
-import { useSelector } from "react-redux";
-import { Ionicons } from '@expo/vector-icons';
-import Menu from "../../components/menu";
+import { getListPosts, getNewPosts } from "../../api/post/post";
+import { useDispatch, useSelector } from "react-redux";
+import Navbar from "../../components/Navbar";
 
 export default home = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
+    const postLists = useSelector((state) => state.post.allPosts?.posts)
+    // const postNew = useSelector((state) => state.post.newPosts.post)
+    // console.log(postNew)
     // console.log(user)
+
     const imageUrl = user.avatar;
+    const dispatch = useDispatch();
+
     const [postData, setPostData] = useState([]);
     const [requestData, setRequestData] = useState({
         in_campaign: "1",
@@ -25,7 +30,6 @@ export default home = () => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
 
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
@@ -33,17 +37,15 @@ export default home = () => {
     const handleWatch = () => {
         router.push("homePage/getVideos/getVideos")
     }
-    const handleFriend = () => {
-        router.push("friends/FriendScreen")
-    }
 
     const handleGetListPost = async () => {
+
         try {
             setLoading(true);
-            const result = await getListPosts(requestData);
-            setPostData([...postData, ...result]);
+            await getListPosts(requestData, dispatch);
+            
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Errors:', error);
         } finally {
             setLoading(false);
         }
@@ -63,7 +65,7 @@ export default home = () => {
 
     useEffect(() => {
         handleGetListPost();
-    }, [requestData]);
+    }, [requestData, dispatch]);
     
     // Xử lý khi đã load thêm thành công
     useEffect(() => {
@@ -72,6 +74,13 @@ export default home = () => {
             setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
         }
     }, [loadingMore]);
+
+    // useEffect(() => {
+    //     if (isFocused) {
+    //       // Load dữ liệu mới khi màn hình Home được tập trung
+    //       handleGetListPost();
+    //     }
+    //   }, [isFocused]);
     
 
     return (  
@@ -87,7 +96,7 @@ export default home = () => {
                         <Ionicons name="tv" size={32} color="#333" />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleFriend}>
+                <TouchableOpacity>
                     <View style={styles.iconContainer}>
                         <Ionicons name="people" size={32} color="#333" />
                     </View>                    
@@ -136,7 +145,7 @@ export default home = () => {
 
             <View style = {styles.content}>
                 <FlatList
-                    data={postData}
+                    data={postLists}
                     keyExtractor={(item, index) => index.toString()} 
                     renderItem={({ item }) => (
                         <PostItem 

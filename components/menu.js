@@ -5,6 +5,7 @@ export default Menu = ({visible, onClose}) => {
 
     const handleOpenSetting = () => {
         router.push('/setting/settings');
+        onClose();
     }
 
     return(
