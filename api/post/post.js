@@ -19,7 +19,7 @@ export const getListPosts = async(requestData, dispatch) => {
     const data = await response.json();
     // console.log(data)
     dispatch(getAllPostSuccess(data.data.post))
-    return data.data.post;
+    // return data.data.post;
 
   } catch (error) {
       console.error('Error fetching data:', error);

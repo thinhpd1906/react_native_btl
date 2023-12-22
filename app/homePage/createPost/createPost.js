@@ -7,7 +7,6 @@ import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
 import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
-import { getAllPostSuccess } from "../../../store/post";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)

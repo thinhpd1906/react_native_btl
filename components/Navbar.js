@@ -15,6 +15,10 @@ export default Navbar = () => {
         router.push('/homePage/home')
     }
 
+    const handleNotifications = () => {
+        router.push('notifications/notification')
+    }
+
     return (
         <View style = {styles.navbar}>
             <TouchableOpacity onPress={handleHome}>
@@ -37,7 +41,7 @@ export default Navbar = () => {
                     <Ionicons name="search" size={32} color="#333" />
                 </View>                    
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleNotifications}>
                 <View style={styles.iconContainer}>
                     <Ionicons name="notifications" size={32} color="#333" />
                 </View>                    
