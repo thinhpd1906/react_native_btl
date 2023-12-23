@@ -12,19 +12,17 @@ import CommentPost from "../comment/CommentPost";
 import { router } from "expo-router";
 import { getMarkComment } from "../../../api/post/comment";
 import { setFell } from "../../../api/post/like";
+import { useDispatch, useSelector } from "react-redux";
 
 export default PostItem = ({ item , user}) => {
+    // const commentLists = useSelector((state) => state.post.comment)
+    // console.log("cmt",commentLists)
+    const dispatch = useDispatch();
+
     const [modalVisible, setModalVisible] = useState(false);
     const [showComment, setShowComment] = useState(false);
-    const [commentData, setCommentData] = useState([]);
-    const [requestData, setRequestData] = useState({
-        id: item.id,
-        index: "0",
-        count: "10",
-    });
-    const [loading, setLoading] = useState(false);
-    const [loadingMore, setLoadingMore] = useState(false);
     const [isFeel, setIsFeel] = useState('');
+    //  console.log("cmt",isFeel)
 
     const openModal = () => {
         setModalVisible(true);
@@ -52,42 +50,6 @@ export default PostItem = ({ item , user}) => {
             
         }
     }
-
-    const handleGetMark = async() => {
-        try {
-            setLoading(true);
-            const result = await getMarkComment(requestData);
-            setCommentData([...commentData, ...result]);
-        } catch (error) {
-            console.log(error)
-        } finally{
-            setLoading(false)
-        }
-    }
-
-    const handleEndReached = () => {
-        if (!loadingMore) {
-          setLoadingMore(true);
-    
-          // Cập nhật index để load thêm
-          setRequestData((prevRequestData) => ({
-            ...prevRequestData,
-            index: (parseInt(prevRequestData.index) + parseInt(prevRequestData.count)).toString(),
-          }));
-        }
-    };
-
-    useEffect(() => {
-        handleGetMark();
-    }, [requestData]);
-    
-    // Xử lý khi đã load thêm thành công
-    useEffect(() => {
-        if (loadingMore) {
-            handleGetMark(); // Gọi lại hàm handleFetchData để load thêm bài viết
-            setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
-        }
-    }, [loadingMore]);
     
     const getFormattedTimeAgo = (createdAt) => {
         const now = moment();
@@ -348,7 +310,6 @@ export default PostItem = ({ item , user}) => {
                 <CommentPost
                     visible={showComment}
                     onClose={() => setShowComment(false)}
-                    comments={commentData}
                     post_Id = {item.id}
                 />                     
                 )}

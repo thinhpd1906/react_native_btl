@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     FlatList, Image, Text, StyleSheet, View, Modal, TouchableOpacity, BackHandler, TextInput 
 } from "react-native";
 import moment from "moment";
-import { setMarkComment } from "../../../api/post/comment";
+import { getMarkComment, setMarkComment } from "../../../api/post/comment";
+import { useDispatch } from "react-redux";
 export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
+    const dispatch = useDispatch();
+
+    const [requestData, setRequestData] = useState({
+        id: post_Id,
+        index: "0",
+        count: "15",
+    });
     const [textComment, setTextCtextComment] = useState('');
     const [showMarkId, setShowMarkId] = useState('');
+    const [commentData, setCommentData] = useState([]);
 
     const handleSetMarkComment = async () => {
         try {
@@ -21,11 +30,29 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
       
           await setMarkComment(newComment);
           setTextCtextComment('');
+          setShowMarkId('');
+
+          const result = await getMarkComment(requestData, dispatch);
+          setCommentData([...result]); 
+
           console.log("Comment: successfully");
         } catch (err) {
           console.error('Error setting mark for comment:', err); 
         }
     };
+
+    const handleGetMark = async() => {
+        try {
+            const result = await getMarkComment(requestData, dispatch);
+            setCommentData([...commentData, ...result]);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        handleGetMark();
+    }, [requestData]);
 
     React.useEffect(() => {
         const backAction = () => {
@@ -85,7 +112,7 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
 
                 </TouchableOpacity>                
                 <FlatList
-                    data={comments}
+                    data={commentData}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                     <View style={styles.commentContainer}>

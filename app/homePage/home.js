@@ -26,7 +26,7 @@ export default home = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "10",
+        count: "16",
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -40,6 +40,7 @@ export default home = () => {
         try {
             setLoading(true);
             await getListPosts(requestData, dispatch);
+            // setPostData([...postData,...postLists])
             
         } catch (error) {
             console.error('Errors:', error);
@@ -71,14 +72,6 @@ export default home = () => {
             setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
         }
     }, [loadingMore]);
-
-    // useEffect(() => {
-    //     if (isFocused) {
-    //       // Load dữ liệu mới khi màn hình Home được tập trung
-    //       handleGetListPost();
-    //     }
-    //   }, [isFocused]);
-    
 
     return (  
         <View style={styles.container}>
