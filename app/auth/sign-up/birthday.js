@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AuthLayout from '../../../components/AuthLayout';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { InputHaft } from '../../../components/TextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup'
@@ -8,7 +8,7 @@ import { ButtonPrimary } from '../../../components/ButtonPrimary';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import {router } from 'expo-router';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserSignInBirthDay, setUserSignInFirstName } from '../../../store/auth';
 export default Birthday = (props) => {

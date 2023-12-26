@@ -12,6 +12,7 @@ export default function App() {
     // We do this in a useFocusEffect to ensure the redirect happens every time the screen
     // is focused.
     router.replace('/auth/login');
+    // router.replace('/homePage/home');
   });
 }
 

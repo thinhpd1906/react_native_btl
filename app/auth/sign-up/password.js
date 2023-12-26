@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthLayout from '../../../components/AuthLayout';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { InputHaft, InputHaftPassword } from '../../../components/TextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup'
@@ -10,25 +10,65 @@ import { COLORS } from '../../../constants/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserSignInPassword } from '../../../store/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { checkVerifyCode, signUp } from '../../../api/auth/auth';
 export default Name = props => {
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  let email = signUpInfor.email
   const dispatch = useDispatch()
   return (
     <AuthLayout  title="What's your password?" showBackButton>
      <Formik
         initialValues={{ 
-            password: '',
+            password: "Thinh123",
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInPassword(values.password))
-          alert("register success:")}
+    //  backend not handle special character
+          let data = {
+              email: email,
+              password: values.password,
+              uuid: "string"
+            }
+            // console.log("data",typeof data)
+            // data = JSON.stringify(data)
+
+            signUp(data)
+              .then((res) => {
+                console.log("sign up success", res)
+                checkVerifyCode({
+                  email: email,
+                  code_verify: res.data.verify_code
+                })
+                .then((res) => {
+                  console.log("check code success", res)
+                  Alert.alert(
+                  "Success", // Tiêu đề của cửa sổ thông báo
+                  "register success", // Nội dung của cửa sổ thông báo
+                  [{
+                    text: 'OK',
+                    onPress: () => router.push('/auth/login'), // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+                  }, ],
+                );
+                })
+                .catch((err) => {
+                    console.log("error check code", err);
+                })
+                // console.log("res", res)
+                
+                
+              })
+              .catch((err) => {
+                  console.log("err sign up", err)
+          })
+          // alert("register success:")
+          }
         }
         validationSchema={yup.object().shape({
             password: yup
             .string()
             .required('password is required')
-            .min(6,'password length is min 6 character')
-            .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$/, 'password is at least 1 uppercase, 1 lowercase and 1 number, 1 special charecters')
+            .min(8,'password length is min 8 character')
+            .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/, 'password is at least 1 uppercase, 1 lowercase and 1 number, 1 special charecters')
         })}
        >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
