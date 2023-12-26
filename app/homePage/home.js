@@ -26,7 +26,7 @@ export default home = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "16",
+        count: "20",
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);

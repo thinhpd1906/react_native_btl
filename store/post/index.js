@@ -9,6 +9,9 @@ const INIT =  {
         post: null,
     },
     comment: null,
+    is_post: {
+        id: null,
+    }
 }
 
 export const post = createSlice({
@@ -27,6 +30,10 @@ export const post = createSlice({
             state.comment = action.payload;
             return state;
         },
+        getIdPostSuccess:(state, action) => {
+            state.is_post.post = action.payload;
+            return state;
+        }
     },
 })
 
@@ -34,6 +41,7 @@ export const {
     getAllPostSuccess,
     getNewPostSuccess,
     getCommentSuccess,
+    getIdPostSuccess,
 } = post.actions;
 
 export default post.reducer;

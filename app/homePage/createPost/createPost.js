@@ -7,6 +7,8 @@ import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
 import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
+import { FlatList } from "react-native-gesture-handler";
+import { Video } from "expo-av";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -24,7 +26,7 @@ export default CreatePost = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "10",
+        count: "20",
     });
   
     useEffect(() => {
@@ -107,7 +109,9 @@ export default CreatePost = () => {
   
         try {
           const responseData = await createAPost(formData);
-          console.log('Upload successful:', responseData); 
+          console.log('Upload successful:', responseData);
+
+          router.push('/homePage/home'); 
           
           await getListPosts(requestData, dispatch); 
 
@@ -116,12 +120,12 @@ export default CreatePost = () => {
           setDescribed('');
           setStatus('');
 
-          router.push('/homePage/home');
-
         } catch (error) {
           console.error('Error uploading media:', error);  
         }
     }
+
+    // console.log("img", video)
 
     return(
         <View style={styles.container}>
@@ -160,7 +164,32 @@ export default CreatePost = () => {
                     value={described}
                     onChangeText={(inputText) => setDescribed(inputText)}
                 />
-                {/* {image && <Image source={{uri: image.uri}}  style = {{width: 50, height:50}} />}                */}
+                {image &&
+                    <FlatList
+                        data={image}
+                        keyExtractor={(item, index) => index.toString()} 
+                        renderItem={({ item }) => (
+                            <View style = {{flexDirection: "row", marginTop: 5}}>
+                                <Image
+                                    source={{uri: item.uri}}
+                                    style = {{width: "100%", height:300}}
+                                />                                
+                            </View>
+                        )}
+                    />
+                }
+                {video && 
+                    <Video
+                     source={{ uri: video.uri }}
+                     rate={1.0}
+                     volume={0.0}
+                     isMuted={false}
+                     resizeMode="cover"
+                     shouldPlay
+                     isLooping
+                     style={{ width: "100%", height: 200, marginBottom: 200 }}
+                    /> 
+                }              
                 {showImagePicker && <ImagePickerContainer />}
             </View>
 

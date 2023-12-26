@@ -10,19 +10,27 @@ import FourPicture from "../../../components/FourPicture";
 import FivePicture from "../../../components/FivePicture";
 import CommentPost from "../comment/CommentPost";
 import { router } from "expo-router";
-import { getMarkComment } from "../../../api/post/comment";
-import { setFell } from "../../../api/post/like";
 import { useDispatch, useSelector } from "react-redux";
+import { deletePost, getListPosts, get_Post } from "../../../api/post/post";
+import { getIdPostSuccess } from "../../../store/post";
+import GetListFeels from "../comment/GetListFeels";
+import SetFeel from "../comment/SetFeel";
 
 export default PostItem = ({ item , user}) => {
-    // const commentLists = useSelector((state) => state.post.comment)
-    // console.log("cmt",commentLists)
+    const post_Id = {
+        id: item.id,
+    }
+   
     const dispatch = useDispatch();
 
+    const [itemf, setItem] = useState(item.feel)
     const [modalVisible, setModalVisible] = useState(false);
     const [showComment, setShowComment] = useState(false);
-    const [isFeel, setIsFeel] = useState('');
-    //  console.log("cmt",isFeel)
+    const [showFeel, setShowFeel] = useState(false);
+
+    const count  = () => {
+        
+    }
 
     const openModal = () => {
         setModalVisible(true);
@@ -31,23 +39,36 @@ export default PostItem = ({ item , user}) => {
         setModalVisible(false);
     };
 
-    const handleEditPost = () => {
+    const handleEditPost = async() => {
         setModalVisible(false);
+
+        const result = await get_Post(post_Id);
+        dispatch(getIdPostSuccess(result)) ;
+
         router.push('/homePage/editPost/editPost');
     }
 
-    const handleFell = async() => {
-        const feelData = {
+    const handleDeletePost = async() => {
+        const requestData = {
+            in_campaign: "1",
+            campaign_id: "1",
+            latitude: "1.0",
+            longitude: "1.0",
+            index: "0",
+            count: "16",
+        }
+        const id = {
             id: item.id,
-            type: "1"
         }
         try {
-            const result =  await setFell(feelData);
-            setIsFeel(result);
-            console.log("Feel: Successfully", result);
+            await deletePost(id);
+
+            await getListPosts(requestData, dispatch);
+            setModalVisible(false);
+
+            console.log("delete success")
         } catch (error) {
-          console.error('Error setting mark for comment:', error); 
-            
+            console.error("err delete post", error);
         }
     }
     
@@ -75,6 +96,8 @@ export default PostItem = ({ item , user}) => {
         }
       };
     const formattedTimeAgo = getFormattedTimeAgo(item.created);
+
+    // console.log('cnt',item.feel)
 
     return(
     <View style = {styles.postItem}>
@@ -135,7 +158,7 @@ export default PostItem = ({ item , user}) => {
                                         </Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={handleDeletePost}>
                                     <View style = {{flexDirection: "row"}}>
                                         <Image
                                             source={require("../../../assets/images/home/delete.png")}
@@ -148,20 +171,19 @@ export default PostItem = ({ item , user}) => {
                                 </TouchableOpacity>                                
                             </View>
                         ) : (
-                            ''
+                            <TouchableOpacity>
+                                <View style = {{flexDirection: "row"}}>
+                                    <Image
+                                        source={require("../../../assets/images/home/report.png")}
+                                        style={styles.imgReport}
+                                    />                                
+                                    <Text style = {styles.textReport}>
+                                        Report
+                                    </Text>
+                                </View>                          
+                            </TouchableOpacity>                            
                         )}
 
-                        <TouchableOpacity>
-                            <View style = {{flexDirection: "row"}}>
-                                <Image
-                                    source={require("../../../assets/images/home/report.png")}
-                                    style={styles.imgReport}
-                                />                                
-                                <Text style = {styles.textReport}>
-                                    Report
-                                </Text>
-                            </View>                          
-                        </TouchableOpacity>
                     </View>
                 </Modal>               
             </View>
@@ -190,7 +212,7 @@ export default PostItem = ({ item , user}) => {
             resizeMode="cover"
             shouldPlay
             isLooping
-            style={{ width: "100%", height: 400 }}
+            style={{ width: "100%", height: 350 }}
             />            
             <View>
                 {item.image.length > 4 ?(
@@ -251,9 +273,34 @@ export default PostItem = ({ item , user}) => {
             borderBottomWidth: 0.6,
             borderBottomColor: "#8D949E",
         }}>
-            <Text style = {{paddingLeft: 10, color: "#65676B"}}>
-                Feel: {item.feel}
-            </Text>
+            <TouchableOpacity onPress={()=>setShowFeel(true)}>
+                <View style = {{flexDirection:"row", alignContent:"center", marginLeft: 30, position: 'relative',}}>
+                    <Image
+                        source={require('../../../assets/images/home/like-blue1.png')}
+                        style = {{
+                            width: 20, height:20, borderRadius: 15, 
+                            borderColor:"#fff", borderWidth:2,
+                            position: 'absolute',
+                            left:-15,
+                            zIndex:5,
+                        }}
+                    />
+                    <Image
+                        source={require('../../../assets/images/home/sad.png')}
+                        style = {{width: 18, height:18, borderRadius: 10, }}
+                    />
+                    <Text style = {{paddingLeft: 5, color: "#65676B"}}>
+                        {itemf}
+                    </Text>                     
+                </View>
+            </TouchableOpacity>
+            {showFeel && 
+                <GetListFeels
+                    visible={showFeel}
+                    onClose={() => setShowFeel(false)}
+                    post_Id = {item.id}
+                />
+            }
             <Text style = {{marginLeft: "50%", color: "#65676B"}}>
                 {item.comment_mark} comments
             </Text>                
@@ -262,37 +309,12 @@ export default PostItem = ({ item , user}) => {
                 flexDirection: 'row',
                 padding: 8,
             }}>
-            {item.is_felt == "1" ? (
-                <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleFell}> 
-                    <Image
-                        source={require('../../../assets/images/home/like-blue.png')}
-                        style = {{height: 30, width: 30, marginLeft: "20%"}}
-                    />
-                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#0866FF"}}>
-                        Like
-                    </Text>                    
-                </TouchableOpacity> 
-            ) : item.is_felt == "0" ? (
-                <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleFell}> 
-                    <Image
-                        source={require('../../../assets/images/home/sad.png')}
-                        style = {{height: 30, width: 30, marginLeft: "20%"}}
-                    />
-                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#F7B125"}}>
-                        Sad
-                    </Text>                    
-                </TouchableOpacity> 
-            ) : (
-                <TouchableOpacity style = {{flexDirection: 'row',}} onPress={handleFell}> 
-                    <Image
-                        source={require('../../../assets/images/home/like.png')}
-                        style = {{height: 30, width: 30, marginLeft: "20%",}}
-                    />
-                    <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                        Like
-                    </Text>                    
-                </TouchableOpacity>                
-            )}
+            
+            <SetFeel
+                item={item}
+                count = {count}
+            />
+
             <View>
                 <TouchableOpacity 
                     style = {{flexDirection: 'row',}}

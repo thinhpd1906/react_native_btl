@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       marginLeft: 15,
       marginBottom: 15,
-      width: "80%",
+      width: "75%",
     },
     avatar: {
       width: 40,
@@ -278,7 +278,6 @@ const styles = StyleSheet.create({
     closeModal: {
         height: 10,
         marginBottom: 10,
-
     },
     inputContainer:{
         flexDirection: "row",
