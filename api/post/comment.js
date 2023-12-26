@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getCommentSuccess } from "../../store/post";
 
 const baseURL = process.env.EXPO_PUBLIC_BASE_API_URL;
 
-export const getMarkComment = async(requestData) => {
+export const getMarkComment = async(requestData, dispatch) => {
 
   try {
     const authToken = await AsyncStorage.getItem('token');
@@ -17,6 +18,7 @@ export const getMarkComment = async(requestData) => {
 
     const data = await response.json();
     // console.log(data.data)
+    dispatch(getCommentSuccess(data.data));
     return data.data;
 
   } catch (error) {
@@ -26,7 +28,7 @@ export const getMarkComment = async(requestData) => {
 
 }
 
-export const setMarkComment = async (newComment) => {
+export const setMarkComment = async (newComment, dispatch) => {
   try {
     // console.log(newComment);
 
@@ -51,7 +53,8 @@ export const setMarkComment = async (newComment) => {
 
     const data = await response.json();
     // console.log('####', data.data);
-    return data.data;
+    
+    // return data.data;
 
   } catch (error) {
     console.error('Error fetching data:', error);
