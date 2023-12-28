@@ -48,7 +48,7 @@ export default SetFeel = ({item, count}) => {
 
     return(
         <View>
-            {is_felt == "1" || isFeel == true ? (
+            {item.is_felt == "1" || isFeel == true ? (
                 <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleIsFeelFalse}> 
                     <Image
                         source={require('../../../assets/images/home/like-blue.png')}
@@ -58,7 +58,7 @@ export default SetFeel = ({item, count}) => {
                         Like
                     </Text>                    
                 </TouchableOpacity> 
-            ) : is_felt == "0" ? (
+            ) : item.is_felt == "0" ? ( 
                 <TouchableOpacity style = {{flexDirection: 'row', }} onPress={handleFeel}> 
                     <Image
                         source={require('../../../assets/images/home/sad.png')}
@@ -68,7 +68,7 @@ export default SetFeel = ({item, count}) => {
                         Sad
                     </Text>                    
                 </TouchableOpacity> 
-            ) : is_felt == "-1" || isFeel == false ? (
+            ) : item.is_felt == "-1" || isFeel == false ? (
                 <TouchableOpacity style = {{flexDirection: 'row',}} onPress={handleIsFeelTrue}> 
                     <Image
                         source={require('../../../assets/images/home/like.png')}

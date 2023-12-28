@@ -29,7 +29,7 @@ export default PostItem = ({ item , user}) => {
     const [showFeel, setShowFeel] = useState(false);
 
     const count  = () => {
-        
+
     }
 
     const openModal = () => {
@@ -63,9 +63,9 @@ export default PostItem = ({ item , user}) => {
         try {
             await deletePost(id);
 
-            await getListPosts(requestData, dispatch);
             setModalVisible(false);
-
+            await getListPosts(requestData, dispatch);
+            
             console.log("delete success")
         } catch (error) {
             console.error("err delete post", error);
@@ -108,14 +108,14 @@ export default PostItem = ({ item , user}) => {
                     source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}}
                 />
                 <View>
-                    <View style = {{flexDirection:"row"}}>
-                        <Text style = {{fontWeight: 600, fontSize: 20}}>
+                    <View style = {{flexDirection:"row", }}>
+                        <Text style = {{fontWeight: 600, fontSize: 17}}>
                             {item.author.name}
                         </Text>
                         {item.state == "" ? (
                             ""
                         ):(
-                            <Text style = {{marginLeft: 5, marginTop:5}}>
+                            <Text style = {{marginLeft: 5, marginTop:3}}>
                                 is feeling {item.state}
                             </Text>                             
                         )}
@@ -290,7 +290,7 @@ export default PostItem = ({ item , user}) => {
                         style = {{width: 18, height:18, borderRadius: 10, }}
                     />
                     <Text style = {{paddingLeft: 5, color: "#65676B"}}>
-                        {itemf}
+                        {item.feel}
                     </Text>                     
                 </View>
             </TouchableOpacity>

@@ -19,10 +19,6 @@ export default getVideos = () => {
         count: "5",
     });
 
-    const handleHome = () =>{
-        router.push('/homePage/home')
-    }
-
     const handleGetVideos = async () => {
         try {
             const result = await getListVideos(requestData);
