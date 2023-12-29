@@ -1,10 +1,6 @@
-import { Video } from "expo-av"
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import GetListVideos from "./getListVideos";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import { getListVideos } from "../../../api/post/video";
 import Navbar from "../../../components/Navbar";
 
