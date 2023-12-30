@@ -34,6 +34,9 @@ export default home = () => {
         router.push("homePage/getVideos/getVideos")
     }
 
+    const handleSearch = () => {
+        router.push("/search/Search")
+    }
     const handleGetListPost = async () => {
         try {
             setLoading(true);
@@ -89,7 +92,7 @@ export default home = () => {
                         <Ionicons name="people" size={32} color="#333" />
                     </View>                    
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleSearch}>
                     <View style={styles.iconContainer}>
                         <Ionicons name="search" size={32} color="#333" />
                     </View>                    
