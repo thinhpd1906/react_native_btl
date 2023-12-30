@@ -11,7 +11,7 @@ export interface FriendProps {
 const FriendCard = (props: FriendProps) => {
   const routerFriend = () => {
     router.push({
-      pathname: `/profile/profile`,
+      pathname: `/profile/${props.id}`,
       params: {
         userId: props.id
       }

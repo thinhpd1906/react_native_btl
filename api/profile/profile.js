@@ -31,3 +31,32 @@ export function setUserInfor(data) {
     headers: { "Content-Type": "multipart/form-data" },
   });
 }
+export function unfriendApi(data) {
+  return service({
+    url:  "/unfriend",
+    method: "post",
+    data,
+  });
+}
+export function deleteRequestFriendApi(data) {
+  return service({
+    url:  "/del_request_friend",
+    method: "post",
+    data,
+  });
+}
+export function setRequestFriendApi(data) {
+  return service({
+    url:  "/set_request_friend",
+    method: "post",
+    data,
+  });
+}
+
+export function setAcceptFriendApi(data) {
+  return service({
+    url:  "/set_accept_friend",
+    method: "post",
+    data,
+  });
+}

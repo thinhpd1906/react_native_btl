@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 10,
     textAlign: 'center',
     color: color.textColor
   },
@@ -61,10 +60,12 @@ const styles = StyleSheet.create({
     borderRadius: 105,
     borderWidth: 5,
     borderColor: 'white',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    marginBottom: 10,
+    // backgroundColor:"red"
   },
   infomation: {
-    marginTop: 40
+    marginTop: 48
   },
   cameraIconWrapper: {
     position: 'absolute',

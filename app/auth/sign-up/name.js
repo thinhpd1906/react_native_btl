@@ -12,11 +12,11 @@ import {setUserSignInFirstName, setUserSignInLastName} from '../../../store/auth
 export default Name = props => {
   const dispatch = useDispatch()
   return (
-    <AuthLayout  title="What's your name?" showBackButton>
+    <AuthLayout  title="Tên của bạn là gì?" showBackButton>
      <Formik
         initialValues={{ 
-          firstName: 'Phan',
-          lastName: 'Thinh', 
+          firstName: '',
+          lastName: '', 
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInFirstName(values.firstName))
@@ -36,7 +36,7 @@ export default Name = props => {
        >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
         <View >
-          <Text style= {{marginBottom: 24}}>Enter 1 the name you use in real life</Text>
+          <Text style= {{marginBottom: 24}}>Nhập tên của bạn sử dụng trong cuộc sống</Text>
           <View >
             <View style= {styles.row}>
               <View style = {[styles.col, {marginRight: 8}]}>
@@ -62,7 +62,7 @@ export default Name = props => {
               }
             </View>
           </View>
-            <ButtonPrimary text="Next" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
+            <ButtonPrimary text="Tiếp theo" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
           </View>
           {/* <Stack options={{ title: "name" }} /> */}
         </View>

@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUserInfoApi, setUserInfor } from '../../api/profile/profile';
 import { useSelector } from 'react-redux';
 import { IUser } from '../../components/profile/interfaces/common.interface';
+import { useLocalSearchParams } from 'expo-router';
 
 interface auth {
   user: IUser
@@ -52,7 +53,10 @@ function EditProfile() {
       created: new Date(),
     }
   })
-  const user_id = useSelector((state: any) => state.auth.userInfor.userId)
+  const params = useLocalSearchParams();
+  const user_id: string | string[] = params.userId;
+  const own_id = useSelector((state: any) => state.auth.userInfor.userId)
+  const isOwn = (own_id === user_id)
   const changeProfile = (formData) => {
     setUserInfor(formData)
     .then((res) => {
@@ -297,10 +301,10 @@ function EditProfile() {
         </Text>
         <TouchableOpacity
           onPress={() => {
-            openImagePickerAvatar();
+            isOwn && openImagePickerAvatar();
           }}
         >
-          <Text style={{ fontSize: 18, color: color.primary }}>Chỉnh sửa</Text>
+          {isOwn && <Text style={{ fontSize: 18, color: color.primary }}>Chỉnh sửa</Text>}
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.wrapAvatar}>
@@ -310,10 +314,10 @@ function EditProfile() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: color.textColor }}>Ảnh bìa</Text>
         <TouchableOpacity
           onPress={() => {
-            openImagePickerCover();
+            isOwn && openImagePickerCover();
           }}
         >
-          <Text style={{ fontSize: 18, color: color.primary }}>Chỉnh sửa</Text>
+          {isOwn && <Text style={{ fontSize: 18, color: color.primary }}>Chỉnh sửa</Text> }
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.wrapAvatar} activeOpacity={0.8}>
@@ -324,19 +328,20 @@ function EditProfile() {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            confirmChangeDescription(description);
+            isOwn && confirmChangeDescription(description);
           }}
         >
-          <Text style={{ fontSize: 18, color: color.primary }}>Thêm</Text>
+          {isOwn && <Text style={{ fontSize: 18, color: color.primary }}>Thêm</Text> }
         </TouchableOpacity>
       </View>
       <View style={styles.wrapAvatar}>
         <TextInput
           style={{ fontSize: 18 }}
-          placeholder='Mô tả bản thân'
+          placeholder={isOwn? "Mô tả bản thân": ""}
           onChangeText={text => {
             setDescription(text);
           }}
+          editable = {isOwn}
           defaultValue={description}
         ></TextInput>
       </View>
@@ -347,10 +352,10 @@ function EditProfile() {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            confirmChangeInfoDetail();
+            isOwn && confirmChangeInfoDetail();
           }}
         >
-          <Text style={{ fontSize: 18, color: color.primary }}>Thêm</Text>
+          {isOwn && <Text style={{ fontSize: 18, color: color.primary }}>Thêm</Text> }
         </TouchableOpacity>
       </View>
       <View style={styles.detailsContainer}>
@@ -365,6 +370,7 @@ function EditProfile() {
             onChangeText={text => {
               setAddress(text);
             }}
+            editable = {isOwn}
             defaultValue={address}
           ></TextInput>
         </View>
@@ -378,6 +384,7 @@ function EditProfile() {
             placeholder={'Thành phố'}
             onChangeText={text => setCity(text)}
             defaultValue={city}
+            editable = {isOwn}
           ></TextInput>
         </View>
         <View style={styles.detailRow}>
@@ -390,19 +397,20 @@ function EditProfile() {
             placeholder={'Quốc gia'}
             onChangeText={text => setCountry(text)}
             defaultValue={country}
+            editable = {isOwn}
           ></TextInput>
         </View>
       </View>
       <View style={styles.wrapText}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: color.textColor }}>Liên kết</Text>
-        <TouchableOpacity activeOpacity={0.8}>
+        {isOwn && <TouchableOpacity activeOpacity={0.8}>
           <Text style={{ fontSize: 18, color: color.primary }}>Thêm</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> }
       </View>
       <View style={styles.wrapAvatar}>
         <TextInput
           style={{ fontSize: 18 }}
-          placeholder={link ? link : 'Thêm liên kết'}
+          placeholder={isOwn?'Thêm liên kết': ""}
           onChangeText={text => setLink(text)}
           value={link}
           defaultValue={link}

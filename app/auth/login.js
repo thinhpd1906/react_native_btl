@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getInfor } from '../../api/profile/profile';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserId } from '../../store/auth';
+import { ButtonPrimary } from '../../components/ButtonPrimary';
 
 
 export default Login = (props) => {
@@ -65,7 +66,7 @@ export default Login = (props) => {
                 router.push('/auth/sign-up/ChangeInfoAfterSignUpScreen');
               } else {
                 router.push({
-                  pathname: "/profile/profile",
+                  pathname: `/profile/${res.data.id}`,
                   params: {
                     userId: res.data.id
                   }
@@ -113,9 +114,10 @@ export default Login = (props) => {
              {touched.password && errors.password &&
               <Text style={{ fontSize: 12, color: '#FF0D10' }}>{errors.password}</Text>
              }
-           <Button title="Log In" onPress={handleSubmit}/>
+           {/* <Button title="Log In" onPress={handleSubmit}/> */}
+           <ButtonPrimary text="Đăng nhập" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
            <Link href="auth/forgotpassword" underlayColor="#f0f4f7" style={styles.navItemContainer}>
-            <Text style={styles.navItemText}>Forgot password ?</Text>
+            <Text style={styles.navItemText}>Bạn quên mật khẩu ư?</Text>
            </Link>
            <Stack options={{ title: "login" }} />
          </View>
@@ -126,7 +128,7 @@ export default Login = (props) => {
 };
 const styles = StyleSheet.create({
   form: {
-    paddingTop: 25,
+    paddingTop: 100,
   },
   navItemContainer: {
     marginTop: 35,

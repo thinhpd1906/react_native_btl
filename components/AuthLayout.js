@@ -27,7 +27,7 @@ const AuthLayout = ({ showBackButton = true, ...props }) => {
     </View>
     <View style={styles.content}>{props.children}</View>
     {!props.notHaveBottomNavigation && (
-      <ButtonPrimary customStyleText= {{color: COLORS.primary}} onPress = {() => router.push(routerBottom)} style={styles.end} text= {!props.isLogin? 'Already have an account?': 'Create new accout'}/>
+      <ButtonPrimary customStyleText= {{color: COLORS.primary}} onPress = {() => router.push(routerBottom)} style={styles.end} text= {!props.isLogin? 'Bạn đã có tài khoản?': 'Tạo tài khoản mới'}/>
     )}
   </View>
   )
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f2f5',
     paddingLeft: 16,
     paddingRight: 16,
+    marginTop: 12
   },
   headerTitle: {
     marginTop: 10,

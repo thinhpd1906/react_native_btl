@@ -8,8 +8,9 @@ interface InforDetailProps {
   address?: string;
   city?: string;
   isOwnProfile?: boolean;
+  id?: string | string[],
 }
-const InforDetail = ({ address, city, isOwnProfile }: InforDetailProps) => {
+const InforDetail = ({ address, city, isOwnProfile, id }: InforDetailProps) => {
   return (
     <View>
       <View style={styles.detailsContainer}>
@@ -42,9 +43,14 @@ const InforDetail = ({ address, city, isOwnProfile }: InforDetailProps) => {
       </View>
       <TouchableOpacity activeOpacity={0.8} style={styles.editPublicButton}>
         <Text style={styles.editPublicButtonText} onPress={() => {
-          if(isOwnProfile) {
-            router.push('/profile/EditProfile');
-          }
+          // if(isOwnProfile) {
+            router.push({
+              pathname: '/profile/EditProfile',
+              params: {
+                userId: id
+              }
+            });
+          // }
         }}>
           {isOwnProfile ? 'Chỉnh sửa chi tiết công khai' : 'Xem thông tin chi tiết'}
         </Text>

@@ -17,10 +17,10 @@ export default Name = props => {
   const dispatch = useDispatch()
   const router = useRouter();
   return (
-    <AuthLayout  title="What's your password?" showBackButton>
+    <AuthLayout  title="Mật khẩu của bạn là gì?" showBackButton>
      <Formik
         initialValues={{ 
-            password: "Thinh123",
+            password: "",
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInPassword(values.password))
@@ -76,7 +76,7 @@ export default Name = props => {
        >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
         <View >
-          <Text style= {{marginBottom: 24}}>Enter your password</Text>
+          <Text style= {{marginBottom: 24}}>Nhập mật khẩu của bạn</Text>
           <View>
             <View style= {styles.row}>
               <View>
@@ -91,7 +91,7 @@ export default Name = props => {
                 }
             </View>
           </View>
-            <ButtonPrimary text="Next" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
+            <ButtonPrimary text="Tiếp theo" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
           </View>
           {/* <Stack options={{ title: "name" }} /> */}
         </View>

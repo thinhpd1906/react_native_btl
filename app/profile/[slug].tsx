@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Image, TouchableOpacity, Platform } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from '../../components/profile/style/style';
 import FriendField from '../../components/profile/FriendField';
 import OptionCard from '../../components/profile/OptionCard';
@@ -23,7 +23,7 @@ import InforDetail from '../../components/profile/InforDetail';
 import { IGetUserFriends, IUserFriends } from '../../components/profile/interfaces/friends.interface';
 import { getUserFriendsApi } from '../../api/profile/profile';
 import { useSelector } from 'react-redux';
-import {router, useLocalSearchParams } from 'expo-router';
+import {router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker';
 
 
@@ -33,14 +33,91 @@ function ProfileScreen() {
   const [profile, setProfile] = useState<IUser | null>(null);
   const [listFriends, setListFriends] = useState<IUserFriends[]>([]);
   const [totalFriend, setTotalFriend] = useState('');
+  const [isFocus, setIsFocus] = useState(false)
+  // useFocusEffect(() => {
+  //   console.log('Hello')
+  //   const fetchUserData = async (data: { user_id: string | string[] }) => {
+  //     try {
+  //       await getUserInfoApi(data)
+  //       .then((res: any) => {
+  //         console.log("res", res.data)
+  //         setProfile(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log("err profile api")
+  //       })
+  //     } catch (error) {
+  //       console.log({ message: 'sever availability' });
+  //     }
+  //   };
+  
+  // fetchUserData({ user_id }).catch(console.error);
+  // const fetchData = async (data: IGetUserFriends) => {
+  //   try {
+  //     const result = await getUserFriendsApi(data);
+  //     setTotalFriend(result.data.total);
+  //     setListFriends(result.data.friends);
+  //     return result;
+  //   } catch (error) {
+  //      console.log({ message: 'sever availability' });
+  //   }
+  // };
+
+  // fetchData({
+  //   index: 0,
+  //   count: 6,
+  //   user_id: !user_id ? '' : user_id
+  // }).catch(console.error);
+  // })
+
+  // listen for isFocused, if useFocused changes 
+  // call the function that you use to mount the component.
+  useFocusEffect(()=> {
+    setIsFocus(true)
+  }, )
+  // useEffect(() => {
+  //   console.log("hello")
+  // }, [isFocus])
 
   const auth = useSelector((state: any) => state.auth.userInfor)
   // const user_id = route.params.user_id;
   const params = useLocalSearchParams();
   const user_id: string | string[] = params.userId;
-  console.log("user_id 0", user_id)
   const isOwnProfile = auth?.userId === user_id;
-  console.log("user_id 1237", user_id)
+  // const test = useCallback(() => {
+  //   console.log("test fun")
+  //   const fetchUserData = async (data: { user_id: string | string[] }) => {
+  //     try {
+  //       await getUserInfoApi(data)
+  //       .then((res: any) => {
+  //         setProfile(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log("err profile api")
+  //       })
+  //     } catch (error) {
+  //       console.log({ message: 'sever availability' });
+  //     }
+  //   };
+  
+  // fetchUserData({ user_id }).catch(console.error);
+  // const fetchData = async (data: IGetUserFriends) => {
+  //   try {
+  //     const result = await getUserFriendsApi(data);
+  //     setTotalFriend(result.data.total);
+  //     setListFriends(result.data.friends);
+  //     return result;
+  //   } catch (error) {
+  //      console.log({ message: 'sever availability' });
+  //   }
+  // };
+
+  // fetchData({
+  //   index: 0,
+  //   count: 6,
+  //   user_id: !user_id ? '' : user_id
+  // }).catch(console.error);
+  // }, [])
   useEffect(() => {
     // if (isOwnProfile) {
     //   setProfile(auth.user);
@@ -49,7 +126,6 @@ function ProfileScreen() {
         try {
           await getUserInfoApi(data)
           .then((res: any) => {
-            console.log("res", res.data)
             setProfile(res.data);
           })
           .catch((err) => {
@@ -77,10 +153,18 @@ function ProfileScreen() {
       count: 6,
       user_id: !user_id ? '' : user_id
     }).catch(console.error);
-  }, []);
+  }, [isFocus]);
   const isFriend = profile?.is_friend;
 
-  const navigateEditProfileScreen = () => router.push('/profile/EditProfile');
+  const navigateEditProfileScreen = () => {
+    router.push({
+      pathname: '/profile/EditProfile',
+      params: {
+        userId: user_id
+      }
+    });
+    setIsFocus(false)
+  }
 
   /*
    * isFirend =
@@ -142,7 +226,6 @@ function ProfileScreen() {
     //     console.warn(err);
     //   }
     // }
-    console.log("lot set avartar")
     const options = {
       mediaType: 'photo' as MediaTypeOptions,
       includeBase64: true,
@@ -152,7 +235,6 @@ function ProfileScreen() {
     };
     let response = await launchImageLibraryAsync(options)
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : profile.avatar;
-    console.log("src source", srcUri)
     let newProfile;
     if(imageType == "avatar") {
       let avatar = srcUri? srcUri: profile.avatar
@@ -206,7 +288,7 @@ function ProfileScreen() {
         <TouchableOpacity style={styles.coverPhoto} onPress={showModalCover} activeOpacity={0.8}>
           <Image style={styles.coverPhoto} source={getCoverUri(profile?.cover_image as string)} />
         </TouchableOpacity>
-        <View style={styles.cameraIconWrapper}>
+        {isOwnProfile && <View style={styles.cameraIconWrapper}>
           <TouchableOpacity style={styles.cameraIcon} onPress={showModalCover} activeOpacity={0.8}>
             <IconButton
               icon='camera'
@@ -217,7 +299,7 @@ function ProfileScreen() {
               onPress={showModalCover}
             />
           </TouchableOpacity>
-        </View>
+        </View>}
         <TouchableOpacity
           style={styles.avatarWrapper}
           onPress={showModalAvatar}
@@ -225,7 +307,7 @@ function ProfileScreen() {
         >
           <Image style={styles.avatar} source={getAvatarUri(profile?.avatar as string)} />
         </TouchableOpacity>
-        <TouchableOpacity
+        {isOwnProfile && <TouchableOpacity
           style={styles.cameraIconAvatar}
           onPress={showModalAvatar}
           activeOpacity={0.8}
@@ -238,8 +320,8 @@ function ProfileScreen() {
             size={32}
             onPress={showModalAvatar}
           />
-        </TouchableOpacity>
-        <View style={styles.infomation}>
+        </TouchableOpacity>}
+        <View style={[styles.infomation, !isOwnProfile && {marginTop: 104}]}>
           <Text style={styles.name}>{profile?.username}</Text>
           {profile?.description !== '' ? (
             <Text style={styles.bio}>{profile?.description}</Text>
@@ -260,16 +342,16 @@ function ProfileScreen() {
           </TouchableOpacity>
         </View>
       ) : !isOwnProfile && isFriend === '0' ? (
-        <ButtonField0 />
+        <ButtonField0 user_id= {user_id} username={profile.username}/>
       ) : !isOwnProfile && isFriend === '1' ? (
-        <ButtonField1 />
+        <ButtonField1 user_id= {user_id} username={profile.username}/>
       ) : !isOwnProfile && isFriend === '2' ? (
-        <ButtonField2 />
+        <ButtonField2 user_id= {user_id} username={profile.username}/>
       ) : !isOwnProfile && isFriend === '3' ? (
-        <ButtonField3 />
+        <ButtonField3 user_id= {user_id} username={profile.username}/>
       ) : null}
       {/* Infor Detail */}
-      <InforDetail address={profile?.address} city={profile?.city} isOwnProfile={isOwnProfile} />
+      <InforDetail address={profile?.address} city={profile?.city} isOwnProfile={isOwnProfile} id={user_id} />
       {/* Friend Field */}
       <View style={styles.section}>
         <FriendField
@@ -307,7 +389,13 @@ function ProfileScreen() {
           ))} */}
           <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => console.log(`Selected: `)}
+              onPress={() => {
+                hideModalAvatar()
+                router.push({
+                  pathname: "/profile/ViewImage",
+                  params: {url: profile.avatar}
+                })
+              }}
             >
               <View style={[styles.option, { height: totalHeight }]}>
                 <OptionCard icon={optionsAvatar[0].icon} title={optionsAvatar[0].title} />
@@ -334,7 +422,13 @@ function ProfileScreen() {
         <View style={styles.modalContent}>
           <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() =>console.log("select view")}
+              onPress={() => {
+                hideModalCover()
+                router.push({
+                  pathname: "/profile/ViewImage",
+                  params: {url: profile.cover_image}
+                })
+              }}
             >
               <View style={[styles.option, { height: totalHeight }]}>
                 <OptionCard icon={optionsCover[0].icon} title={optionsCover[0].title} />
