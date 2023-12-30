@@ -9,74 +9,11 @@ import {
   ActivityIndicator,
   Modal
 } from 'react-native';
-import { Ionicons, Entypo } from '@expo/vector-icons';
+import { Ionicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { getUserFriends, unFriend, setBlock } from '../../api/friends/Friend';
 import { router } from 'expo-router';
-
-const dataFake = [
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-];
 
 const FriendScreen = () => {
   const user = useSelector((state) => state.auth.login.currentUser)
@@ -85,6 +22,7 @@ const FriendScreen = () => {
   const [totalFriend, setTotalFriend] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedFriendId, setSelectedFriendId] = useState(null);
   const [requestData, setRequestData] = useState({
     index: "0",
     count: "15",
@@ -94,7 +32,7 @@ const FriendScreen = () => {
   const handleGetUserFriend = async () => {
     try {
       const result = await getUserFriends(requestData);
-      setFriendData([...friendData, ...result.friends]);
+      setFriendData([, ...result.friends]);
       setTotalFriend(result.total);
       console.log("sucessfully");
     } catch(error) {
@@ -102,7 +40,10 @@ const FriendScreen = () => {
     }
   }
 
-  const openModal = () => { setModalVisible(true); }
+  const openModal = (friendId) => { 
+    setSelectedFriendId(friendId)
+    setModalVisible(true)
+  }
   const closeModal = () => { setModalVisible(false); }
 
   const handleBlock = async(friendId) => {
@@ -117,7 +58,7 @@ const FriendScreen = () => {
     } catch (error) {
         console.log("Lỗi khi chặn người dùng: ", error)
     }
-    closeModal();
+    closeModal()
   }
 
   const handleUnFriend = async(friendId) => {
@@ -139,6 +80,7 @@ const FriendScreen = () => {
     } catch(error) {
       console.log("err: ", error)
     }
+    closeModal()
   }
 
   useEffect(() => {
@@ -199,7 +141,7 @@ const FriendScreen = () => {
                   </View>
                   <TouchableOpacity
                     style={styles.options}
-                    onPress={openModal}
+                    onPress={() => openModal(friend.id)}
                   >
                     <Entypo
                       name="dots-three-horizontal"
@@ -218,25 +160,22 @@ const FriendScreen = () => {
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}
+      // style={styles.modalContainer}
       >
-      <View style={styles.modalContainer}>
-        {/* Phần nội dung modal */}
-        <View style={styles.modalContent}>
-          <Text>Modal Content</Text>
-        </View>
-
+      {/* Vùng tương tác với nền để đóng modal */}
+      <TouchableOpacity style={styles.overlay} onPress={() => closeModal()} />
+      <View style={styles.modalContent}>
         {/* Nút "Block" */}
-        <TouchableOpacity style={styles.modalButton} onPress={handleBlock}>
-          <Text>Block</Text>
+        <TouchableOpacity style={styles.modalButton} onPress={() => handleBlock(selectedFriendId)}>
+          <MaterialCommunityIcons name='account-cancel-outline' size={20} style={{marginRight: 5}} />
+          <Text style={{fontWeight: 'bold'}}>Block</Text>
         </TouchableOpacity>
 
         {/* Nút "Hủy kết bạn" */}
-        <TouchableOpacity style={styles.modalButton} onPress={handleUnFriend}>
-          <Text>Hủy kết bạn</Text>
+        <TouchableOpacity style={styles.modalButton} onPress={() => handleUnFriend(selectedFriendId)}>
+          <MaterialCommunityIcons name='account-remove-outline' size={20} style={{marginRight: 5, color: 'red'}} />
+          <Text style={{color: 'red', fontWeight: 'bold'}}>Hủy kết bạn</Text>
         </TouchableOpacity>
-
-        {/* Vùng tương tác với nền để đóng modal */}
-        <TouchableOpacity style={styles.overlay} onPress={closeModal} />
       </View>
     </Modal>
     </>
@@ -318,6 +257,34 @@ const styles = StyleSheet.create({
   },
   options: {
     marginLeft: 'auto',
+  },
+  modalContent: {
+    backgroundColor: '#ccc',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    left: 0,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  modalButton: {
+    display: 'flex', 
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 15,
+    marginTop: 10,
+    borderRadius: 10,
+  },
+  // modalCloseButton: {
+  //   backgroundColor: '#ebebeb',
+  //   alignSelf: 'flex-end',
+  //   padding: 5,
+  //   marginTop: 10,
+  //   marginRight: 10,
+  //   borderRadius: 10,
+  // },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 
