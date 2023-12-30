@@ -10,6 +10,7 @@ import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getInfor } from '../../api/profile/profile';
 import { useSelector, useDispatch } from 'react-redux';
+import { loginSuccess } from '../../store/auth';
 import { setUserId } from '../../store/auth';
 import { ButtonPrimary } from '../../components/ButtonPrimary';
 
@@ -31,7 +32,7 @@ export default Login = (props) => {
             let data = {
               email: values.email,
               password: values.password,
-              uuid: "string"
+              uuid: "string",
             }
             login(data)
             .then(async res => {

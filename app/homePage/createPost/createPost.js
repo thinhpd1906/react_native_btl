@@ -1,13 +1,132 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { 
     Image, StyleSheet, Text, View, TouchableOpacity, TextInput
 }from "react-native";
-
+import { useDispatch, useSelector } from "react-redux";
+import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
+import { router } from "expo-router";
+import * as ImagePick from 'expo-image-picker';
+import { ImagePicker } from "expo-image-multiple-picker";
+import { FlatList } from "react-native-gesture-handler";
+import { Video } from "expo-av";
 
 export default CreatePost = () => {
-    const imageUrl = 'https://scr.vn/wp-content/uploads/2020/08/Con-g%C3%A1i-che-m%E1%BA%B7t-1024x1024.jpg';
-    const [textTitle, setTextTitle] = useState('');
-    const [textDescribed, setTextDescribed] = useState('');
+    const user = useSelector((state) => state.auth.login.currentUser)
+    // console.log(user)
+    const imageUrl = user.avatar;
+    const dispatch = useDispatch();
+    const [status, setStatus] = useState('');
+    const [described, setDescribed] = useState('');
+    const [image, setImage] = useState([]);
+    const [video, setVideo] = useState(null);
+    const [showImagePicker, setShowImagePicker] = useState(false);
+    const [requestData, setRequestData] = useState({      
+        in_campaign: "1",
+        campaign_id: "1",
+        latitude: "1.0",
+        longitude: "1.0",
+        index: "0",
+        count: "20",
+    });
+  
+    useEffect(() => {
+        (async () => {
+          const { status } = await ImagePick.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Permission to access media library is required!');
+          }
+        })();
+    }, []);
+
+    const closeImagePicker = (assets) => {
+        setImage([...assets]);
+        setShowImagePicker(false);
+    };
+ 
+    const ImagePickerContainer = () => {
+        return (
+            <View style={styles.imagePickerContainer}>
+              <ImagePicker
+                onSave={(assets) => closeImagePicker(assets)}
+                onCancel={() => setShowImagePicker(false)}
+                multiple
+                noAlbums 
+                limit={4}
+                galleryColumns={3}
+                albumColumns={3}
+              />
+            </View>
+          );
+    }
+
+    const pickVideo = async () => {
+        try {
+            const result = await ImagePick.launchImageLibraryAsync({
+              mediaTypes: ImagePick.MediaTypeOptions.Videos,
+              allowsEditing: true,
+              aspect: null, 
+              quality: 1,
+            });
+      
+            if (!result.canceled) {
+                console.log("videoData" ,result.assets[0])
+                setVideo(result.assets[0]);  
+            }
+          } catch (error) {
+            console.error('Error choosing video:', error);
+          }
+    };
+    
+     
+    const handeleCreatePost = async() => {
+        const formData = new FormData();
+
+        if (image && image.length > 0) {
+            image.forEach((img, index) => {
+              formData.append(`image`, {
+                uri: img.uri,
+                type: 'image/jpeg',
+                name: `image${index}.jpg`,
+              });
+            });
+        }
+  
+        if (video) {
+          formData.append('video', {
+            uri: video.uri,
+            type: 'video/mp4',
+            name: 'video.mp4',
+          });
+        }
+   
+        if (described) {
+            formData.append('described', described);
+        }
+        
+        if (status) {
+            formData.append('status', status);
+        }
+  
+        try {
+          const responseData = await createAPost(formData);
+          console.log('Upload successful:', responseData);
+
+          router.push('/homePage/home'); 
+          
+          await getListPosts(requestData, dispatch); 
+
+          setImage([]); 
+          setVideo(null);
+          setDescribed('');
+          setStatus('');
+
+        } catch (error) {
+          console.error('Error uploading media:', error);  
+        }
+    }
+
+    // console.log("img", video)
+
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -16,70 +135,94 @@ export default CreatePost = () => {
                     style={styles.image}
                 />
                 <Text style = {styles.text}>
-                    Nguyễn Văn An    
+                    {user.username}    
                 </Text>
-                <TouchableOpacity style={styles.button} >
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={handeleCreatePost} 
+                >
                     <Text style={styles.textButton}>POST</Text>
                 </TouchableOpacity>                               
             </View>
 
             <View style = {styles.slider}>
-                {/* <Text style = {{fontSize: 15, fontWeight: 500, marginRight: "85%"}}>
-                    Title
-                </Text> */}
                 <TextInput 
                     style = {styles.textInput}
                     multiline={true}
-                    numberOfLines={4} // Số dòng mặc định hiển thị (tùy chọn)
-                    placeholder="Nhập nội dung ở đây..."
+                    numberOfLines={4} 
+                    placeholder="How are you feeling?"
                     placeholderStyle={styles.placeholder}
-                    value={textTitle}
-                    onChangeText={(inputText) => setTextTitle(inputText)}
+                    value={status}
+                    onChangeText={(inputText) => setStatus(inputText)}
                 />
-                {/* <Text style = {{fontSize: 15, fontWeight: 500, marginRight: "75%"}}>
-                    Described
-                </Text> */}
                 <TextInput 
                     style = {styles.textInputs}
                     multiline={true}
                     numberOfLines={4} 
                     placeholder="What's on your mind?"
                     placeholderStyle={styles.placeholder}
-                    value={textDescribed}
-                    onChangeText={(inputText) => setTextDescribed(inputText)}
-                />               
-                    
+                    value={described}
+                    onChangeText={(inputText) => setDescribed(inputText)}
+                />
+                {image &&
+                    <FlatList
+                        data={image}
+                        keyExtractor={(item, index) => index.toString()} 
+                        renderItem={({ item }) => (
+                            <View style = {{flexDirection: "row", marginTop: 5}}>
+                                <Image
+                                    source={{uri: item.uri}}
+                                    style = {{width: "100%", height:300}}
+                                />                                
+                            </View>
+                        )}
+                    />
+                }
+                {video && 
+                    <Video
+                     source={{ uri: video.uri }}
+                     rate={1.0}
+                     volume={0.0}
+                     isMuted={false}
+                     resizeMode="cover"
+                     shouldPlay
+                     isLooping
+                     style={{ width: "100%", height: 200, marginBottom: 200 }}
+                    /> 
+                }              
+                {showImagePicker && <ImagePickerContainer />}
             </View>
 
             <View style = {styles.footter}>
                 <View style = {styles.footterLeft}>
-                    <Image
-                        source={require('../../../assets/images/home/album.png')}
-                        style={{
-                            width: 45,
-                            height: 45,
-                            margin: 7,
-                            marginRight: 80
-                        }}
-                    />                    
+                    <TouchableOpacity onPress={() => setShowImagePicker(true)}>
+                        <Image
+                            source={require('../../../assets/images/home/album.png')}
+                            style={{
+                                width: 45,
+                                height: 45,
+                                margin: 7,
+                                marginRight: 80
+                            }}
+                        />                         
+                    </TouchableOpacity>
                 </View>
                 <View style = {styles.footterRight}>
-                    <Image
-                        source={require('../../../assets/images/home/video.png')}
-                        style={{
-                            width: 45,
-                            height: 45,
-                            margin: 7,
-                            marginLeft: 80
-                        }}
-                    />                   
+                    <TouchableOpacity onPress={pickVideo}>
+                        <Image
+                            source={require('../../../assets/images/home/video.png')}
+                            style={{
+                                width: 45,
+                                height: 45,
+                                margin: 7,
+                                marginLeft: 80
+                            }}
+                        />                         
+                    </TouchableOpacity>
                 </View>
-
             </View>
-
         </View>        
     )
-
 };
 
 const styles = StyleSheet.create({
@@ -147,6 +290,12 @@ const styles = StyleSheet.create({
     },
     footterRight: {
 
-    }
+    },
+    imagePickerContainer: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "white",
+        marginTop: -30,
+        zIndex: 9,
+    },
 
 })

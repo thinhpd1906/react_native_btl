@@ -38,6 +38,7 @@ service.interceptors.request.use(
     (error) => {
       if(error.response) {
         const message = error.response.data.message
+        console.log(message)
         const errorCustom = {status: error.response.status, message: error.response.data.message}
           switch(error.response.status) {
             case 400:
