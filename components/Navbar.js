@@ -19,10 +19,6 @@ export default Navbar = () => {
         router.push('notifications/notification')
     }
 
-    const handleFriend = () => {
-        router.push('/friends/FriendScreen')
-    }
-
     return (
         <View style = {styles.navbar}>
             <TouchableOpacity onPress={handleHome}>
@@ -35,7 +31,7 @@ export default Navbar = () => {
                     <Ionicons name="tv" size={32} color="#333" />
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleFriend}>
+            <TouchableOpacity>
                 <View style={styles.iconContainer}>
                     <Ionicons name="people" size={32} color="#333" />
                 </View>                    
