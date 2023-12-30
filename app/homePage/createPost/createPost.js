@@ -2,104 +2,69 @@ import { useEffect, useState } from "react";
 import { 
     Image, StyleSheet, Text, View, TouchableOpacity, TextInput
 }from "react-native";
-import { useSelector } from "react-redux";
-import { createAPost, getListPosts } from "../../../api/post/post";
+import { useDispatch, useSelector } from "react-redux";
+import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
 import { router } from "expo-router";
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePick from 'expo-image-picker';
+import { ImagePicker } from "expo-image-multiple-picker";
+import { FlatList } from "react-native-gesture-handler";
+import { Video } from "expo-av";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
     // console.log(user)
     const imageUrl = user.avatar;
+    const dispatch = useDispatch();
     const [status, setStatus] = useState('');
     const [described, setDescribed] = useState('');
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState([]);
     const [video, setVideo] = useState(null);
-
-    // const [selectedImage, setSelectedImage] = useState(null);
-
-    // const handleChoosePhoto = async () => {
-    //   try {
-    //     const result = await ImagePicker.launchImageLibraryAsync({
-    //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //       allowsEditing: true,
-    //       aspect: null,
-    //       quality: 1,
-    //     });
+    const [showImagePicker, setShowImagePicker] = useState(false);
+    const [requestData, setRequestData] = useState({      
+        in_campaign: "1",
+        campaign_id: "1",
+        latitude: "1.0",
+        longitude: "1.0",
+        index: "0",
+        count: "20",
+    });
   
-    //     if (!result.canceled) {
-    //       setSelectedImage(result);
-    //     //   console.log("Resul", result)
-    //     }
-    //   } catch (error) {
-    //     console.error('Error choosing photo:', error);
-    //   }
-    // };
-  
-    // const handleUpload = async () => {
-    //   if (selectedImage) {
-    //     const formData = new FormData();
-    //     formData.append('image', {
-    //       uri: selectedImage.uri,
-    //       type: 'image/jpeg',
-    //       name: 'photo.jpg',
-    //     });
-    //     console.log("form data", formData)
-    //     try {
-    //         const authToken = await AsyncStorage.getItem('token');
-    //       const response = await fetch('https://it4788.catan.io.vn/add_post', {
-    //         method: 'POST',
-    //         body: formData,
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         'Authorization': `${authToken}`,
-
-    //         },
-    //       });
-  
-    //       const responseData = await response.json();
-  
-    //       console.log('Upload successful:', responseData);
-    //     } catch (error) {
-    //       console.error('Error uploading image:', error);
-    //     }
-    //   }
-    // };
-
     useEffect(() => {
         (async () => {
-          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          const { status } = await ImagePick.requestMediaLibraryPermissionsAsync();
           if (status !== 'granted') {
             alert('Permission to access media library is required!');
           }
         })();
     }, []);
 
-    const handleImagePicker = async () => { 
-        try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: null,
-              quality: 1,
-            });
-      
-            if (!result.canceled) {
-                console.log("IMGData" ,result.assets[0])
-                setImage(result.assets[0]);
-            }
-          } catch (error) {
-            console.error('Error choosing image:', error);
-          }
+    const closeImagePicker = (assets) => {
+        setImage([...assets]);
+        setShowImagePicker(false);
     };
+ 
+    const ImagePickerContainer = () => {
+        return (
+            <View style={styles.imagePickerContainer}>
+              <ImagePicker
+                onSave={(assets) => closeImagePicker(assets)}
+                onCancel={() => setShowImagePicker(false)}
+                multiple
+                noAlbums 
+                limit={4}
+                galleryColumns={3}
+                albumColumns={3}
+              />
+            </View>
+          );
+    }
+
     const pickVideo = async () => {
         try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+            const result = await ImagePick.launchImageLibraryAsync({
+              mediaTypes: ImagePick.MediaTypeOptions.Videos,
               allowsEditing: true,
-              aspect: null,
+              aspect: null, 
               quality: 1,
             });
       
@@ -116,12 +81,14 @@ export default CreatePost = () => {
     const handeleCreatePost = async() => {
         const formData = new FormData();
 
-        if (image) {
-          formData.append('image', {
-            uri: image.uri,
-            type: 'image/jpeg',
-            name: 'image.jpg',
-          });
+        if (image && image.length > 0) {
+            image.forEach((img, index) => {
+              formData.append(`image`, {
+                uri: img.uri,
+                type: 'image/jpeg',
+                name: `image${index}.jpg`,
+              });
+            });
         }
   
         if (video) {
@@ -142,11 +109,23 @@ export default CreatePost = () => {
   
         try {
           const responseData = await createAPost(formData);
-          console.log('Upload successful:', responseData); 
+          console.log('Upload successful:', responseData);
+
+          router.push('/homePage/home'); 
+          
+          await getListPosts(requestData, dispatch); 
+
+          setImage([]); 
+          setVideo(null);
+          setDescribed('');
+          setStatus('');
+
         } catch (error) {
           console.error('Error uploading media:', error);  
         }
     }
+
+    // console.log("img", video)
 
     return(
         <View style={styles.container}>
@@ -185,12 +164,38 @@ export default CreatePost = () => {
                     value={described}
                     onChangeText={(inputText) => setDescribed(inputText)}
                 />
-                {/* {image && <Image source={{uri: image.uri}}  style = {{width: 50, height:50}} />}                */}
+                {image &&
+                    <FlatList
+                        data={image}
+                        keyExtractor={(item, index) => index.toString()} 
+                        renderItem={({ item }) => (
+                            <View style = {{flexDirection: "row", marginTop: 5}}>
+                                <Image
+                                    source={{uri: item.uri}}
+                                    style = {{width: "100%", height:300}}
+                                />                                
+                            </View>
+                        )}
+                    />
+                }
+                {video && 
+                    <Video
+                     source={{ uri: video.uri }}
+                     rate={1.0}
+                     volume={0.0}
+                     isMuted={false}
+                     resizeMode="cover"
+                     shouldPlay
+                     isLooping
+                     style={{ width: "100%", height: 200, marginBottom: 200 }}
+                    /> 
+                }              
+                {showImagePicker && <ImagePickerContainer />}
             </View>
 
             <View style = {styles.footter}>
                 <View style = {styles.footterLeft}>
-                    <TouchableOpacity onPress={handleImagePicker}>
+                    <TouchableOpacity onPress={() => setShowImagePicker(true)}>
                         <Image
                             source={require('../../../assets/images/home/album.png')}
                             style={{
@@ -285,6 +290,12 @@ const styles = StyleSheet.create({
     },
     footterRight: {
 
-    }
+    },
+    imagePickerContainer: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "white",
+        marginTop: -30,
+        zIndex: 9,
+    },
 
 })
