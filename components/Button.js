@@ -13,7 +13,7 @@ import { COLORS } from '../constants/theme';
 const Button =(props) => {
   const {theme} = props;
   return (
-    <TouchableOpacity style={[styles.button,{borderColor:theme.backgroundColor}]} {...props}>
+    <TouchableOpacity style={[styles.button,{borderColor:theme.backgroundColor}, { backgroundColor: props.isSelect ? 'yellow' : '#8CC33F' }]} {...props}>
       <Text style={styles.buttonText}>{props.title}</Text>
     </TouchableOpacity>
   );
@@ -21,7 +21,7 @@ const Button =(props) => {
 export default withTheme(Button)
 const styles = StyleSheet.create({
   button: {
-    borderColor: '#8CC33F',
+    // borderColor: {props.isSelect} ? 'yellow' : '#8CC33F',
     borderWidth: 2,
     paddingTop: 10,
     paddingBottom: 10,
