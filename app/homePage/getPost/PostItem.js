@@ -29,7 +29,7 @@ export default PostItem = ({ item , user}) => {
     const [showFeel, setShowFeel] = useState(false);
 
     const count  = () => {
-        
+
     }
 
     const openModal = () => {
@@ -63,9 +63,9 @@ export default PostItem = ({ item , user}) => {
         try {
             await deletePost(id);
 
-            await getListPosts(requestData, dispatch);
             setModalVisible(false);
-
+            await getListPosts(requestData, dispatch);
+            
             console.log("delete success")
         } catch (error) {
             console.error("err delete post", error);
@@ -101,22 +101,23 @@ export default PostItem = ({ item , user}) => {
 
     return(
     <View style = {styles.postItem}>
-        <View style = {{paddingLeft: 10, paddingRight: 10}}>
+        <View style = {{marginLeft: 10, marginRight: 10}}>
             <View style = {styles.author}>
                 <Image
                     style={styles.avatar}
                     source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}}
                 />
                 <View>
-                    <View style = {{flexDirection:"row"}}>
-                        <Text style = {{fontWeight: 600, fontSize: 20}}>
-                            {item.author.name}
-                        </Text>
+                    <View style = {{width:250,}}>
                         {item.state == "" ? (
-                            ""
+                            <Text style = {{fontWeight: 600, fontSize: 17}}>
+                                {item.author.name}
+                            </Text>                            
                         ):(
-                            <Text style = {{marginLeft: 5, marginTop:5}}>
-                                is feeling {item.state}
+                            <Text style = {{}}>
+                                <Text style = {{fontWeight: 600, fontSize: 17,}}>
+                                    {item.author.name}
+                                </Text> đang cảm thấy {item.state}
                             </Text>                             
                         )}
                     </View>
@@ -139,51 +140,103 @@ export default PostItem = ({ item , user}) => {
                 >
                     <View style={styles.overlay} />
                     <View style={styles.modalContainer}>
-                        <TouchableOpacity onPress={closeModal}>
-                            <Image
-                                source={require("../../../assets/images/home/dash.png")}
-                                style={styles.closeModal}
-                            />
-                        </TouchableOpacity>
-                        {user.id == item.author.id ? (
-                            <View>
-                                <TouchableOpacity onPress={handleEditPost}>
-                                    <View style = {{flexDirection: "row"}}>
-                                        <Image
-                                            source={require("../../../assets/images/home/edit.png")}
-                                            style={styles.imgEdit}
-                                        />                                 
-                                        <Text style = {styles.textEdit}>
-                                            Edit
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={handleDeletePost}>
-                                    <View style = {{flexDirection: "row"}}>
-                                        <Image
-                                            source={require("../../../assets/images/home/delete.png")}
-                                            style={styles.imgDelete}
-                                        />                                 
-                                        <Text style = {styles.textDelete}>
-                                            Delete
-                                        </Text>  
-                                    </View>                         
-                                </TouchableOpacity>                                
-                            </View>
-                        ) : (
-                            <TouchableOpacity>
-                                <View style = {{flexDirection: "row"}}>
-                                    <Image
-                                        source={require("../../../assets/images/home/report.png")}
-                                        style={styles.imgReport}
-                                    />                                
-                                    <Text style = {styles.textReport}>
-                                        Report
-                                    </Text>
-                                </View>                          
+                        <View style={{alignItems:"center"}}>
+                            <TouchableOpacity onPress={closeModal}>
+                                <Image
+                                    source={require("../../../assets/images/home/dash.png")}
+                                    style={styles.closeModal}
+                                />
                             </TouchableOpacity>                            
-                        )}
-
+                        </View>
+                        <View style ={{padding: 20}}>
+                            {user.id == item.author.id ? (
+                                <View>
+                                    <TouchableOpacity onPress={handleEditPost}>
+                                        <View style = {{flexDirection: "row", marginBottom: 20}}>
+                                            <Image
+                                                source={require("../../../assets/images/home/edit.png")}
+                                                style={styles.imgEdit}
+                                            />
+                                            <View style={{marginLeft:15}}>
+                                                <Text style = {styles.textEdit}>
+                                                    Edit post
+                                                </Text>
+                                                <Text style = {{color: "#9B9B9B"}}>
+                                                    Change the content of the post
+                                                </Text>                                            
+                                            </View>                                 
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={handleDeletePost}>
+                                        <View style = {{flexDirection: "row", marginBottom:20}}>
+                                            <Image
+                                                source={require("../../../assets/images/home/delete.png")}
+                                                style={styles.imgDelete}
+                                            />
+                                            <View style={{marginLeft:15}}>
+                                                <Text style = {styles.textDelete}>
+                                                    Delete post
+                                                </Text>
+                                                <Text style = {{color: "#9B9B9B"}}>
+                                                    The post will be deleted and will no longer be displayed
+                                                </Text>                                           
+                                            </View>                                 
+                                        </View>                         
+                                    </TouchableOpacity>                                
+                                </View>
+                            ) : (
+                                <View>
+                                    <TouchableOpacity>
+                                        <View style = {{flexDirection: "row", marginBottom: 20}}>
+                                            <Image
+                                                source={require("../../../assets/images/home/report.png")}
+                                                style={styles.imgReport}
+                                            />  
+                                            <View style = {{marginLeft: 15}}>
+                                                <Text style = {styles.textReport}>
+                                                    Report post
+                                                </Text> 
+                                                <Text style = {{color: "#9B9B9B"}}>
+                                                    We won't let {item.author.name} know who reported this
+                                                </Text>                                               
+                                            </View>                              
+                                        </View>                          
+                                    </TouchableOpacity>   
+                                    <TouchableOpacity>
+                                        <View style = {{flexDirection: "row", marginBottom: 20}}>
+                                            <Image
+                                                source={require("../../../assets/images/home/add-friend.png")}
+                                                style={styles.imgReport}
+                                            />
+                                            <View style = {{marginLeft: 15}}>
+                                                <Text style = {styles.textReport}>
+                                                    Add friend with {item.author.name}'s profile
+                                                </Text>
+                                                <Text style = {{color: "#9B9B9B"}}>
+                                                    Let's build relationships with everyone together  
+                                                </Text>                                        
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity> 
+                                    <TouchableOpacity>
+                                        <View style = {{flexDirection: "row", marginBottom: 20}}>
+                                            <Image
+                                                source={require("../../../assets/images/home/block-friend.png")}
+                                                style={styles.imgReport}
+                                            />
+                                            <View style = {{marginLeft: 15}}>
+                                                <Text style = {styles.textReport}>
+                                                    Block {item.author.name}'s profile
+                                                </Text>
+                                                <Text style = {{color: "#9B9B9B"}}>
+                                                    You won't be able to see or contact each other
+                                                </Text>
+                                            </View>
+                                        </View>                                        
+                                    </TouchableOpacity>                                                                     
+                                </View>
+                            )}
+                        </View>
                     </View>
                 </Modal>               
             </View>
@@ -290,7 +343,7 @@ export default PostItem = ({ item , user}) => {
                         style = {{width: 18, height:18, borderRadius: 10, }}
                     />
                     <Text style = {{paddingLeft: 5, color: "#65676B"}}>
-                        {itemf}
+                        {item.feel}
                     </Text>                     
                 </View>
             </TouchableOpacity>
@@ -376,9 +429,9 @@ const styles = StyleSheet.create({
         marginTop:0,
     },
     modalContainer: {
-        alignItems: 'center',
+        // alignItems: 'center',
         backgroundColor: '#fff',
-        height: "18%",
+        height: "50%",
         marginTop: "auto"
     },
     closeModal: {
@@ -395,24 +448,22 @@ const styles = StyleSheet.create({
         right: 0,
     },
     textEdit: {
-        fontSize: 20,
-        fontWeight: "600",
+        fontSize: 18,
+        fontWeight: "500",
         color: "black",
-        padding: 5,
         marginRight: 20,
     },
     imgEdit:{
-        width: 25, 
-        height: 25, 
-        marginBottom:5,
-        marginTop: 5,
+        width: 35, 
+        height: 35, 
+        // marginBottom:5,
+        // marginTop: 5,
         marginRight: 5,
     },
     textDelete: {
-        fontSize: 20,
-        fontWeight: "600",
+        fontSize: 18,
+        fontWeight: "500",
         color: "black",
-        padding: 5,
         marginRight: 5,
     },
     imgDelete:{
@@ -423,16 +474,12 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     textReport: {
-        fontSize: 20,
-        fontWeight: "600",
+        fontSize: 17,
+        fontWeight: "500",
         color: "black",
-        padding: 5,
     },
     imgReport:{
-        width: 25, 
-        height: 25, 
-        marginBottom:5,
-        marginTop: 4,
-        marginRight: 5
+        width: 30, 
+        height: 30, 
     }
 });

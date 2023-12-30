@@ -18,7 +18,7 @@ export default EditPost = () => {
 
     const imageUrl = user.avatar;
     const dispatch = useDispatch();
-    const list_image = post.image;
+    const [list_image, setListImage] = useState(post.image);
     const [status, setStatus] = useState(post.state);
     const [described, setDescribed] = useState(post.described);
     const [image_del, setImage_del] = useState('');
@@ -26,6 +26,7 @@ export default EditPost = () => {
     const [image, setImage] = useState([]); 
     const [video, setVideo] = useState(post.video);
     const [showImagePicker, setShowImagePicker] = useState(false);
+    const [showState, setShowState] = useState(true);
     const [requestData, setRequestData] = useState({      
         in_campaign: "1",
         campaign_id: "1",
@@ -34,6 +35,54 @@ export default EditPost = () => {
         index: "0",
         count: "20",
     });
+
+    const state = [
+        {
+            id:"1",
+            content: "😁 Good"
+        },
+        {
+            id:"2",
+            content: "😇 Happy"
+        },
+        {
+            id:"3",
+            content: "🥺 Sad"
+        },
+        {
+            id:"4",
+            content: "😊 Chill"
+        },
+        {
+            id:"5",
+            content: "🤗 Hopeful"
+        }
+    ]
+
+    const showStatus = (content) => {
+        setStatus(content);
+        setShowState(true);
+    }
+
+    const removeImageById = (idToRemove) => {
+        setImage(prevImage => prevImage.filter(item => item.id !== idToRemove));
+    };
+
+    const removeImageInList = (idToRemove) => {
+        setListImage(prevImage => {
+            const filteredImage = prevImage.filter(item => item.id !== idToRemove);
+            const deletedIndexes = prevImage
+              .map((item, index) => item.id !== idToRemove ? null : index + 1)
+              .filter(index => index !== null)
+              .join(",");
+      
+              setImage_del(prevDeletedIndexes => 
+                prevDeletedIndexes === "" ? deletedIndexes : `${prevDeletedIndexes}, ${deletedIndexes}`
+              );
+        
+              return filteredImage;
+        });
+    }
 
     useEffect(() => {
         (async () => {
@@ -45,7 +94,7 @@ export default EditPost = () => {
     }, []);
 
     const closeImagePicker = (assets) => {
-        setImage([...assets]);
+        setImage([...image,...assets]);
         setShowImagePicker(false);
     };
  
@@ -150,9 +199,16 @@ export default EditPost = () => {
                     source={{ uri: imageUrl }}
                     style={styles.image}
                 />
-                <Text style = {styles.text}>
-                    {user.username}    
-                </Text>
+                <View>
+                    <Text style = {styles.text}>
+                        {user.username}    
+                    </Text> 
+                    {showState && 
+                        <Text style={{marginLeft:8}}>
+                            is feelling {status}
+                        </Text>
+                    }               
+                </View>
                 <TouchableOpacity 
                     style={styles.button}
                     onPress={handeleEditPost} 
@@ -162,15 +218,32 @@ export default EditPost = () => {
             </View>
 
             <View style = {styles.slider}>
-                <TextInput 
-                    style = {styles.textInput}
-                    multiline={true}
-                    numberOfLines={4} 
-                    placeholder="How are you feeling?"
-                    placeholderStyle={styles.placeholder}
-                    value={status}
-                    onChangeText={(inputText) => setStatus(inputText)}
-                /> 
+                <View style={{flexDirection:"row"}}>
+                    {state.map((item) => {
+                        return (
+                            <View key={item.id} style = {{
+                                marginLeft: 5, marginRight: 5, padding:3
+                            }}>
+                                <TouchableOpacity onPress={()=> showStatus(item.content)}>
+                                    {status == item.content ? (
+                                        <Text style ={{
+                                            paddingBottom: 5, borderBottomWidth:1, borderBottomColor:"#1B74E4", color:"#1B74E4"
+                                        }}>
+                                            {item.content}
+                                        </Text>                                        
+                                    ):(
+                                        <Text style ={{
+                                            paddingBottom: 5,
+                                        }}>
+                                            {item.content}
+                                        </Text>                                         
+                                    )}
+
+                                </TouchableOpacity>                                
+                            </View>
+                        )
+                    })}
+                </View>
                 <TextInput 
                     style = {styles.textInputs}
                     multiline={true}
@@ -180,14 +253,6 @@ export default EditPost = () => {
                     value={described}
                     onChangeText={(inputText) => setDescribed(inputText)}
                 />
-                <TextInput 
-                    style = {styles.textInput}
-                    multiline={true}
-                    numberOfLines={4} 
-                    placeholder="What photos do you want to delete?"
-                    value={image_del}
-                    onChangeText={(inputText) => setImage_del(inputText)}
-                /> 
                 <TextInput 
                     style = {styles.textInput}
                     multiline={true}
@@ -205,14 +270,25 @@ export default EditPost = () => {
                                     <Image
                                         source={{uri: item.uri || item.url}}
                                         style = {{width: 80, height:150, borderRadius: 15}}
-                                    />                                
+                                    />
+                                    <TouchableOpacity onPress={() => removeImageInList(item.id)}>  
+                                        <Image
+                                            source={require('../../../assets/images/home/delete1.png')}
+                                            style={{
+                                                width: 25,
+                                                height: 25,
+                                                borderRadius:30,
+                                                padding: 10,
+                                                marginLeft: 25,
+                                                marginTop: 10,
+                                            }}
+                                        />   
+                                    </TouchableOpacity>                                 
                                 </View>
                             )
                         })}
                     </View>
                 }
-
-
 
                 {image &&
                     <View style = {{flexDirection:"row", marginTop: 20}}>
@@ -221,8 +297,21 @@ export default EditPost = () => {
                                 <View key={item.id} style = {{marginLeft: 3, marginRight: 3}}>
                                     <Image
                                         source={{uri: item.uri || item.url}}
-                                        style = {{width: 85, height:200, borderRadius: 15}}
-                                    />                                
+                                        style = {{width: 80, height:150, borderRadius: 15}}
+                                    />
+                                    <TouchableOpacity onPress={() => removeImageById(item.id)}>  
+                                        <Image
+                                            source={require('../../../assets/images/home/delete1.png')}
+                                            style={{
+                                                width: 25,
+                                                height: 25,
+                                                borderRadius:30,
+                                                padding: 10,
+                                                marginLeft: 25,
+                                                marginTop: 10,
+                                            }}
+                                        />   
+                                    </TouchableOpacity>                                 
                                 </View>
                             )
                         })}
