@@ -51,6 +51,13 @@ export default PostItem = ({ item , user}) => {
         router.push('/homePage/editPost/editPost');
     }
 
+    const handleGetPost = async() => { 
+        const result = await get_Post(post_Id);
+        dispatch(getIdPostSuccess(result)) ;
+
+        router.push('/homePage/getPost/getPost');
+    }
+
     const handleDeletePost = async() => {
         const requestData = {
             in_campaign: "1",
@@ -164,7 +171,7 @@ export default PostItem = ({ item , user}) => {
                                 <Text style = {{}}>
                                     <Text style = {{fontWeight: 600, fontSize: 17,}}>
                                         {item.author.name}
-                                    </Text> đang cảm thấy {item.state}
+                                    </Text> is feelling {item.state}
                                 </Text>                             
                             )}
                         </View>
@@ -288,17 +295,17 @@ export default PostItem = ({ item , user}) => {
                     </Modal>               
                 </View>
                 {item.described ? (
-                    <Text 
-                        style = {{
-                            fontWeight: 400,
-                            fontSize: 16,
-                            marginBottom: 10,
-                        }}>
-                        {item.described}
-                    </Text>  
-                ):(
-                    ""
-                )}
+                    <View style = {{ height:"auto"}}>
+                        <Text 
+                            style = {{
+                                fontWeight: 400,
+                                fontSize: 16,
+                                marginBottom: 7,
+                            }}>
+                            {item.described}
+                        </Text>                        
+                    </View>
+                ):('')}
                 
             </View>
 
@@ -314,54 +321,34 @@ export default PostItem = ({ item , user}) => {
                 isLooping
                 style={{ width: "100%", height: 350 }}
                 />            
-                <View>
-                    {item.image.length > 4 ?(
-                    <FivePicture 
-                        selectedImages={item.image.slice(0, 4).map(img => img.url)} 
-                        extraImagesCount={item.image.length - 4} 
-                    />
-                    ) : item.image.length === 3 ? (
-                    <ThreePicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 2 ? (
-                    <TwoPicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 4 ? (
-                    <FourPicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 1 ? (
-                    <Image
-                        source={{
-                        uri: item.image[0].url,
-                        }}
-                        style={styles.picture}
-                    />
-                    ) : (
-                    ""
-                    )}
-                </View>
             </View>
             ) : (
-                <View>
-                    {item.image.length > 4 ?(
-                    <FivePicture 
-                        selectedImages={item.image.slice(0, 4).map(img => img.url)} 
-                        extraImagesCount={item.image.length - 4} 
-                    />
-                    ) : item.image.length === 3 ? (
-                    <ThreePicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 2 ? (
-                    <TwoPicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 4 ? (
-                    <FourPicture selectedImages={item.image.map(img => img.url)} />
-                    ) : item.image.length === 1 ? (
-                    <Image
-                        source={{
-                        uri: item.image[0].url,
-                        }}
-                        style={styles.picture}
-                    />
-                    ) : (
-                    ""
-                    )}
-                </View>
+                <TouchableOpacity onPress={handleGetPost}>
+                    <View>
+                        {item.image.length > 4 ?(
+                        <FivePicture 
+                            selectedImages={item.image.slice(0, 4).map(img => img.url)} 
+                            extraImagesCount={item.image.length - 4} 
+                        />
+                        ) : item.image.length === 3 ? (
+                        <ThreePicture selectedImages={item.image.map(img => img.url)} />
+                        ) : item.image.length === 2 ? (
+                        <TwoPicture selectedImages={item.image.map(img => img.url)} />
+                        ) : item.image.length === 4 ? (
+                        <FourPicture selectedImages={item.image.map(img => img.url)} />
+                        ) : item.image.length === 1 ? (
+                        <Image
+                            source={{
+                            uri: item.image[0].url,
+                            }}
+                            style={styles.picture}
+                        />
+                        ) : (
+                        ""
+                        )}
+                    </View>                    
+                </TouchableOpacity>
+
 
             )}
 

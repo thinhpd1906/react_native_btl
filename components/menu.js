@@ -1,6 +1,6 @@
 import { router } from "expo-router"
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { logOut } from "../api/post/log_out";
+import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Deactivate, logOut } from "../api/post/log_out";
 import { useState } from "react";
 
 export default Menu = ({visible, onClose}) => {
@@ -26,6 +26,29 @@ export default Menu = ({visible, onClose}) => {
             console.error(error)
         }
     }
+    const handleDeactivate = async () => {
+        try {
+            await Deactivate();
+            Alert.alert(
+                "Success",
+                "Account deactivated successfully",
+                [{
+                    text: 'OK',
+                    onPress: () => {
+                        try {
+                            router.push('/auth/login');
+                        } catch (routerError) {
+                            console.error('Error navigating to login:', routerError);
+                        }
+                    },
+                }],
+            );
+            console.log("Deactivate success");
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
 
     return(
         <Modal 
@@ -45,7 +68,7 @@ export default Menu = ({visible, onClose}) => {
                         />                        
                     </View>
                 </TouchableOpacity> 
-                <View style = {{paddingLeft: 20}}>
+                <View style = {{paddingLeft: 17}}>
                     <TouchableOpacity onPress={handleOpenSetting}>
                         <View style = {{flexDirection:"row", padding:5, marginBottom:10, marginTop: 5}}>
                             <Image
@@ -73,7 +96,7 @@ export default Menu = ({visible, onClose}) => {
                             <Text style = {styles.textSetting}>List of blocked profiles</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setWarning(true)}>
                         <View style = {{flexDirection:"row", padding:5, marginBottom:10}}>
                             <Image
                                 source={require('../assets/images/home/disable.png')} 
@@ -83,10 +106,23 @@ export default Menu = ({visible, onClose}) => {
                                 <Text style = {styles.textSetting}>Deactivate your account</Text>
                                 {warning && 
                                     <View>
-
-                                        <TouchableOpacity>
-
-                                        </TouchableOpacity>                                        
+                                        <Text style = {{color:"red",}}>
+                                            Are you sure you want to deactivate your account?
+                                        </Text>
+                                        <View style ={{flexDirection:"row"}}>
+                                            <TouchableOpacity onPress={handleDeactivate}>
+                                                <View style = {{backgroundColor:"#56A6E8", marginTop: 5, marginLeft: 20, borderRadius:5}}>
+                                                    <Text style = {styles.yes}>
+                                                        Yes
+                                                    </Text>                                                   
+                                                </View>
+                                            </TouchableOpacity>    
+                                            <TouchableOpacity onPress={()=>setWarning(false)}>
+                                                <View style = {{backgroundColor:"#ccc", marginTop: 5, marginLeft: 20, borderRadius:5}}>
+                                                    <Text style={styles.no}>No</Text>
+                                                </View>
+                                            </TouchableOpacity>                                         
+                                        </View>
                                     </View>
                                 }
                             </View>
@@ -146,5 +182,16 @@ const styles = StyleSheet.create({
         width:25,
         height:25,
         marginTop: 5,    
+    },
+    yes:{
+        padding: 5,
+        paddingLeft: 15,
+        paddingRight:15,
+        color: "#fff"
+    },
+    no:{
+        padding: 5,
+        paddingLeft: 15,
+        paddingRight:15
     }
 })
