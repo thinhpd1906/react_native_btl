@@ -6,4 +6,4 @@ const COLORS = {
     lightWhite: "#FAFAFC",
     black: '#000000',
   };
-  export { COLORS };
+export { COLORS };

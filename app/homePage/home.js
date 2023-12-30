@@ -168,5 +168,4 @@ const styles = StyleSheet.create({
     loadingIndicator: {
         marginVertical: 10,
     },
-  });
- 
+});   
