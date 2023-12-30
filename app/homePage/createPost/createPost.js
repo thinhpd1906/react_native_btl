@@ -7,6 +7,8 @@ import { createAPost, getListPosts, getNewPosts } from "../../../api/post/post";
 import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
+import { FlatList } from "react-native-gesture-handler";
+import { Video } from "expo-av";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -18,13 +20,14 @@ export default CreatePost = () => {
     const [image, setImage] = useState([]);
     const [video, setVideo] = useState(null);
     const [showImagePicker, setShowImagePicker] = useState(false);
+    const [showState, setShowState] = useState(false);
     const [requestData, setRequestData] = useState({      
         in_campaign: "1",
         campaign_id: "1",
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "10",
+        count: "20",
     });
   
     useEffect(() => {
@@ -36,10 +39,47 @@ export default CreatePost = () => {
         })();
     }, []);
 
+    const state = [
+        {
+            id:"1",
+            content: "😁 Good"
+        },
+        {
+            id:"2",
+            content: "😇 Happy"
+        },
+        {
+            id:"3",
+            content: "🥺 Sad"
+        },
+        {
+            id:"4",
+            content: "😊 Chill"
+        },
+        {
+            id:"5",
+            content: "🤗 Hopeful"
+        }
+    ]
+
+    const showStatus = (content) => {
+        setStatus(content);
+        setShowState(true);
+    }
+
     const closeImagePicker = (assets) => {
-        setImage([...assets]);
+        setImage([...image,...assets]);
         setShowImagePicker(false);
+        setVideo(null);
     };
+
+    const removeImageById = (idToRemove) => {
+        setImage(prevImage => prevImage.filter(item => item.id !== idToRemove));
+    };
+
+    const remoteVideo = () => {
+        setVideo(null);
+    }
  
     const ImagePickerContainer = () => {
         return (
@@ -68,6 +108,7 @@ export default CreatePost = () => {
       
             if (!result.canceled) {
                 console.log("videoData" ,result.assets[0])
+                setImage([]);
                 setVideo(result.assets[0]);  
             }
           } catch (error) {
@@ -107,7 +148,9 @@ export default CreatePost = () => {
   
         try {
           const responseData = await createAPost(formData);
-          console.log('Upload successful:', responseData); 
+          console.log('Upload successful:', responseData);
+
+          router.push('/homePage/home'); 
           
           await getListPosts(requestData, dispatch); 
 
@@ -115,8 +158,7 @@ export default CreatePost = () => {
           setVideo(null);
           setDescribed('');
           setStatus('');
-
-          router.push('/homePage/home');
+          setShowState(false);
 
         } catch (error) {
           console.error('Error uploading media:', error);  
@@ -126,13 +168,20 @@ export default CreatePost = () => {
     return(
         <View style={styles.container}>
             <View style={styles.header}>
-                 <Image
+                <Image
                     source={{ uri: imageUrl }}
                     style={styles.image}
                 />
-                <Text style = {styles.text}>
-                    {user.username}    
-                </Text>
+                <View>
+                    <Text style = {styles.text}>
+                        {user.username}    
+                    </Text> 
+                    {showState && 
+                        <Text style={{marginLeft:8}}>
+                            is feelling {status}
+                        </Text>
+                    }               
+                </View>
                 <TouchableOpacity 
                     style={styles.button}
                     onPress={handeleCreatePost} 
@@ -142,15 +191,32 @@ export default CreatePost = () => {
             </View>
 
             <View style = {styles.slider}>
-                <TextInput 
-                    style = {styles.textInput}
-                    multiline={true}
-                    numberOfLines={4} 
-                    placeholder="How are you feeling?"
-                    placeholderStyle={styles.placeholder}
-                    value={status}
-                    onChangeText={(inputText) => setStatus(inputText)}
-                />
+                <View style={{flexDirection:"row"}}>
+                    {state.map((item) => {
+                        return (
+                            <View key={item.id} style = {{
+                                marginLeft: 5, marginRight: 5, padding:3
+                            }}>
+                                <TouchableOpacity onPress={()=> showStatus(item.content)}>
+                                    {status == item.content ? (
+                                        <Text style ={{
+                                            paddingBottom: 5, borderBottomWidth:1, borderBottomColor:"#1B74E4", color:"#1B74E4"
+                                        }}>
+                                            {item.content}
+                                        </Text>                                        
+                                    ):(
+                                        <Text style ={{
+                                            paddingBottom: 5,
+                                        }}>
+                                            {item.content}
+                                        </Text>                                         
+                                    )}
+
+                                </TouchableOpacity>                                
+                            </View>
+                        )
+                    })}
+                </View>
                 <TextInput 
                     style = {styles.textInputs}
                     multiline={true}
@@ -160,7 +226,63 @@ export default CreatePost = () => {
                     value={described}
                     onChangeText={(inputText) => setDescribed(inputText)}
                 />
-                {/* {image && <Image source={{uri: image.uri}}  style = {{width: 50, height:50}} />}                */}
+                {image &&
+                    <View style = {{flexDirection:"row", marginTop: 20}}>
+                        {image.map((item) => {
+                            return(
+                                <View key={item.id} style = {{
+                                        marginLeft: 3, marginRight: 3,
+                                    }}>
+                                    <Image
+                                        source={{uri: item.uri || item.url}}
+                                        style = {{width: 85, height:200, borderRadius: 15}}
+                                    />
+                                    <TouchableOpacity onPress={() => removeImageById(item.id)}>  
+                                        <Image
+                                            source={require('../../../assets/images/home/delete1.png')}
+                                            style={{
+                                                width: 25,
+                                                height: 25,
+                                                borderRadius:30,
+                                                padding: 10,
+                                                marginLeft: 30,
+                                                marginTop: 10,
+                                            }}
+                                        />   
+                                    </TouchableOpacity>                                
+                                </View>
+                            )
+                        })}
+                    </View>
+                }
+                {video && 
+                    <View style={{ width: "100%"}}>
+                        <Video
+                            source={{ uri: video.uri }}
+                            rate={1.0}
+                            volume={0.0}
+                            isMuted={false}
+                            resizeMode="cover"
+                            shouldPlay
+                            isLooping
+                            style={{ width: "100%", height: 350, }}
+                        /> 
+                        <TouchableOpacity onPress={remoteVideo}>  
+                            <Image
+                                source={require('../../../assets/images/home/delete1.png')}
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius:30,
+                                    padding: 10,
+                                    marginLeft: "48%",
+                                    marginTop: 10,
+                                }}
+                            />   
+                        </TouchableOpacity>                          
+                    </View>
+ 
+                }              
                 {showImagePicker && <ImagePickerContainer />}
             </View>
 

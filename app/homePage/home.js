@@ -26,7 +26,7 @@ export default home = () => {
         latitude: "1.0",
         longitude: "1.0",
         index: "0",
-        count: "10",
+        count: "20",
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -40,6 +40,7 @@ export default home = () => {
         try {
             setLoading(true);
             await getListPosts(requestData, dispatch);
+            // setPostData([...postData,...postLists])
             
         } catch (error) {
             console.error('Errors:', error);
@@ -71,11 +72,11 @@ export default home = () => {
             setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
         }
     }, [loadingMore]);
-    
+
     return (  
         <View style={styles.container}>
             <View style = {styles.navbar}>
-               <Navbar/>
+                <Navbar/>
             </View>
 
             <View style = {styles.header}>
@@ -167,5 +168,4 @@ const styles = StyleSheet.create({
     loadingIndicator: {
         marginVertical: 10,
     },
-  });
- 
+});   
