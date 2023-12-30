@@ -12,9 +12,9 @@ export const auth = createSlice({
   name: 'auth',
   initialState: INIT,
   reducers: {
-    // getUserInforSignIn: (state) => {
-    //   return state;
-    // },
+    getUserInforSignIn: (state) => {
+      return state;
+    },
     setUserSignInEmail: (state,action) => {
         state.userInforSignIn.email = action.payload;
         return state;
@@ -38,11 +38,15 @@ export const auth = createSlice({
     setToken: (state,action) => {
       state.token = action.payload;
       return state;
-  },
+    },
+    setUserId: (state, action) => {
+        state.userInfor.userId = action.payload
+        return state
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { getUserInforSignIn, setUserSignInEmail, setUserSignInPassword, setUserSignInFirstName, setUserSignInLastName, setUserSignInBirthDay, setToken } = auth.actions
+export const { getUserInforSignIn, setUserSignInEmail, setUserSignInPassword, setUserSignInFirstName, setUserSignInLastName, setUserSignInBirthDay, setToken, setUserId } = auth.actions
 
 export default auth.reducer

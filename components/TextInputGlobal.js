@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 export  default Login =(props) => {
-  const [border,setBorder] =React.useState('#707070')
+  const [border,setBorder] =React.useState('#0866ff')
   const [isSecure, setIsSecure] = React.useState(false)
   return (
         <View style={[styles.inputWrapper]}>

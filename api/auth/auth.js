@@ -31,3 +31,25 @@ export function changeProfileAfterSignUp(data) {
     data: data
   })
 }
+
+export function checkVerifyCodeApi(data) {
+  return service({
+    url: "/check_verify_code",
+    method: "post",
+    data: data
+  })
+}
+export function getVerifyCodeApi(data) {
+  return service({
+    url: "/get_verify_code",
+    method: "post",
+    data: data
+  })
+}
+export function resetPasswordApi(data) {
+  return service({
+    url: "/reset_password",
+    method: "post",
+    data: data
+  })
+}

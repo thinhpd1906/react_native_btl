@@ -2,26 +2,29 @@
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import AuthLayout from '../../components/AuthLayout';
 import Button from '../../components/Button';
-import { Link, Stack, router } from 'expo-router';
+import { Link, Stack, router, useRouter } from 'expo-router';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import TextInputGlobal from '../../components/TextInputGlobal';
 import { changeProfileAfterSignUp, login } from '../../api/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getInfor } from '../../api/profile/profile';
-import { useSelector } from 'react-redux';
+// import { getInfor } from '../../api/profile/profile';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserId } from '../../store/auth';
 
 
 export default Login = (props) => {
+  const router2 = useRouter();
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
+  const dispatch = useDispatch()
   // const [userEmail, setUserEmail] = useState("")
   return (
     <AuthLayout isLogin = {true}>
       <Formik
         initialValues={{ 
-          name: '',
-          email: signUpInfor.email, 
-          password: signUpInfor.password 
+          // name: '',
+          email: "phanthinhpt@gmail.com", 
+          password: "Thinh123" 
         }}
         onSubmit={ (values) => {
             let data = {
@@ -31,7 +34,7 @@ export default Login = (props) => {
             }
             login(data)
             .then(async res => {
-              console.log("res login", res)
+              console.log("token", res.data.token)
               await AsyncStorage.setItem('token',"Bearer " + res.data.token);
               // getInfor({user_id: res.data.id})
               // .then((res) => {
@@ -40,30 +43,34 @@ export default Login = (props) => {
               // .catch((err) => {
               //   console.log("err get infor", err)
               // })
-              Alert.alert(
-                  "Success", // Tiêu đề của cửa sổ thông báo
-                  "login success", // Nội dung của cửa sổ thông báo
-                  [{
-                    text: 'OK',
-                    onPress: () => {
-                      if(res.data.username !== "") {
-                            changeProfileAfterSignUp({
-                              username: signUpInfor.firstName + signUpInfor.lastName
-                            })
-                            .then(res => {
-                              router.push('/homePage/home');
-                            })
-                            .catch(err => {
-                              
-                            })
-                      } else {
-                            router.push('/homePage/home');
-                      }
-                    },
+              // Alert.alert(
+              //     "Success", // Tiêu đề của cửa sổ thông báo
+              //     "login success", // Nội dung của cửa sổ thông báo
+              //     [{
+              //       text: 'OK',
+              //       onPress: () => {
+              //         dispatch(setUserId(res.data.id))
+              //         if(res.data.username == "") {
+              //               router.push('/auth/sign-up/ChangeInfoAfterSignUpScreen');
+              //         } else {
+              //               router.push({pathname: "/profile/profile", params: {userId: res.data.id}})
+              //         }
+              //       },
                    
-                     // Hàm này sẽ được gọi khi người dùng nhấn "OK"
-                  }, ],
-                );
+              //        // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+              //     }, ],
+              //   );
+              dispatch(setUserId(res.data.id))
+              if (res.data.username == "") {
+                router.push('/auth/sign-up/ChangeInfoAfterSignUpScreen');
+              } else {
+                router.push({
+                  pathname: "/profile/profile",
+                  params: {
+                    userId: res.data.id
+                  }
+                })
+              }
             })
             .catch((err) => {
                 console.log("err", err)
