@@ -12,7 +12,8 @@ import {
 import { Ionicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { getUserFriends, unFriend, setBlock } from '../../api/friends/Friend';
+import { getUserFriends, unFriend } from '../../api/friends/Friend';
+import { setBlock } from '../../api/block/Block';
 import { router } from 'expo-router';
 
 const FriendScreen = () => {

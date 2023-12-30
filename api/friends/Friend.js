@@ -152,40 +152,7 @@ export const unFriend = async(requestData) => {
         message: data.message,
         data: data.data
       }
-    } else {
-      return {
-        message: data.message
-      }
-    }
-  } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-  }
-}
-
-export const setBlock = async(requestData) => {
-  try {
-    const authToken = await AsyncStorage.getItem('token');
-    const response = await fetch(`${baseURL}set_block`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `${authToken}`,
-      },
-      body: JSON.stringify(requestData), // Chuyển đối tượng JSON thành chuỗi
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      return {
-        message: data.message,
-        data: data.data
-      }
-    } else {
-      return {
-        message: data.message
-      }
-    }
+    } else return data.message
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
