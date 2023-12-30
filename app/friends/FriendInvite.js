@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import {Ionicons, Entypo} from '@expo/vector-icons';
-import { getRequestedFriends } from '../../api/friends/Friend';
+import { getRequestedFriends, setAcceptFriend } from '../../api/friends/Friend';
 
 const data = [
   {
@@ -92,10 +92,54 @@ const RequestedFriend = () => {
     }
   }
 
+  const handleSetAcceptFriend = async(friendId) => {
+    try {
+      const response = await setAcceptFriend({
+        user_id: friendId,
+        is_accept: '1'
+      })
+
+      if (response.message === 'OK') {
+        const updatedFriends = requestedFriendData.filter(
+          (friend) => friend.id !== friendId
+        );
+        setRequestedFriendData(updatedFriends);
+        setTotalData(updatedFriends.length)
+        console.log("sucessfully chấp nhận lời mời kết bạn")
+      } else {
+        console.log('Lỗi khi chấp nhận lời mời: ', response.message);
+      }
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
+  const handleSetRejectFriend = async(friendId) => {
+    try {
+      const response = await setAcceptFriend({
+        user_id: friendId,
+        is_accept: '0'
+      })
+
+      if (response.message === 'OK') {
+        const updatedFriends = requestedFriendData.filter(
+          (friend) => friend.id !== friendId
+        );
+        setRequestedFriendData(updatedFriends);
+        setTotalData(updatedFriends.length)
+        console.log("đã xóa lời mời kết bạn")
+      } else {
+        console.log('Lỗi khi xóa lời mời: ', response.message);
+      }
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
   useEffect(() => {
     handleGetRequestedFriend();
   }, [requestData]);
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -135,12 +179,18 @@ const RequestedFriend = () => {
                   <Text>{friend.same_friends} bạn chung</Text>
                   <View style={styles.buttonContainer}>
                     {/* Nút Chấp nhận */}
-                    <TouchableOpacity style={[styles.button, styles.acceptButton]}>
-                        <Text style={styles.buttonText}>Chấp nhận</Text>
+                    <TouchableOpacity 
+                      style={[styles.button, styles.acceptButton]}
+                      onPress={() => handleSetAcceptFriend(friend.id)}
+                    >
+                      <Text style={styles.buttonText}>Chấp nhận</Text>
                     </TouchableOpacity>
                     {/* Nút Xóa */}
-                    <TouchableOpacity style={[styles.button, styles.deleteButton]}>
-                        <Text style={styles.buttonText}>Xóa</Text>
+                    <TouchableOpacity 
+                      style={[styles.button, styles.deleteButton]}
+                      onPress={() => handleSetRejectFriend(friend.id)}
+                    >
+                      <Text style={styles.buttonText}>Xóa</Text>
                     </TouchableOpacity>
                   </View>
                 </View>

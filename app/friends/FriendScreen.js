@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Modal
 } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { getUserFriends } from '../../api/friends/Friend';
+import { getUserFriends, unFriend, setBlock } from '../../api/friends/Friend';
 import { router } from 'expo-router';
 
 const dataFake = [
@@ -83,13 +84,14 @@ const FriendScreen = () => {
   const [friendData, setFriendData] = useState([]);
   const [totalFriend, setTotalFriend] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [requestData, setRequestData] = useState({
     index: "0",
-    count: "50",
+    count: "15",
     user_id: user.id,
   });
 
-  const handleGetFriend = async () => {
+  const handleGetUserFriend = async () => {
     try {
       const result = await getUserFriends(requestData);
       setFriendData([...friendData, ...result.friends]);
@@ -100,11 +102,51 @@ const FriendScreen = () => {
     }
   }
 
+  const openModal = () => { setModalVisible(true); }
+  const closeModal = () => { setModalVisible(false); }
+
+  const handleBlock = async(friendId) => {
+    try {
+      const response = await setBlock({
+        user_id: friendId
+      })
+
+      if (response.message === 'OK') {
+        console.log(`Đã chặn người dùng có ID ${friendId}`)
+      }
+    } catch (error) {
+        console.log("Lỗi khi chặn người dùng: ", error)
+    }
+    closeModal();
+  }
+
+  const handleUnFriend = async(friendId) => {
+    try {
+      const response = await unFriend({
+        user_id: friendId
+      })
+
+      if (response.message === 'OK') {
+        const updatedFriends = friendData.filter(
+          (friend) => friend.id !== friendId
+        );
+        setFriendData(updatedFriends);
+        setTotalFriend(updatedFriends.length)
+        console.log("Hủy kết bạn thành công")
+      } else {
+        console.log("Lỗi khi hủy kết bạn: ", response.message);
+      }
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
   useEffect(() => {
-    handleGetFriend();
+    handleGetUserFriend();
   }, [requestData]);
 
   return (
+    <>
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerBar}>
@@ -112,28 +154,24 @@ const FriendScreen = () => {
             <Ionicons
               name="arrow-back"
               size={30}
-              color="black"
-              onPress={() => navigation.goBack()}
-            />
+              color="black" />
           </TouchableOpacity>
           <Text style={styles.textHeader}>Bạn bè</Text>
           <TouchableOpacity style={styles.buttonSearch}>
             <Ionicons
               name="search"
               size={28}
-              color="black"
-              // onPress={}
-            />
+              color="black" />
           </TouchableOpacity>
         </View>
         <View style={styles.headerButton}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={() => router.push('/friends/SuggestionFriend')}
           >
             <Text>Gợi ý</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={() => router.push('/friends/FriendInvite')}
           >
@@ -143,7 +181,7 @@ const FriendScreen = () => {
       </View>
       <ScrollView style={styles.body}>
         <View style={styles.invite}>
-          <Text style={styles.textInvite}>100 bạn bè</Text>
+          <Text style={styles.textInvite}>{totalFriend} bạn bè</Text>
         </View>
         <View style={styles.listFriend}>
           <ScrollView showsHorizontalScrollIndicator={false}>
@@ -152,45 +190,56 @@ const FriendScreen = () => {
               <ActivityIndicator size="large" color="#0000ff" />
             ) : (
               // Hiển thị danh sách bạn bè từ dữ liệu API
-              dataFake.map((friend, index) => (
+              friendData.map((friend, index) => (
                 <View key={index} style={styles.friendItem}>
-                  <Image source={{uri: friend.avatar}} style={styles.avatar} />
+                  <Image source={{ uri: friend.avatar || 'https://example.com/default-image.jpg' }} style={styles.avatar} />
                   <View style={styles.userInfo}>
-                    <Text style={styles.name}>{friend.name}</Text>
-                    {/* <Text>{totalFriend} bạn chung</Text> */}
-                    <Text>{friend.mutualFriend} bạn chung</Text>
+                    <Text style={styles.name}>{friend.username}</Text>
+                    <Text>{friend.same_friends} bạn chung</Text>
                   </View>
-                  <Entypo
+                  <TouchableOpacity
                     style={styles.options}
-                    name="dots-three-horizontal"
-                    size={25}
-                    color="black"
-                    // onPress={}
-                  />
+                    onPress={openModal}
+                  >
+                    <Entypo
+                      name="dots-three-horizontal"
+                      size={25}
+                      color="black" />
+                  </TouchableOpacity>
                 </View>
               ))
             )}
-            
-            {/* {data.map((friend, index) => (
-              <View key={index} style={styles.friendItem}>
-                <Image source={{uri: friend.avatar}} style={styles.avatar} />
-                <View style={styles.userInfo}>
-                  <Text style={styles.name}>{friend.name}</Text>
-                  <Text>{friend.mutualFriend} bạn chung</Text>
-                </View>
-                <Entypo
-                  style={styles.options}
-                  name="dots-three-horizontal"
-                  size={25}
-                  color="black"
-                  // onPress={}
-                />
-              </View>
-            ))} */}
           </ScrollView>
         </View>
       </ScrollView>
     </View>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={closeModal}
+      >
+      <View style={styles.modalContainer}>
+        {/* Phần nội dung modal */}
+        <View style={styles.modalContent}>
+          <Text>Modal Content</Text>
+        </View>
+
+        {/* Nút "Block" */}
+        <TouchableOpacity style={styles.modalButton} onPress={handleBlock}>
+          <Text>Block</Text>
+        </TouchableOpacity>
+
+        {/* Nút "Hủy kết bạn" */}
+        <TouchableOpacity style={styles.modalButton} onPress={handleUnFriend}>
+          <Text>Hủy kết bạn</Text>
+        </TouchableOpacity>
+
+        {/* Vùng tương tác với nền để đóng modal */}
+        <TouchableOpacity style={styles.overlay} onPress={closeModal} />
+      </View>
+    </Modal>
+    </>
   );
 };
 
@@ -257,7 +306,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 70,
     height: 70,
-    borderRadius: 25,
+    borderRadius: 50,
     marginRight: 10,
   },
   userInfo: {

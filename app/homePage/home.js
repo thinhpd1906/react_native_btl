@@ -34,9 +34,6 @@ export default home = () => {
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
     };
-    const handleWatch = () => {
-        router.push("homePage/getVideos/getVideos")
-    }
 
     const handleGetListPost = async () => {
 
@@ -74,56 +71,11 @@ export default home = () => {
             setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
         }
     }, [loadingMore]);
-
-    // useEffect(() => {
-    //     if (isFocused) {
-    //       // Load dữ liệu mới khi màn hình Home được tập trung
-    //       handleGetListPost();
-    //     }
-    //   }, [isFocused]);
     
-
     return (  
         <View style={styles.container}>
             <View style = {styles.navbar}>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="home" size={32} color="#333" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleWatch}>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="tv" size={32} color="#333" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="people" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="search" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="notifications" size={32} color="#333" />
-                    </View>                    
-                </TouchableOpacity>
-                <View>
-                    <TouchableOpacity onPress={()=> setShowMenu(true)}>
-                        <View style={styles.iconContainer}>
-                            <Ionicons name="menu" size={32} color="#333" />
-                        </View>                     
-                    </TouchableOpacity>
-                    {showMenu && (
-                    <Menu
-                        visible={showMenu}
-                        onClose={() => setShowMenu(false)}
-                    />                         
-                    )} 
-                </View>
+               <Navbar/>
             </View>
 
             <View style = {styles.header}>

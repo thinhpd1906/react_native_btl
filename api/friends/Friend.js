@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createImageFormData } from "../../components/createImageFormData";
 
 const baseURL = process.env.EXPO_PUBLIC_BASE_API_URL;
 
@@ -90,14 +89,105 @@ export const setRequestFriend = async(requestData) => {
     });
 
     const data = await response.json();
-    console.log(data.data.requests)
-    return {
-      message: data.message,
-      data: data.data
-    };
-
+    if (response.ok) {
+      return {
+        message: data.message,
+        data: data.data
+      }
+    } else {
+      return {
+        message: data.message
+      }
+    }
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
   }  
+}
+
+export const setAcceptFriend = async(requestData) => {
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}set_accept_friend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(requestData), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        message: data.message,
+        data: data.data
+      }
+    } else {
+      return {
+        message: data.message
+      }
+    }
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }
+}
+
+export const unFriend = async(requestData) => {
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}unfriend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(requestData), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        message: data.message,
+        data: data.data
+      }
+    } else {
+      return {
+        message: data.message
+      }
+    }
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }
+}
+
+export const setBlock = async(requestData) => {
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}set_block`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(requestData), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        message: data.message,
+        data: data.data
+      }
+    } else {
+      return {
+        message: data.message
+      }
+    }
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }
 }

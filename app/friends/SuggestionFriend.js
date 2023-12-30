@@ -10,99 +10,73 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { getSuggestedFriends, setRequestFriend } from '../../api/friends/Friend';
 
-const data = [
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-];
 
 const SuggestionFriend = () => {
   const [suggestedFriendData, setSuggestedFriendData] = useState([])
   const [requestData, setRequestData] = useState({
     index: "0",
-    count: "10"
+    count: "15"
   })
+  const [friendStatus, setFriendStatus] = useState({});
+
   
   const handleGetSuggestedFriend = async() => {
     try {
       const result = await getSuggestedFriends(requestData)
+      const defaultFriendStatus = result.reduce((acc, friend) => {
+        acc[friend.id] = 'add'; // Mặc định là trạng thái "Thêm bạn bè"
+        return acc;
+      }, {});
+
       setSuggestedFriendData([...suggestedFriendData, ...result])
+      setFriendStatus(defaultFriendStatus);
       console.log("sucessfully")
     } catch(error) {
       console.log("err: ", error)
     }
   }
+
+  const handleSetRequestFriend = async(friendId) => {
+    try {
+      const response = await setRequestFriend({
+        user_id: friendId,
+      })
+
+      if (response.message === 'OK') {
+        // Cập nhật trạng thái thành "Hủy" khi gửi yêu cầu thành công
+        setFriendStatus({
+          ...friendStatus,
+          [friendId]: 'cancel',
+        });
+        console.log("sucessfully gửi lời mời thành công")
+      } else {
+        console.log('Lỗi khi gửi yêu cầu kết bạn: ', response.message);
+      }
+    } catch(error) {
+      console.log("err: ", error)
+    }
+  }
+
+  const handleDeleteRequestFriend = async(friendId) => {
+    const updatedSuggestedFriends = suggestedFriendData.filter(
+      (friend) => friend.id !== friendId
+    );
+    setSuggestedFriendData(updatedSuggestedFriends);
+    console.log(`Đã gỡ người bạn có ID ${friendId} khỏi danh sách gợi ý`)
+  }
+  
+  const handleCancelRequestFriend = (friendId) => {
+    // Thực hiện các bước xử lý khi hủy yêu cầu kết bạn
+    // Cập nhật trạng thái về mặc định hoặc "Thêm bạn bè" tùy thuộc vào logic của bạn
+    setFriendStatus({
+      ...friendStatus,
+      [friendId]: 'add',
+    });
+  };
 
   useEffect(() => {
     handleGetSuggestedFriend();
   }, [requestData]);
-
-  const handleSetRequestFriend = async(friendId) => {
-    try {
-      const result = await setRequestFriend()
-      // setSuggestedFriendData([...suggestedFriendData, ...result])
-      console.log("sucessfully")
-    } catch(error) {
-      console.log("err: ", error)
-    }
-  }
 
   return (
     <View style={styles.container}>
@@ -113,7 +87,7 @@ const SuggestionFriend = () => {
             name="arrow-back"
             size={30}
             color="black"
-            onPress={() => navigation.goBack()}
+            // onPress={() => navigation.goBack()}
           />
         </TouchableOpacity>
         <Text style={styles.textHeader}>Gợi ý</Text>
@@ -141,19 +115,31 @@ const SuggestionFriend = () => {
                   <Text style={styles.name}>{friend.username}</Text>
                   <Text>{friend.same_friends} bạn chung</Text>
                   <View style={styles.buttonContainer}>
-                    {/* Nút Chấp nhận */}
-                    <TouchableOpacity 
-                      style={[styles.button, styles.acceptButton]}
-                      onPress={() => handleSetRequestFriend(friend.id)}
-                    >
+                    {friendStatus[friend.id] === 'add' && [
+                      <TouchableOpacity 
+                        key="addButton"
+                        style={[styles.button, styles.acceptButton]}
+                        onPress={() => handleSetRequestFriend(friend.id)}
+                      >
                         <Text style={styles.buttonText}>Thêm bạn bè</Text>
-                    </TouchableOpacity>
-                    {/* Nút Xóa */}
-                    <TouchableOpacity 
-                      style={[styles.button, styles.deleteButton]}
-                    >
+                      </TouchableOpacity>,
+                      <TouchableOpacity 
+                        key="deleteButton"
+                        style={[styles.button, styles.deleteButton]}
+                        onPress={() => handleDeleteRequestFriend(friend.id)}
+                      >
                         <Text style={styles.buttonText}>Gỡ</Text>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
+                    ]}
+                    {friendStatus[friend.id] === 'cancel' && (
+                      <TouchableOpacity
+                        key="cancelButton"
+                        style={[styles.button, styles.cancelButton]}
+                        onPress={() => handleCancelRequestFriend(friend.id)}
+                      >
+                        <Text style={styles.buttonText}>Hủy</Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               </View>
@@ -233,6 +219,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#1f37d1',
   },
   deleteButton: {
+    backgroundColor: '#808080',
+  },
+  cancelButton: {
     backgroundColor: '#808080',
   },
   buttonText: {
