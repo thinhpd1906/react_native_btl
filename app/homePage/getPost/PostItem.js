@@ -15,7 +15,8 @@ import { deletePost, getListPosts, get_Post } from "../../../api/post/post";
 import { getIdPostSuccess } from "../../../store/post";
 import GetListFeels from "../comment/GetListFeels";
 import SetFeel from "../comment/SetFeel";
-import { setBlock } from "../../../api/friends/Friend";
+import { setBlock } from "../../../api/block/Block"; 
+import { setRequestFriend } from "../../../api/friends/Friend";
 
 export default PostItem = ({ item , user}) => {
     const post_Id = {
@@ -29,9 +30,33 @@ export default PostItem = ({ item , user}) => {
     const [showComment, setShowComment] = useState(false);
     const [showFeel, setShowFeel] = useState(false);
     const [hidePost, setHidePost] = useState(false);
+    const [friendStatus, setFriendStatus] = useState({});
 
     const count  = () => {
 
+    }
+    const handleSetRequestFriend = async(friendId) => {
+        try {
+          const response = await setRequestFriend({
+            user_id: friendId,
+          })
+    
+          if (response.message === 'OK') {
+            // Cập nhật trạng thái thành "Hủy" khi gửi yêu cầu thành công
+            setFriendStatus({
+              ...friendStatus,
+              [friendId]: 'cancel',
+            });
+
+            setModalVisible(false);
+
+            console.log("sucessfully gửi lời mời thành công")
+          } else {
+            console.log('Lỗi khi gửi yêu cầu kết bạn: ', response.message);
+          }
+        } catch(error) {
+          console.log("err: ", error)
+        }
     }
 
     const openModal = () => {
@@ -256,7 +281,7 @@ export default PostItem = ({ item , user}) => {
                                                 </View>                              
                                             </View>                          
                                         </TouchableOpacity>   
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={()=> handleSetRequestFriend(item.author.id)}>
                                             <View style = {{flexDirection: "row", marginBottom: 20}}>
                                                 <Image
                                                     source={require("../../../assets/images/home/add-friend.png")}
