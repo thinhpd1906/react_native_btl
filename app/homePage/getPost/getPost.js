@@ -10,7 +10,6 @@ import CommentPost from "../comment/CommentPost"
 export default getPost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
     const post = useSelector((state) => state.post.is_post.post);
-    console.log(post)
 
     const [showFeel, setShowFeel] = useState(false);
     const [showComment, setShowComment] = useState(false);
