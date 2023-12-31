@@ -10,69 +10,6 @@ import {
 import {Ionicons, Entypo} from '@expo/vector-icons';
 import { getRequestedFriends, setAcceptFriend } from '../../api/friends/Friend';
 
-const data = [
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-  {
-    avatar:
-      'https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-gau-cute.jpg',
-    name: 'Nguyễn Ăn Khu',
-    mutualFriend: 90,
-  },
-];
-
 const RequestedFriend = () => {
   const [requestedFriendData, setRequestedFriendData] = useState([])
   const [requestData, setRequestData] = useState({
@@ -169,7 +106,7 @@ const RequestedFriend = () => {
             Lời mời kết bạn <Text style={{color: 'red', fontSize: 22}}>{totalData}</Text>
           </Text>
         </View>
-        <View style={styles.listFriend}>
+        <View>
           <ScrollView showsHorizontalScrollIndicator={false}>
             {requestedFriendData.map((friend, index) => (
               <View key={index} style={styles.friendItem}>
@@ -205,7 +142,6 @@ const RequestedFriend = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // paddingTop: StatusBar.currentHeight,
     backgroundColor: '#fff',
     flex: 1,
   },
@@ -217,13 +153,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 10,
-    // marginHorizontal: 15,
   },
   textHeader: {
     fontWeight: 'bold',
     fontSize: 18,
   },
-  //body
   body: {
     paddingHorizontal: 15,
   },
