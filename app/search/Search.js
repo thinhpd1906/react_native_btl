@@ -220,15 +220,16 @@ export default Search = () => {
                 <TouchableOpacity
                   style={styles.itemUser}
                   // cho nay cho thinh
-                  // onPress={() =>
-                  //   navigation.navigate('InforFriend', {
-                  //     avatar: ItemPeople.avatar,
-                  //     idUser: ItemPeople._id,
-                  //     username: ItemPeople.username,
-                  //     cover_image: ItemPeople.cover_image,
-                  //     text: 'Thêm bạn bè',
-                  //   })
-                  // }
+                  onPress = {
+                    () =>
+                   { console.log("friends", item)
+                    router.push({
+                      pathname: `/profile/${item.id}`,
+                      params: {
+                        userId: item.id
+                      }
+                    })}
+                  }
                 >
                   <Image
                     source={item.avatar ? {

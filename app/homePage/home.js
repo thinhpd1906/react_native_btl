@@ -35,9 +35,6 @@ export default home = () => {
         router.push('/homePage/createPost/createPost')  
     };
 
-    const handleSearch = () => {
-        router.push("/search/Search")
-    }
     const handleGetListPost = async () => {
 
         try {
@@ -171,4 +168,5 @@ const styles = StyleSheet.create({
     loadingIndicator: {
         marginVertical: 10,
     },
-});   
+  });
+ 

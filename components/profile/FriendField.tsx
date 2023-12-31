@@ -30,7 +30,7 @@ const FriendField = ({ friends, totalFriend, isOwnProfile }: FriendFieldProps) =
               // })
             }
           >
-            <Text style={{ fontSize: 16, color: color.primary }}>Tìm bạn bè</Text>
+            <Text style={{ fontSize: 16, color: color.primary }} onPress={() => router.push("/friends/FriendScreen")}>Tìm bạn bè</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -45,7 +45,7 @@ const FriendField = ({ friends, totalFriend, isOwnProfile }: FriendFieldProps) =
           <FriendCard id={item.id} avatarUrl={item.avatar} username={item.username} key={index} />
         ))}
       </View>
-      <TouchableOpacity style={styles.allFriendBtn} activeOpacity={0.7}>
+      <TouchableOpacity style={styles.allFriendBtn} activeOpacity={0.7} onPress={() => router.push("/friends/FriendScreen")}>
         <Text
           style={{ color: color.textColor, textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}
         >

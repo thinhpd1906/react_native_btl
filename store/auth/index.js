@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice } from '@reduxjs/toolkit'
 
 const INIT =  {
@@ -6,7 +7,7 @@ const INIT =  {
         
     },
     login:{
-        currentUser:null,
+        currentUser: null,
     },
     token: "",
 }

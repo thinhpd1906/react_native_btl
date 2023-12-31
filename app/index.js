@@ -15,7 +15,10 @@ export default function App() {
       console.log("pk token", token)
       if(token) {
         // router.replace('/profile/profile');
+        // router.replace('/homePage/home');
+        // router.replace('homePage/home');
         router.replace('/homePage/home');
+
 
       } else {
         router.replace('/auth/login');
