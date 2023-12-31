@@ -3,6 +3,8 @@ import moment from "moment";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import CommentPost from "../comment/CommentPost";
+import SetFeel from "../comment/SetFeel";
+import GetListFeels from "../comment/GetListFeels";
 
 export default getListVideos = ({item}) => {
 
@@ -10,6 +12,7 @@ export default getListVideos = ({item}) => {
     const [commentData, setCommentData] = useState([]);
     const [isFeel, setIsFeel] = useState('');
     const [shouldPlay, setShouldPlay] = useState(true);
+    const [showFeel, setShowFeel] = useState(false);
 
     const handleFell = () => {
         console.log("like")
@@ -40,7 +43,7 @@ export default getListVideos = ({item}) => {
     };
 
     return(
-        <View>
+        <View style = {{borderBottomWidth: 8, borderBottomColor: '#ddd',}}>
             <View style = {styles.author}>
                 <Image
                     style={styles.avatar}
@@ -74,7 +77,7 @@ export default getListVideos = ({item}) => {
                 resizeMode="cover"
                 shouldPlay = {shouldPlay}
                 isLooping = {true}
-                style={{ width: "100%", height: 500 }}
+                style={{ width: "100%", height: 450 }}
                 />            
             </TouchableOpacity>
 
@@ -87,9 +90,34 @@ export default getListVideos = ({item}) => {
                 borderBottomWidth: 0.6,
                 borderBottomColor: "#8D949E",
             }}>
-                <Text style = {{paddingLeft: 10, color: "#65676B"}}>
-                    Feel: {item.feel}
-                </Text>
+                <TouchableOpacity onPress={()=>setShowFeel(true)}>
+                    <View style = {{flexDirection:"row", alignContent:"center", marginLeft: 30, position: 'relative',}}>
+                        <Image
+                            source={require('../../../assets/images/home/like-blue1.png')}
+                            style = {{
+                                width: 20, height:20, borderRadius: 15, 
+                                borderColor:"#fff", borderWidth:2,
+                                position: 'absolute',
+                                left:-15,
+                                zIndex:5,
+                            }}
+                        />
+                        <Image
+                            source={require('../../../assets/images/home/sad.png')}
+                            style = {{width: 18, height:18, borderRadius: 10, }}
+                        />
+                        <Text style = {{paddingLeft: 5, color: "#65676B"}}>
+                            {item.feel}
+                        </Text>                     
+                    </View>
+                </TouchableOpacity>
+                {showFeel && 
+                    <GetListFeels
+                        visible={showFeel}
+                        onClose={() => setShowFeel(false)}
+                        post_Id = {item.id}
+                    />
+                }
                 <Text style = {{marginLeft: "50%", color: "#65676B"}}>
                     {item.comment_mark} comments
                 </Text>                
@@ -99,38 +127,11 @@ export default getListVideos = ({item}) => {
                     flexDirection: 'row',
                     padding: 8,
                 }}>
-                {isFeel.disappointed == "1" ? (
-                    <TouchableOpacity style = {{flexDirection: 'row', backgroundColor : "red"}} onPress={handleFell}> 
-                        <Image
-                            source={require('../../../assets/images/home/like.png')}
-                            style = {{height: 30, width: 30, marginLeft: "20%",}}
-                        />
-                        <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                            Like
-                        </Text>                    
-                    </TouchableOpacity> 
-                ) : isFeel.disappointed == "0" ? (
-                    <TouchableOpacity style = {{flexDirection: 'row', backgroundColor: "blue"}} onPress={handleFell}> 
-                        <Image
-                            source={require('../../../assets/images/home/like.png')}
-                            style = {{height: 30, width: 30, marginLeft: "20%",}}
-                        />
-                        <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                            Like
-                        </Text>                    
-                    </TouchableOpacity> 
-                ) : (
-                    <TouchableOpacity style = {{flexDirection: 'row',}} onPress={handleFell}> 
-                        <Image
-                            source={require('../../../assets/images/home/like.png')}
-                            style = {{height: 30, width: 30, marginLeft: "20%",}}
-                        />
-                        <Text style = {{marginTop: 7, marginLeft: 7, color: "#65676B"}}>
-                            Like
-                        </Text>                    
-                    </TouchableOpacity>                
-                )}
-                <View>
+                <SetFeel
+                    item={item}
+                    // count = {count}
+                />
+                    <View>
                     <TouchableOpacity 
                         style = {{flexDirection: 'row',}}
                         onPress={() => setShowComment(true)}

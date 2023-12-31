@@ -5,7 +5,7 @@ import {
 import moment from "moment";
 import { getMarkComment, setMarkComment } from "../../../api/post/comment";
 import { useDispatch } from "react-redux";
-export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
+export default CommentPost = ({ visible, onClose, post_Id }) => {
     const dispatch = useDispatch();
 
     const [requestData, setRequestData] = useState({
@@ -16,6 +16,20 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
     const [textComment, setTextCtextComment] = useState('');
     const [showMarkId, setShowMarkId] = useState('');
     const [commentData, setCommentData] = useState([]);
+    const [showReply, setShowReply] = useState(false);
+    const [showUserName, setShowName] = useState("");
+
+    const handleShowReply = (id, username)=>{
+        setShowReply(true);
+        setShowMarkId(id);
+        setShowName(username);
+    }
+
+    const handleCloseReply = () =>{
+        setShowReply(false);
+        setShowName('');
+        setShowMarkId('');
+    }
 
     const handleSetMarkComment = async () => {
         try {
@@ -31,6 +45,7 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
           await setMarkComment(newComment);
           setTextCtextComment('');
           setShowMarkId('');
+          setShowReply(false);
 
           const result = await getMarkComment(requestData, dispatch);
           setCommentData([...result]); 
@@ -133,7 +148,7 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                                     {getFormattedTimeAgo(item.created)}
                                 </Text>
                                 <Text style = {styles.like}>Like</Text>
-                                <TouchableOpacity onPress={()=>setShowMarkId(item.id)}>
+                                <TouchableOpacity onPress={() => handleShowReply(item.id, item.poster.name)}>
                                     <Text style = {styles.reply}>Reply</Text> 
                                 </TouchableOpacity>
                             </View>  
@@ -162,16 +177,6 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                                     </View>
                                 )}
                             />
-
-                        {/* <TextInput
-                            style = {styles.textInput}
-                            multiline={true}
-                            numberOfLines={1} 
-                            placeholder="Write a public comment..."
-                            placeholderStyle={styles.placeholder}
-                            value={textComment}
-                            onChangeText={(inputText) => setTextCtextComment(inputText)}
-                        />                            */}
                           
                         </View>
 
@@ -179,29 +184,44 @@ export default CommentPost = ({ visible, onClose, comments, post_Id }) => {
                     
                     )}
                 />
-                <View style = {styles.inputContainer}>
-                    <TextInput
-                        style = {styles.textInput}
-                        multiline={true}
-                        numberOfLines={1} 
-                        placeholder="Write a public comment..."
-                        placeholderStyle={styles.placeholder}
-                        value={textComment}
-                        onChangeText={(inputText) => setTextCtextComment(inputText)}
-                    />
-                    <TouchableOpacity onPress={handleSetMarkComment}>
-                        {textComment ? (
-                        <Image
-                            source={require("../../../assets/images/home/send-blue.png")}
-                            style = {styles.cameraComment}
-                        />
-                        ):(
-                        <Image
-                            source={require("../../../assets/images/home/send-white.png")}
-                            style = {styles.cameraComment}
-                        />                             
-                        )}                      
-                    </TouchableOpacity>
+                <View style = {styles.inputContainers}>
+                    {showReply &&
+                        <View style = {{flexDirection:"row"}}>
+                            <Text>
+                                Replying to <Text style={{fontWeight:"bold"}}>{showUserName}</Text>
+                            </Text>
+                            <Text style= {{fontWeight:"bold", color:"#65676B", marginLeft:5,}}>.</Text>
+                            <TouchableOpacity onPress={handleCloseReply}>
+                                <Text style = {{fontWeight:"bold", color:"#65676B", paddingLeft:5,}}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    <View style = {styles.inputContainer}>
+                        <TextInput
+                            style = {styles.textInput}
+                            multiline={true}
+                            numberOfLines={1} 
+                            placeholder="Write a public comment..."
+                            placeholderStyle={styles.placeholder}
+                            value={textComment}
+                            onChangeText={(inputText) => setTextCtextComment(inputText)}
+                        />                            
+                        <View>
+                            <TouchableOpacity onPress={handleSetMarkComment}>
+                                {textComment ? (
+                                <Image
+                                    source={require("../../../assets/images/home/send-blue.png")}
+                                    style = {styles.cameraComment}
+                                />
+                                ):(
+                                <Image
+                                    source={require("../../../assets/images/home/send-white.png")}
+                                    style = {styles.cameraComment}
+                                />                             
+                                )}                      
+                            </TouchableOpacity>                              
+                        </View>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -283,6 +303,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center", 
         alignItems: "center",
+        paddingTop: 5,
+    },
+    inputContainers:{
+        paddingLeft:20,
         borderTopWidth: 0.6, 
         borderBottomWidth: 0.6, 
         borderTopColor: "#8D949E", 
