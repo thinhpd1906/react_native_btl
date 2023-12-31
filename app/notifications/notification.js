@@ -5,113 +5,55 @@ import {
     Image,
     Avatar,
     ScrollView,
+    FlatList,
   } from "react-native";
-  import React from "react";
-  export default function Notification({ route }) {
-    const [notify, setNotify] = React.useState([
-      {
-        id: 1,
-        name: "Trinh Dat",
-        content: "đã thích ảnh của bạn",
-        time: "7:00 am",
-        avatar: "https://reactnative.dev/img/tiny_logo.png",
-      },
-      {
-        id: 2,
-        name: "Pham Dinh Minh",
-        content: "đã bình luận về ảnh của bạn",
-        time: "8:00 am",
-        avatar:
-          "https://gamek.mediacdn.vn/2019/10/20/photo-1-1571521922264714072244.jpg",
-      },
-      {
-        id: 3,
-        name: "Do Dang Phuong",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "9:00 am",
-        avatar: "https://i.ytimg.com/vi/dkvaprtP6L8/maxresdefault.jpg",
-      },
-      {
-        id: 4,
-        name: "Ho Duc Han",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "10:00 am",
-        avatar:
-          "https://cdna.artstation.com/p/assets/images/images/019/387/690/large/inward-vertical-city.jpg?1563272711",
-      },
-      {
-        id: 5,
-        name: "Chien Hoang Van",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "11:00 am",
-        avatar:
-          "https://www.ebtc.ie/wp-content/uploads/2017/10/bigstock-Autumn-Fall-scene-Beautiful-150998720.jpg",
-      },
-      {
-        id: 6,
-        name: "Vu Ba Luong",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "12:00 am",
-        avatar:
-          "https://s.ftcdn.net/v2013/pics/all/curated/RKyaEDwp8J7JKeZWQPuOVWvkUjGQfpCx_cover_580.jpg?r=1a0fc22192d0c808b8bb2b9bcfbf4a45b1793687",
-      },
-      {
-        id: 7,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "1:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 8,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "2:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 9,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "3:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 10,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "4:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 11,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "5:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 12,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "6:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-      {
-        id: 13,
-        name: "Ronaldo",
-        content: "đã cập nhật ảnh đại diện của anh ấy",
-        time: "7:00 pm",
-        avatar:
-          "https://images.pexels.com/photos/301599/pexels-photo-301599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      },
-    ]);
+  import React, { useEffect, useState } from "react";
+import { getNotification } from "../../api/notification/notification";
+import moment from "moment";
+export default function Notification({ route }) {
+      const [notifyData, setNotifyData] = useState([])
+      const requestData = {
+        index: "0",
+        count: "30"
+      }
+      const handGetNotification = async () =>{
+        try{
+          const result = await getNotification(requestData)
+          setNotifyData([...result])
+        }
+        catch(error){
+          console.error("error", error);
+        }
+      }
+      useEffect(()=>{
+        handGetNotification();
+      }, [requestData]);
+
+      const getFormattedTimeAgo = (createdAt) => {
+        const now = moment();
+        const postTime = moment(createdAt);
+        const duration = moment.duration(now.diff(postTime));
+      
+        const years = duration.years();
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+      
+        if (years > 0) {
+          return `${years} năm trước`;
+        } else if (months > 0) {
+          return `${months} tháng trước`;
+        } else if (days > 0) {
+          return `${days} ngày trước`;
+        } else if (hours > 0) {
+          return `${hours} giờ trước`;
+        } else {
+          return `${minutes} phút trước`;
+        }
+    };
+
+
     return (
       <View>
           <View style = {styles.navbar}>
@@ -121,23 +63,42 @@ import {
           <Text>{`Current Route: ${route.name}`}</Text>
           )}
         <View style={styles.container}>
-          <ScrollView>
-            <View style={styles.header}>
-              <Text style={styles.textHeader}>Thông báo</Text>
-            </View>
-            {notify.map((item) => (
-              <View key={item.id} style={styles.main}>
-                <Image style={styles.img} source={{ uri: item.avatar }} />
-                {/* <Avatar style={styles.img} rounded source={{uri: ''}}/> */}
-                <View style={styles.content}>
-                  <Text style={styles.item}>
-                    <Text style={styles.name}>{item.name}</Text> {item.content}
-                  </Text>
-                  <Text style={styles.time}>{item.time}</Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
+          <FlatList
+                data = {notifyData}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) =>(
+                <View key={item.notification_id} style={styles.main}>
+                  <Image style={styles.img} source={{ uri: item.user.avatar || 'https://example.com/default-image.jpg'}} />
+                  {/* <Avatar style={styles.img} rounded source={{uri: ''}}/> */}
+                  <View style={styles.content}>
+                    <Text style={styles.item}>
+                      <Text style={styles.name}>{item.user.username}</Text> 
+                      {item.type == "1" ? (
+                        ' đã gửi lời mời kết bạn'
+                      ) : item.type == '2' ? (
+                        ' đã chấp nhận lời mời kết bạn'
+                      ) : item.type == '3' ? (
+                        ' đã thêm một bài viết mới'
+                      ) : item.type  == "4" ? (
+                        ' đã cập nhật lại bài viết'
+                      ) : item.type  == "5" ? (
+                        ' đã bày tỏ cảm xúc bài viết của bạn'
+                      ) : item.type  == "6" ? (
+                        ' đã bình luận bài viết của bạn'
+                      ) : item.type  == "7" ? (
+                        ' đã trả lời bình luận của bạn'
+                      ) : item.type  == "8" ? (
+                        ' đã thêm một video mới'
+                      ) : item.type  == "9" ? (
+                        ' đã bình luận bài viết của bạn'
+                      ) : ('')
+                    }
+                    </Text>
+                    <Text style={styles.time}>{getFormattedTimeAgo(item.created)}</Text>
+                  </View>
+                </View>                 
+                )}
+          />
         </View>
       </View>
     );
