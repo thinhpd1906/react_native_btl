@@ -35,9 +35,8 @@ const FriendScreen = () => {
       const result = await getUserFriends(requestData);
       setFriendData([, ...result.friends]);
       setTotalFriend(result.total);
-      console.log("sucessfully");
     } catch(error) {
-      console.log("err",error);
+      console.log("err", error);
     }
   }
 
@@ -54,7 +53,12 @@ const FriendScreen = () => {
       })
 
       if (response.message === 'OK') {
-        console.log(`Đã chặn người dùng có ID ${friendId}`)
+        const updatedFriends = friendData.filter(
+          (friend) => friend.id !== friendId
+        );
+        setFriendData(updatedFriends);
+        setTotalFriend(updatedFriends.length)
+        console.log(`Đã chặn người dùng có ID: ${friendId}`)
       }
     } catch (error) {
         console.log("Lỗi khi chặn người dùng: ", error)
@@ -74,7 +78,7 @@ const FriendScreen = () => {
         );
         setFriendData(updatedFriends);
         setTotalFriend(updatedFriends.length)
-        console.log("Hủy kết bạn thành công")
+        console.log(`Hủy kết bạn với người bạn có ID: ${friendId} thành công`)
       } else {
         console.log("Lỗi khi hủy kết bạn: ", response.message);
       }

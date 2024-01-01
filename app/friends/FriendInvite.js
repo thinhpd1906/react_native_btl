@@ -42,7 +42,7 @@ const RequestedFriend = () => {
         );
         setRequestedFriendData(updatedFriends);
         setTotalData(updatedFriends.length)
-        console.log("sucessfully chấp nhận lời mời kết bạn")
+        console.log(`Đã chấp nhận lời mời kết bạn với người bạn ID ${friendId}`)
       } else {
         console.log('Lỗi khi chấp nhận lời mời: ', response.message);
       }
@@ -64,7 +64,7 @@ const RequestedFriend = () => {
         );
         setRequestedFriendData(updatedFriends);
         setTotalData(updatedFriends.length)
-        console.log("đã xóa lời mời kết bạn")
+        console.log(`Đã xóa lời mời của người bạn ID ${friendId}`)
       } else {
         console.log('Lỗi khi xóa lời mời: ', response.message);
       }

@@ -20,7 +20,6 @@ export const getUserFriends = async(requestData) => {
       friends: data.data.friends,
       total: data.data.total
     };
-
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
@@ -43,7 +42,6 @@ export const getSuggestedFriends = async(requestData) => {
     const data = await response.json();
     console.log(data.data)
     return data.data;
-
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
@@ -69,7 +67,6 @@ export const getRequestedFriends = async(requestData) => {
       requests: data.data.requests,
       total: data.data.total
     };
-
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
@@ -94,11 +91,7 @@ export const setRequestFriend = async(requestData) => {
         message: data.message,
         data: data.data
       }
-    } else {
-      return {
-        message: data.message
-      }
-    }
+    } else return data.message
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
@@ -123,11 +116,7 @@ export const setAcceptFriend = async(requestData) => {
         message: data.message,
         data: data.data
       }
-    } else {
-      return {
-        message: data.message
-      }
-    }
+    } else return data.message
   } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
