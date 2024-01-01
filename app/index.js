@@ -17,8 +17,6 @@ export default function App() {
       console.log("pk token", token)
       if(token) {
         // router.replace('/profile/profile');
-        // router.replace('/homePage/home');
-        // router.replace('homePage/home');
         const jsonString = await AsyncStorage.getItem('user');
         if (jsonString) {
             const userObject = JSON.parse(jsonString);
@@ -31,7 +29,6 @@ export default function App() {
         }
 
         router.replace('/homePage/home');
-
 
       } else {
         router.replace('/auth/login');

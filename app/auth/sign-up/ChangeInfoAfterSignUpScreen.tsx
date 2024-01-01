@@ -24,6 +24,7 @@ import { changeInfoAfterSignupApi } from '../../../api/profile/profile';
 // import { AccountStatus } from 'src/common/enum/commom';
 import * as yup from 'yup';
 import { router } from 'expo-router';
+import { loginSuccess } from '../../../store/auth';
 const nameFormSchema = yup.object({
     firstname: yup.string().required(),
     lastname: yup.string().required()
@@ -60,11 +61,10 @@ const ChangeInfoAfterSignUpScreen: React.FC = () => {
       }
     }
     const options = {
-      mediaType: 'photo' as MediaTypeOptions,
-      includeBase64: true,
+      mediaType:  MediaTypeOptions.Images,
       quality: 0.4,
-      maxWidth: 800,
-      maxHeight: 800
+      aspect: null, 
+      allowsEditing: true,
     };
     let response = await launchImageLibraryAsync(options)
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : avatarSource;
@@ -90,6 +90,7 @@ const ChangeInfoAfterSignUpScreen: React.FC = () => {
       changeInfoAfterSignupApi(formData)
       .then((res) => {
         console.log("res change infor", res)
+        dispatch(loginSuccess(res.data))
         router.push("/homePage/home")
       })
       .catch((err) => {

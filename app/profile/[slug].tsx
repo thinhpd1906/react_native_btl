@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Platform, PermissionsAndroid } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { useCallback, useEffect, useState } from 'react';
 import styles from '../../components/profile/style/style';
@@ -227,13 +227,34 @@ function ProfileScreen() {
     //   }
     // }
     const options = {
-      mediaType: 'photo' as MediaTypeOptions,
-      includeBase64: true,
+      mediaType: MediaTypeOptions.Images,
+      // includeBase64: true,
       quality: 0.4,
-      maxWidth: 800,
-      maxHeight: 800
+      aspect: null, 
+      allowsEditing: true,
+      // maxWidth: 800,
+      // maxHeight: 800
     };
+    // try {
+    //   console.log("test chose")
+    //   const result = await launchImageLibraryAsync({
+    //     mediaTypes: MediaTypeOptions.All,
+    //     allowsEditing: true,
+    //     aspect: null, 
+    //     quality: 1,
+    //   });
+    //   console.log("test", result)
+
+    //   // if (!result.canceled) {
+    //   //     console.log("videoData" ,result.assets[0])
+    //   //     setImage([]);
+    //   //     setVideo(result.assets[0]);  
+    //   // }
+    // } catch (error) {
+    //   console.error('Error choosing video:', error);
+    // }
     let response = await launchImageLibraryAsync(options)
+    console.log("sai gi", response)
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : profile.avatar;
     let newProfile;
     if(imageType == "avatar") {
