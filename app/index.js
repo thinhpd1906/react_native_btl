@@ -17,9 +17,9 @@ export default function App() {
         // router.replace('/profile/profile');
         // router.replace('/homePage/home');
         // router.replace('homePage/home');
-        router.replace('/homePage/home');
-
-
+        // router.replace('/homePage/home');
+        router.replace('/auth/sign-up');
+        // router.replace('/auth/login');
       } else {
         router.replace('/auth/login');
       }
