@@ -3,9 +3,9 @@ import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedb
 import { useSelector } from "react-redux"
 import BuyCoins from "./buyCoins";
 import { buyCoins } from "../../api/post/log_out"
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default Settings = () => {
+    const user = useSelector((state) => state.auth.login.currentUser)
     const [showBuy, setShowBuy] = useState(false);
     const [showItem, setShowItem] = useState({});
     const [coins, setCoins] = useState('');
@@ -33,29 +33,8 @@ export default Settings = () => {
         },
     ]
 
-    const [user, setUserData] = useState(null);
-    const [userDataLoaded, setUserDataLoaded] = useState(false);
+    const [userDataLoaded, setUserDataLoaded] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const jsonString = await AsyncStorage.getItem('user');
-                if (jsonString) {
-                    const userObject = JSON.parse(jsonString);
-                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
-                    setUserData(userObject);
-                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
-                } else {
-                    setUserDataLoaded(true); 
-                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
-                }
-            } catch (error) {
-                console.error('Lỗi khi lấy đối tượng:', error);
-            }
-        };
-
-        fetchData(); // Gọi hàm fetchData khi component được render
-    }, []); // Chạy useEffect một lần sau khi component được render
 
     const handleBuyCoins = async() => {
         const req = {

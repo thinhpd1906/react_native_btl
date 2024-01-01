@@ -1,13 +1,24 @@
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { deleteFeel, setFeel } from '../../../api/post/like';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getListPosts } from '../../../api/post/post';
 
 export default SetFeel = ({item, count}) => {
+    const dispatch = useDispatch();
     const [typeFeel, setTypeFeel] = useState("-1");  
     const [isFeel, setIsFeel] = useState('-1');
     const [is_felt, setIs_felt] = useState(item.is_felt);
     const [modalVisible, setModalVisible] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
+    const [requestData, setRequestData] = useState({      
+        in_campaign: "1",
+        campaign_id: "1",
+        latitude: "1.0",
+        longitude: "1.0",
+        index: "0",
+        count: "20",
+    });
 
     const buttonRef = useRef(null);
 
@@ -55,6 +66,8 @@ export default SetFeel = ({item, count}) => {
         if (typeFeel === '1' || typeFeel === '0') {
             try {
                 await setFeel(feelData);
+                await getListPosts(requestData, dispatch); 
+
                 setTypeFeel('-1');
                 console.log("Feel: Successfully");
             } catch (error) {
@@ -71,6 +84,8 @@ export default SetFeel = ({item, count}) => {
         }
         try {
             await deleteFeel(feelData);
+            await getListPosts(requestData, dispatch); 
+            
             console.log("delete Feel: Successfully");
         } catch (error) {
           console.error('Error setting mark for comment:', error); 
@@ -131,7 +146,7 @@ export default SetFeel = ({item, count}) => {
                         Like 
                     </Text>                    
                 </TouchableOpacity>  
-            ) : item.is_felt == "0" || isFeel == "0" ? ( 
+            ) : item.is_felt == "0" || isFeel == "0" ? (  
                 <TouchableOpacity 
                     ref={buttonRef} 
                     style = {{flexDirection: 'row', }} 

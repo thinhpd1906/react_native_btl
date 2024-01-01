@@ -8,39 +8,14 @@ import { useEffect, useState } from "react";
 import { getListPosts, getNewPosts } from "../../api/post/post";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/Navbar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default home = () => {  
-    const postLists = useSelector((state) => state.post.allPosts?.posts)
-    const [userData, setUserData] = useState(null); 
-    const [userDataLoaded, setUserDataLoaded] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const jsonString = await AsyncStorage.getItem('user');
-                if (jsonString) {
-                    const userObject = JSON.parse(jsonString);
-                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
-                    setUserData(userObject);
-                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
-                } else {
-                    setUserDataLoaded(true); 
-                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
-                }
-            } catch (error) {
-                console.error('Lỗi khi lấy đối tượng:', error);
-            }
-        };
-
-        fetchData(); // Gọi hàm fetchData khi component được render
-    }, []); // Chạy useEffect một lần sau khi component được render
-
-    // console.log(userData)
+    const user = useSelector((state) => state.auth.login.currentUser)
+    const postNew = useSelector((state) => state.post.allPosts?.posts)
+    const [userDataLoaded, setUserDataLoaded] = useState(true);
 
     const dispatch = useDispatch();
 
-    const [postData, setPostData] = useState([]);
     const [requestData, setRequestData] = useState({
         in_campaign: "1",
         campaign_id: "1",
@@ -78,7 +53,7 @@ export default home = () => {
           // Cập nhật index để load thêm
           setRequestData((prevRequestData) => ({
             ...prevRequestData,
-            index: (parseInt(prevRequestData.index) + parseInt(prevRequestData.count)).toString(),
+            count: (parseInt("20") + parseInt(prevRequestData.count)).toString(),
           }));
         }
     };
@@ -95,6 +70,15 @@ export default home = () => {
         }
     }, [loadingMore]);
 
+    const handerProfile = (id) =>{
+        router.push({
+                  pathname: `/profile/${id}`,
+                  params: {
+                    userId: id
+                  }
+                })
+    }
+
     return (  
         <View style={styles.container}>
             <View style = {styles.navbar}>
@@ -103,10 +87,13 @@ export default home = () => {
 
             <View style = {styles.header}>
                 {userDataLoaded && 
-                    <Image
-                        source={{ uri: userData.avatar || 'https://example.com/default-image.jpg'}}
-                        style={styles.avatar}
-                    />                
+                    <TouchableOpacity onPress={()=> handerProfile(user.id)}>
+                        <Image
+                            source={{ uri: user.avatar || 'https://example.com/default-image.jpg'}}
+                            style={styles.avatar}
+                        />                         
+                    </TouchableOpacity>
+               
                 }
                 <TouchableOpacity onPress={handlePress} style={styles.button}>
                     <Text style={styles.buttonText}>What's on your mind?</Text>
@@ -123,12 +110,12 @@ export default home = () => {
             <View style = {styles.content}>
                 {userDataLoaded &&
                     <FlatList
-                        data={postLists}
+                        data={postNew}
                         keyExtractor={(item, index) => index.toString()} 
                         renderItem={({ item }) => (
                             <PostItem 
                                 item={item} 
-                                user={userData}
+                                user={user}
                             />
                         )}
                         onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang

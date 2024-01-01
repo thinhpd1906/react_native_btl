@@ -8,9 +8,9 @@ import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
 import { Video } from "expo-av";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default EditPost = () => {
+    const user = useSelector((state) => state.auth.login.currentUser)
     const post = useSelector((state) => state.post.is_post.post)
     // console.log("redux",post)  
     const post_Id = post.id;
@@ -34,29 +34,7 @@ export default EditPost = () => {
         count: "20",
     });
 
-    const [user, setUserData] = useState(null);
-    const [userDataLoaded, setUserDataLoaded] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const jsonString = await AsyncStorage.getItem('user');
-                if (jsonString) {
-                    const userObject = JSON.parse(jsonString);
-                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
-                    setUserData(userObject);
-                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
-                } else {
-                    setUserDataLoaded(true); 
-                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
-                }
-            } catch (error) {
-                console.error('Lỗi khi lấy đối tượng:', error);
-            }
-        };
-
-        fetchData(); // Gọi hàm fetchData khi component được render
-    }, []);
+    const [userDataLoaded, setUserDataLoaded] = useState(true);
 
     const state = [
         {

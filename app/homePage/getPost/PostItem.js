@@ -1,6 +1,6 @@
 import { Video } from "expo-av";
 import { 
-    Image, StyleSheet, Text, TouchableOpacity, View, Modal
+    Image, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput
 } from "react-native";
 import { useEffect, useState } from "react";
 import moment from 'moment';
@@ -11,7 +11,7 @@ import FivePicture from "../../../components/FivePicture";
 import CommentPost from "../comment/CommentPost";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, getListPosts, get_Post } from "../../../api/post/post";
+import { deletePost, getListPosts, get_Post, reportPost } from "../../../api/post/post";
 import { getIdPostSuccess } from "../../../store/post";
 import GetListFeels from "../comment/GetListFeels";
 import SetFeel from "../comment/SetFeel";
@@ -30,7 +30,10 @@ export default PostItem = ({ item , user}) => {
     const [showComment, setShowComment] = useState(false);
     const [showFeel, setShowFeel] = useState(false);
     const [hidePost, setHidePost] = useState(false);
+    const [showReport, setShowReport] = useState(false);
     const [friendStatus, setFriendStatus] = useState({});
+    const [text, setText] = useState('');
+    const [notiReport, setNoti] = useState(false);
 
     const count  = () => {
 
@@ -90,7 +93,7 @@ export default PostItem = ({ item , user}) => {
             latitude: "1.0",
             longitude: "1.0",
             index: "0",
-            count: "16",
+            count: "20",
         }
         const id = {
             id: item.id,
@@ -132,6 +135,24 @@ export default PostItem = ({ item , user}) => {
             console.log("Lỗi khi chặn người dùng: ", error)
         }
         closeModal();
+    };
+
+    const handleReport = async(id)=>{
+        const req = {
+            id: id,
+            subject: text,
+            details: "Details"
+        }
+        try {
+            await reportPost(req);
+            setNoti(true);
+            // setModalVisible(false);
+            setText('');
+
+            console.log("Report succsess");
+        } catch (error) {
+            console.error(error)
+        }
     }
     
     const getFormattedTimeAgo = (createdAt) => {
@@ -159,6 +180,15 @@ export default PostItem = ({ item , user}) => {
       };
     const formattedTimeAgo = getFormattedTimeAgo(item.created);
 
+    const handerProfile = (id) =>{
+        router.push({
+                  pathname: `/profile/${id}`,
+                  params: {
+                    userId: id
+                  }
+                })
+    }
+
     // console.log('cnt',item.feel)
 
     return(
@@ -182,10 +212,13 @@ export default PostItem = ({ item , user}) => {
         <View style = {styles.postItem}>
             <View style = {{marginLeft: 10, marginRight: 10}}>
                 <View style = {styles.author}>
-                    <Image
-                        style={styles.avatar}
-                        source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}}
-                    />
+                    <TouchableOpacity onPress={()=>handerProfile(item.author.id)}>
+                        <Image
+                            style={styles.avatar}
+                            source={{ uri: item.author.avatar || 'https://example.com/default-image.jpg'}} 
+                        />                        
+                    </TouchableOpacity>
+
                     <View>
                         <View style = {{width:250,}}>
                             {item.state == "" ? (
@@ -265,7 +298,7 @@ export default PostItem = ({ item , user}) => {
                                     </View>
                                 ) : (
                                     <View>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={()=> setShowReport(true)}>
                                             <View style = {{flexDirection: "row", marginBottom: 20}}>
                                                 <Image
                                                     source={require("../../../assets/images/home/report.png")}
@@ -280,7 +313,73 @@ export default PostItem = ({ item , user}) => {
                                                     </Text>                                               
                                                 </View>                              
                                             </View>                          
-                                        </TouchableOpacity>   
+                                        </TouchableOpacity>
+                                        <Modal
+                                            animationType="fade"
+                                            transparent={true}
+                                            visible={showReport}
+                                            onRequestClose={()=>setShowReport(false)}
+                                        >
+                                            <View style={styles.overlay} />
+                                            <View style = {styles.modalReport}>
+                                                {notiReport ? (
+                                                    <View style={{alignItems:"center",justifyContent:"center"}}> 
+                                                        <Text style={{padding: 15, fontSize: 17, fontWeight:"bold", marginTop: 25
+                                                        }}> 
+                                                            You have successfully reported {item.author.name}'s post !
+                                                        </Text>
+                                                        <TouchableOpacity onPress={()=>setShowReport(false)}>
+                                                            <Text style={{
+                                                                padding: 10, paddingLeft:20, paddingRight:20,borderRadius:5,
+                                                                backgroundColor:"red", color:"#fff", fontSize:16
+                                                            }}>
+                                                                OK
+                                                            </Text>                                                            
+                                                        </TouchableOpacity>
+
+                                                    </View>
+                                                ):(
+                                                    <View>
+                                                        <View style = {{flexDirection:"row"}}>
+                                                            <TouchableOpacity onPress={()=>setShowReport(false)}>
+                                                                <Text style = {{
+                                                                    padding: 10, backgroundColor:"#ccc",
+                                                                    color:"#333", borderRadius: 5, paddingLeft:15, paddingRight:15,
+                                                                    margin: 5
+                                                                }}
+                                                                >
+                                                                        Cancel
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                            {text && 
+                                                                <TouchableOpacity onPress={()=> handleReport(item.author.id)}>
+                                                                    <Text style = {{
+                                                                        padding: 10, backgroundColor:"#339AF0", marginLeft:"auto",
+                                                                        color:"#fff", borderRadius: 10, paddingLeft:15, paddingRight:15,
+                                                                        margin: 5
+                                                                    }}
+                                                                    >
+                                                                        Send
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            }                                                    
+                                                        </View>
+
+                                                        <TextInput
+                                                            style = {styles.textInput}
+                                                            multiline={true}
+                                                            numberOfLines={1} 
+                                                            placeholder="Write a public report..."
+                                                            placeholderStyle={styles.placeholder}
+                                                            value={text}
+                                                            onChangeText={(inputText) => setText(inputText)}
+                                                        />                                                        
+                                                    </View>
+                                                )}
+
+
+                                            </View>
+                                        </Modal>   
                                         <TouchableOpacity onPress={()=> handleSetRequestFriend(item.author.id)}>
                                             <View style = {{flexDirection: "row", marginBottom: 20}}>
                                                 <Image
@@ -552,5 +651,31 @@ const styles = StyleSheet.create({
         width: 30, 
         height: 30, 
         marginTop: 3
-    }
+    },
+    textInput: {
+        width: "90%",
+        height: "auto",
+        // backgroundColor: "#ddd",
+        borderRadius: 15,
+        padding: 10,
+        marginLeft:"5%"
+    },
+    modalReport: {
+        backgroundColor: '#fff',
+        height: "31%",
+        marginTop: "50%",
+        width:"84%",
+        // alignItems:"center",
+        marginLeft:"8%",
+        borderRadius: 10,
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)', 
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    },
 });

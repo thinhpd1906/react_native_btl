@@ -19,7 +19,7 @@ export const getListPosts = async(requestData, dispatch) => {
     const data = await response.json();
     // console.log(data)
     dispatch(getAllPostSuccess(data.data.post))
-    // return data.data.post;
+    return data.data.post;
 
   } catch (error) {
       console.error('Error fetching data:', error);
@@ -142,6 +142,26 @@ export const deletePost = async(id) => {
         'Authorization': `${authToken}`,
       },
       body: JSON.stringify(id), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    console.log(data)
+  } catch (error) {
+    console.error('API Error delete post:', error);
+    throw error;
+  }
+}
+
+export const reportPost = async(req) => {
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}report_post`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(req), // Chuyển đối tượng JSON thành chuỗi
     });
 
     const data = await response.json();

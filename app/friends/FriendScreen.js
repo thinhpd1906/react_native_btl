@@ -16,39 +16,19 @@ import { getUserFriends, unFriend } from '../../api/friends/Friend';
 import { setBlock } from '../../api/block/Block';
 import { router } from 'expo-router';
 import Navbar from '../../components/Navbar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendScreen = () => {
+  const user = useSelector((state) => state.auth.login.currentUser)
   const [friendData, setFriendData] = useState([]);
   const [totalFriend, setTotalFriend] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [userDataLoaded, setUserDataLoaded] = useState(false);
   const [requestData, setRequestData] = useState({
     index: "0",
     count: "15",
-    user_id: null,
+    user_id: user.id,
   });
-
-  useEffect(()=>{
-    const fetchData = async()=>{
-      const result = await AsyncStorage.getItem("userId")
-      setUserData(result);
-      setUserDataLoaded(true);
-    }
-    fetchData();
-  },[])
-
-  useEffect(() => {
-    if (userDataLoaded) {
-      setRequestData((prevRequestData) => ({
-        ...prevRequestData,
-        user_id: userData, // Cập nhật user_id khi userData thay đổi
-      }));
-    }
-  }, [userData, userDataLoaded]);
 
   const handleGetUserFriend = async () => {
     try {

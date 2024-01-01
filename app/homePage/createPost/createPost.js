@@ -8,9 +8,9 @@ import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
 import { Video } from "expo-av";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default CreatePost = () => {
+    const user = useSelector((state) => state.auth.login.currentUser)
     const dispatch = useDispatch();
     const [status, setStatus] = useState('');
     const [described, setDescribed] = useState('');
@@ -26,30 +26,6 @@ export default CreatePost = () => {
         index: "0",
         count: "20",
     });
-
-    const [user, setUserData] = useState(null);
-    const [userDataLoaded, setUserDataLoaded] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const jsonString = await AsyncStorage.getItem('user');
-                if (jsonString) {
-                    const userObject = JSON.parse(jsonString);
-                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
-                    setUserData(userObject);
-                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
-                } else {
-                    setUserDataLoaded(true); 
-                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
-                }
-            } catch (error) {
-                console.error('Lỗi khi lấy đối tượng:', error);
-            }
-        };
-
-        fetchData(); // Gọi hàm fetchData khi component được render
-    }, []); // Chạy useEffect một lần sau khi component được render
   
     useEffect(() => {
         (async () => {
@@ -188,7 +164,7 @@ export default CreatePost = () => {
 
     return(
         <View style={styles.container}>
-            {userDataLoaded &&
+            {/* {userDataLoaded && */}
                 <View style={styles.header}>
                     <Image
                         source={{ uri: user.avatar || 'https://example.com/default-image.jpg'}}
@@ -211,7 +187,7 @@ export default CreatePost = () => {
                         <Text style={styles.textButton}>POST</Text>
                     </TouchableOpacity>                               
                 </View>            
-            }
+            {/* } */}
 
 
             <View style = {styles.slider}>
