@@ -13,10 +13,10 @@ import { setUserSignInEmail } from '../../../store/auth';
 export default Name = props => {
   const dispatch = useDispatch()
   return (
-    <AuthLayout  title="What's your email?" showBackButton>
+    <AuthLayout  title="Nhập email của bạn?" showBackButton>
      <Formik
         initialValues={{ 
-          email: 'phanthinh123@gmail.com',
+          email: '',
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInEmail(values.email))
@@ -31,7 +31,7 @@ export default Name = props => {
        >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
         <View >
-          <Text style= {{marginBottom: 24}}>Enter your email to contact you</Text>
+          <Text style= {{marginBottom: 24}}>Nhập email mà bạn sử dụng để liên lạc</Text>
           <View >
             <View style= {styles.row}>
               <View>
@@ -46,7 +46,7 @@ export default Name = props => {
                 }
             </View>
           </View>
-            <ButtonPrimary text="Next" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
+            <ButtonPrimary text="Tiếp theo" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
           </View>
           {/* <Stack options={{ title: "name" }} /> */}
         </View>

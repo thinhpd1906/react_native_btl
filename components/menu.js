@@ -2,6 +2,7 @@ import { router } from "expo-router"
 import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Deactivate, logOut } from "../api/post/log_out";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default Menu = ({visible, onClose}) => {
 
@@ -20,7 +21,16 @@ export default Menu = ({visible, onClose}) => {
     const handleLogOut = async() => {
         try {
             await logOut();
-            router.push('/auth/login')
+            onClose();
+
+            // Xóa token từ AsyncStorage
+            await AsyncStorage.removeItem('token');
+            // Xóa user thông tin từ AsyncStorage (nếu có)
+            await AsyncStorage.removeItem('user');
+            await AsyncStorage.removeItem('userId');
+
+            router.push('/auth/login');
+            // await AsyncStorage.setItem('user', '')
             console.log("Log out success")
         } catch (error) {
             console.error(error)

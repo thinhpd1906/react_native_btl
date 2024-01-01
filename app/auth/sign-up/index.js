@@ -9,15 +9,15 @@ export default SignUp = (props) => {
   const screenWidth = Dimensions.get('window').width;
   const imageWidth = screenWidth * 0.9;
   return (
-    <AuthLayout title="Join With Us" showBackButton>
+    <AuthLayout title="Tham gia cùng chúng tôi" showBackButton>
       <View style={styles.form}>
         <Image 
           source={require('../../../assets/images/sign_up_commumity_image.jpg')}
           style = {{width: imageWidth, height:imageWidth*2/3}}
         />
         <Text style={{paddingTop: 12, paddingBottom: 12}}>Tạo tài khoản để kết nối cùng bạn bè và gia đình, cộng đồng những người cùng sở thích với bạn</Text>
-        <ButtonPrimary text="start" customStyle={{marginBottom: 12}} onPress = {() =>  router.push('/auth/sign-up/name')}/>
-        <ButtonSecondary text="I already have an account" onPress = {() =>  router.push('/auth/login')}/>
+        <ButtonPrimary text="Bắt đầu" customStyle={{marginBottom: 12}} onPress = {() =>  router.push('/auth/sign-up/name')}/>
+        <ButtonSecondary text="Tôi đã có tài khoản" onPress = {() =>  router.push('/auth/login')}/>
       </View>
     </AuthLayout>
   );

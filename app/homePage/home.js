@@ -8,15 +8,36 @@ import { useEffect, useState } from "react";
 import { getListPosts, getNewPosts } from "../../api/post/post";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/Navbar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default home = () => {
-    const user = useSelector((state) => state.auth.login.currentUser)
+export default home = () => {  
     const postLists = useSelector((state) => state.post.allPosts?.posts)
-    // const postNew = useSelector((state) => state.post.newPosts.post)
-    // console.log(postNew)
-    // console.log(user)
+    const [userData, setUserData] = useState(null); 
+    const [userDataLoaded, setUserDataLoaded] = useState(false);
 
-    const imageUrl = user.avatar;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const jsonString = await AsyncStorage.getItem('user');
+                if (jsonString) {
+                    const userObject = JSON.parse(jsonString);
+                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
+                    setUserData(userObject);
+                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
+                } else {
+                    setUserDataLoaded(true); 
+                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy đối tượng:', error);
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi component được render
+    }, []); // Chạy useEffect một lần sau khi component được render
+
+    // console.log(userData)
+
     const dispatch = useDispatch();
 
     const [postData, setPostData] = useState([]);
@@ -30,14 +51,12 @@ export default home = () => {
     });
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [users, setUser] = useState(null);
 
     const handlePress = () => {
         router.push('/homePage/createPost/createPost')  
     };
 
-    const handleSearch = () => {
-        router.push("/search/Search")
-    }
     const handleGetListPost = async () => {
 
         try {
@@ -83,10 +102,12 @@ export default home = () => {
             </View>
 
             <View style = {styles.header}>
-                <Image
-                    source={{ uri: imageUrl || 'https://example.com/default-image.jpg'}}
-                    style={styles.avatar}
-                />
+                {userDataLoaded && 
+                    <Image
+                        source={{ uri: userData.avatar || 'https://example.com/default-image.jpg'}}
+                        style={styles.avatar}
+                    />                
+                }
                 <TouchableOpacity onPress={handlePress} style={styles.button}>
                     <Text style={styles.buttonText}>What's on your mind?</Text>
                 </TouchableOpacity>
@@ -100,19 +121,22 @@ export default home = () => {
             </View>
 
             <View style = {styles.content}>
-                <FlatList
-                    data={postLists}
-                    keyExtractor={(item, index) => index.toString()} 
-                    renderItem={({ item }) => (
-                        <PostItem 
-                            item={item} 
-                            user={user}
-                        />
-                    )}
-                    onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang
-                    onEndReachedThreshold={0.1}
-                    ListFooterComponent={loadingMore && <ActivityIndicator style={styles.loadingIndicator} />}
-                />  
+                {userDataLoaded &&
+                    <FlatList
+                        data={postLists}
+                        keyExtractor={(item, index) => index.toString()} 
+                        renderItem={({ item }) => (
+                            <PostItem 
+                                item={item} 
+                                user={userData}
+                            />
+                        )}
+                        onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang
+                        onEndReachedThreshold={0.1}
+                        ListFooterComponent={loadingMore && <ActivityIndicator style={styles.loadingIndicator} />}
+                    />                 
+                }
+ 
             </View>
         </View>
     );
@@ -121,16 +145,6 @@ export default home = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-    },
-    navbar:{
-        flexDirection: "row", 
-        paddingTop: 10, 
-        paddingLeft: 20, 
-        paddingRight:20,
-        paddingBottom: 5, 
-        justifyContent: "center",
-        borderBottomColor: "#ddd",
-        borderBottomWidth: 0.7,
     },
     iconContainer:{
         paddingLeft: 15,
@@ -171,4 +185,5 @@ const styles = StyleSheet.create({
     loadingIndicator: {
         marginVertical: 10,
     },
-});   
+  });
+ 

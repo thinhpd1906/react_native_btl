@@ -73,7 +73,7 @@ export default Navbar = () => {
 const styles = StyleSheet.create({
     navbar:{
         flexDirection: "row", 
-        paddingTop: 10, 
+        paddingTop: 50, 
         paddingLeft: 20, 
         paddingRight:20,
         paddingBottom: 5, 

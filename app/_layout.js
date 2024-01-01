@@ -18,6 +18,7 @@ const Layout = () => {
   return <Stack 
     screenOptions={{
       headerTitle: '',
+      headerShown: false,
       headerStyle: {
           backgroundColor: '#f0f2f5',
       },
@@ -25,6 +26,7 @@ const Layout = () => {
         marginLeft: 0,
         paddingLeft: 0,
       },
+      
     }}
   />;
 };

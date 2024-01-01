@@ -1,17 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { useSelector } from "react-redux"
 import BuyCoins from "./buyCoins";
 import { buyCoins } from "../../api/post/log_out"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default Settings = () => {
-    const user = useSelector((state) => state.auth.login.currentUser);
-    const imageUrl = user.avatar;
-
     const [showBuy, setShowBuy] = useState(false);
     const [showItem, setShowItem] = useState({});
     const [coins, setCoins] = useState('');
-    console.log("coins",coins)
 
     const fake = [
         {
@@ -35,6 +32,30 @@ export default Settings = () => {
             money:"950.000 VND"
         },
     ]
+
+    const [user, setUserData] = useState(null);
+    const [userDataLoaded, setUserDataLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const jsonString = await AsyncStorage.getItem('user');
+                if (jsonString) {
+                    const userObject = JSON.parse(jsonString);
+                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
+                    setUserData(userObject);
+                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
+                } else {
+                    setUserDataLoaded(true); 
+                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy đối tượng:', error);
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi component được render
+    }, []); // Chạy useEffect một lần sau khi component được render
 
     const handleBuyCoins = async() => {
         const req = {
@@ -63,33 +84,36 @@ export default Settings = () => {
 
     return(
         <View style = {styles.container}>
-            <View style={styles.header}>
-                <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.image}
-                />
-                <View>
-                    <Text style = {styles.text}>
-                        {user.username}    
-                    </Text> 
-                </View>
-                <View style = {styles.coins}>
+            {userDataLoaded && 
+                <View style={styles.header}>
                     <Image
-                        source={require('../../assets/images/home/coins.png')}
-                        style = {{width:30, height:30}}
+                        source={{ uri: user.avatar }}
+                        style={styles.image}
                     />
-                    {coins ? (
-                    <Text style ={{margin:5, color:"#FF8F6B", fontWeight:"bold", fontSize: 17}}>
-                        {coins} coins
-                    </Text>
-                    ):(
-                    <Text style ={{margin:5, color:"#FF8F6B", fontWeight:"bold", fontSize: 17}}>
-                        {user.coins} coins
-                    </Text>                        
-                    )}
+                    <View>
+                        <Text style = {styles.text}>
+                            {user.username}    
+                        </Text> 
+                    </View>
+                    <View style = {styles.coins}>
+                        <Image
+                            source={require('../../assets/images/home/coins.png')}
+                            style = {{width:30, height:30}}
+                        />
+                        {coins ? (
+                        <Text style ={{margin:5, color:"#FF8F6B", fontWeight:"bold", fontSize: 17}}>
+                            {coins} coins
+                        </Text>
+                        ):(
+                        <Text style ={{margin:5, color:"#FF8F6B", fontWeight:"bold", fontSize: 17}}>
+                            {user.coins} coins
+                        </Text>                        
+                        )}
 
-                </View>                             
-            </View>
+                    </View>                             
+                </View>            
+            }
+
             <View style = {{padding:10, marginLeft:5}}>
                 {fake.map((item) => {
                     return(
@@ -147,7 +171,7 @@ const styles = StyleSheet.create({
         padding: 12,
         flexDirection: 'row', 
         alignItems: 'center',
- 
+        marginTop:40
     },
     text: {
         color: "#000",

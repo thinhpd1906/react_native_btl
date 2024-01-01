@@ -15,7 +15,7 @@ export const setFeel = async(feelData) => {
     });
 
     const data = await response.json();
-    console.log(data.data)
+    // console.log(data.data)
     return data.data;
 
   } catch (error) {
@@ -61,6 +61,30 @@ export const getListFeels = async(feelData) => {
 
     const data = await response.json();
     // console.log(data.data)
+    return data.data;
+
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }  
+
+}
+
+export const getUserInfo = async(feelData) => {
+
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}get_user_info`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(feelData), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    console.log(data.data)
     return data.data;
 
   } catch (error) {

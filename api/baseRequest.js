@@ -21,25 +21,21 @@ service.interceptors.request.use(
       // }
       const token = await AsyncStorage.getItem('token');
       if(token != null) {
-        console.log('wtf', token)
         config.headers["Authorization"] = token;
       }
       return config;
     },
     (error) => {
-      console.log("error config request",error); // for debug
       return Promise.reject(error);
     }
   );
 
   service.interceptors.response.use(
     (response) => {
-      // console.log("config response", response)
       const data = response.data.data? response.data.data:  response.data
       return {data: data}
     },
     (error) => {
-      // console.log("response config error",error.response); 
       if(error.response) {
         const message = error.response.data.message
         console.log(message)

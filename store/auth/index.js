@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice } from '@reduxjs/toolkit'
 
 const INIT =  {
@@ -6,7 +7,7 @@ const INIT =  {
         
     },
     login:{
-        currentUser:null,
+        currentUser: null,
     },
     token: "",
 }
@@ -15,9 +16,9 @@ export const auth = createSlice({
   name: 'auth',
   initialState: INIT,
   reducers: {
-    // getUserInforSignIn: (state) => {
-    //   return state;
-    // },
+    getUserInforSignIn: (state) => {
+      return state;
+    },
     setUserSignInEmail: (state,action) => {
         state.userInforSignIn.email = action.payload;
         return state;
@@ -45,6 +46,10 @@ export const auth = createSlice({
     loginSuccess: (state,action) => {
         state.login.currentUser = action.payload;
         return state;
+      },
+    setUserId: (state, action) => {
+        state.userInfor.userId = action.payload
+        return state
     },
   },
 })
@@ -56,7 +61,7 @@ export const {
     setUserSignInPassword,
     setUserSignInFirstName,
     setUserSignInLastName, setUserSignInBirthDay,
-    setToken ,
+    setToken, setUserId ,
     loginSuccess
 } = auth.actions
 

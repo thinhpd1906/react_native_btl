@@ -8,7 +8,6 @@ import SetFeel from "../comment/SetFeel"
 import CommentPost from "../comment/CommentPost"
 
 export default getPost = () => {
-    const user = useSelector((state) => state.auth.login.currentUser)
     const post = useSelector((state) => state.post.is_post.post);
 
     const [showFeel, setShowFeel] = useState(false);
@@ -192,6 +191,7 @@ const styles = StyleSheet.create({
     postItem: {
         flex:1,
         paddingTop: 10,
+        marginTop:40,
     },
     author: {
         flexDirection: 'row',

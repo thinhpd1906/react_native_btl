@@ -108,16 +108,6 @@ export default function Notification({ route }) {
     container: {
       backgroundColor: "#fff",
     },
-    navbar:{
-      flexDirection: "row", 
-      paddingTop: 10, 
-      paddingLeft: 20, 
-      paddingRight:20,
-      paddingBottom: 5, 
-      justifyContent: "center",
-      borderBottomColor: "#ddd",
-      borderBottomWidth: 0.7,
-  },
     header: {
       justifyContent: "space-between",
       flexDirection: "row",

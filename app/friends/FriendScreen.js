@@ -15,20 +15,40 @@ import { useSelector } from 'react-redux';
 import { getUserFriends, unFriend } from '../../api/friends/Friend';
 import { setBlock } from '../../api/block/Block';
 import { router } from 'expo-router';
+import Navbar from '../../components/Navbar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendScreen = () => {
-  const user = useSelector((state) => state.auth.login.currentUser)
-  // console.log(user.id)
   const [friendData, setFriendData] = useState([]);
   const [totalFriend, setTotalFriend] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [userDataLoaded, setUserDataLoaded] = useState(false);
   const [requestData, setRequestData] = useState({
     index: "0",
     count: "15",
-    user_id: user.id,
+    user_id: null,
   });
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      const result = await AsyncStorage.getItem("userId")
+      setUserData(result);
+      setUserDataLoaded(true);
+    }
+    fetchData();
+  },[])
+
+  useEffect(() => {
+    if (userDataLoaded) {
+      setRequestData((prevRequestData) => ({
+        ...prevRequestData,
+        user_id: userData, // Cập nhật user_id khi userData thay đổi
+      }));
+    }
+  }, [userData, userDataLoaded]);
 
   const handleGetUserFriend = async () => {
     try {
@@ -91,14 +111,15 @@ const FriendScreen = () => {
   return (
     <>
     <View style={styles.container}>
+      <Navbar/>
       <View style={styles.header}>
         <View style={styles.headerBar}>
-          <TouchableOpacity style={styles.buttonReturn}>
+          {/* <TouchableOpacity style={styles.buttonReturn}>
             <Ionicons
               name="arrow-back"
               size={30}
               color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.textHeader}>Bạn bè</Text>
           <TouchableOpacity style={styles.buttonSearch}>
             <Ionicons

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Ionicons, Entypo} from '@expo/vector-icons';
 import { getRequestedFriends, setAcceptFriend } from '../../api/friends/Friend';
+import Navbar from '../../components/Navbar';
 
 const RequestedFriend = () => {
   const [requestedFriendData, setRequestedFriendData] = useState([])
@@ -79,6 +80,7 @@ const RequestedFriend = () => {
   
   return (
     <View style={styles.container}>
+      <Navbar/>
       <View style={styles.header}>
         <TouchableOpacity style={styles.buttonReturn}>
           <Ionicons

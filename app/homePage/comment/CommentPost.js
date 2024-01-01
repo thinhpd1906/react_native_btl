@@ -159,7 +159,7 @@ export default CommentPost = ({ visible, onClose, post_Id }) => {
                                 renderItem={({ item }) => (
                                     <View style = {styles.replyMark}>
                                         <Image
-                                            source={{ uri: item.poster.avatar }}
+                                            source={{ uri: item.poster.avatar || 'https://example.com/default-image.jpg'}}
                                             style={styles.avatarReply}
                                         />
                                         <View>

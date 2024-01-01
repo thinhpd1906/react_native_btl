@@ -39,9 +39,9 @@ export default Birthday = (props) => {
   }
 
   return (
-    <AuthLayout title="What's your birthday?" showBackButton>
+    <AuthLayout title="Ngày sinh của bạn?" showBackButton>
         <ScrollView>
-          <Text style= {{marginBottom: 24}}>Chose your  date of birth. You can always make this private later.</Text>
+          <Text style= {{marginBottom: 24}}>Chọn ngày sinh của bạn, bạn luôn có thể đặt nó thành riêng tư</Text>
           <View >
             <ScrollView >
             <TouchableOpacity style = {styles.buttonBirthday} onPress = {showDatepicker}>
@@ -59,7 +59,7 @@ export default Birthday = (props) => {
         />
       )}
             </ScrollView>
-            <ButtonPrimary onPress = {() => router.push('/auth/sign-up/email')} text="Next" customStyle= {{marginTop: 24}}/>
+            <ButtonPrimary onPress = {() => router.push('/auth/sign-up/email')} text="Tiếp theo" customStyle= {{marginTop: 24}}/>
           </View>
         </ScrollView>
     </AuthLayout>

@@ -15,6 +15,7 @@ import {router} from 'expo-router';
 import PostItem from '../homePage/getPost/PostItem';
 import {useSelector} from 'react-redux';
 import Button from '../../components/Button';
+import Navbar from '../../components/Navbar';
 
 export default Search = () => {
   const [firstClick, setFirstClick] = useState(true);
@@ -130,6 +131,9 @@ export default Search = () => {
 
   return (
     <View style={styles.container}>
+      <View style = {styles.navbar}>
+          <Navbar/>
+      </View>
       <View style={styles.header}>
         <View style={styles.group}>
           <TextInput
@@ -220,15 +224,16 @@ export default Search = () => {
                 <TouchableOpacity
                   style={styles.itemUser}
                   // cho nay cho thinh
-                  // onPress={() =>
-                  //   navigation.navigate('InforFriend', {
-                  //     avatar: ItemPeople.avatar,
-                  //     idUser: ItemPeople._id,
-                  //     username: ItemPeople.username,
-                  //     cover_image: ItemPeople.cover_image,
-                  //     text: 'Thêm bạn bè',
-                  //   })
-                  // }
+                  onPress = {
+                    () =>
+                   { console.log("friends", item)
+                    router.push({
+                      pathname: `/profile/${item.id}`,
+                      params: {
+                        userId: item.id
+                      }
+                    })}
+                  }
                 >
                   <Image
                     source={item.avatar ? {

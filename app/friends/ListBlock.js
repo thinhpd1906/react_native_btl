@@ -13,7 +13,7 @@ const ListBlock = () => {
   const [listBlockData, setListBlockData] = useState([]);
   const [requestData, setRequestData] = useState({
     index: '0',
-    count: '10',
+    count: '20',
   });
 
   const handleGetListBlock = async () => {
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
+    marginTop:40
   },
   body: {
     paddingHorizontal: 15,

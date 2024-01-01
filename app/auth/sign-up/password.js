@@ -5,7 +5,7 @@ import { InputHaft, InputHaftPassword } from '../../../components/TextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup'
 import { ButtonPrimary } from '../../../components/ButtonPrimary';
-import { Stack, router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { COLORS } from '../../../constants/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserSignInPassword } from '../../../store/auth';
@@ -15,15 +15,15 @@ export default Name = props => {
   const signUpInfor = useSelector((state) => state.auth.userInforSignIn)
   let email = signUpInfor.email
   const dispatch = useDispatch()
+  const router = useRouter();
   return (
-    <AuthLayout  title="What's your password?" showBackButton>
+    <AuthLayout  title="Mật khẩu của bạn là gì?" showBackButton>
      <Formik
         initialValues={{ 
-            password: "Thinh123",
+            password: "",
         }}
         onSubmit={(values) => {
           dispatch(setUserSignInPassword(values.password))
-    //  backend not handle special character
           let data = {
               email: email,
               password: values.password,
@@ -34,25 +34,28 @@ export default Name = props => {
 
             signUp(data)
               .then((res) => {
-                console.log("sign up success", res)
-                checkVerifyCode({
-                  email: email,
-                  code_verify: res.data.verify_code
-                })
-                .then((res) => {
-                  console.log("check code success", res)
-                  Alert.alert(
-                  "Success", // Tiêu đề của cửa sổ thông báo
-                  "register success", // Nội dung của cửa sổ thông báo
-                  [{
-                    text: 'OK',
-                    onPress: () => router.push('/auth/login'), // Hàm này sẽ được gọi khi người dùng nhấn "OK"
-                  }, ],
-                );
-                })
-                .catch((err) => {
-                    console.log("error check code", err);
-                })
+                console.log("lot res sign up", res.data.verify_code)
+                // router.push('/auth/sign-up/verifyOtp')
+                router.push({pathname: "/auth/sign-up/verifyOtp", params: {code: res.data.verify_code}})
+                // console.log("sign up success", res)
+                // checkVerifyCode({
+                //   email: email,
+                //   code_verify: res.data.verify_code
+                // })
+                // .then((res) => {
+                //   console.log("check code success", res)
+                //   Alert.alert(
+                //   "Success", // Tiêu đề của cửa sổ thông báo
+                //   "register success", // Nội dung của cửa sổ thông báo
+                //   [{
+                //     text: 'OK',
+                //     onPress: () => router.push('/auth/login'), // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+                //   }, ],
+                // );
+                // })
+                // .catch((err) => {
+                //     console.log("error check code", err);
+                // })
                 // console.log("res", res)
                 
                 
@@ -73,7 +76,7 @@ export default Name = props => {
        >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
         <View >
-          <Text style= {{marginBottom: 24}}>Enter your password</Text>
+          <Text style= {{marginBottom: 24}}>Nhập mật khẩu của bạn</Text>
           <View>
             <View style= {styles.row}>
               <View>
@@ -88,7 +91,7 @@ export default Name = props => {
                 }
             </View>
           </View>
-            <ButtonPrimary text="Next" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
+            <ButtonPrimary text="Tiếp theo" customStyle= {{marginTop: 24}} onPress={handleSubmit}/>
           </View>
           {/* <Stack options={{ title: "name" }} /> */}
         </View>

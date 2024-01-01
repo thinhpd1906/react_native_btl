@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getSuggestedFriends, setRequestFriend } from '../../api/friends/Friend';
+import Navbar from '../../components/Navbar';
 
 
 const SuggestionFriend = () => {
@@ -80,6 +81,7 @@ const SuggestionFriend = () => {
 
   return (
     <View style={styles.container}>
+      <Navbar/>
       <View style={styles.header}>
         <TouchableOpacity style={styles.buttonReturn}>
           <Ionicons

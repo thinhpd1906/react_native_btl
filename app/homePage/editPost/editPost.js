@@ -7,16 +7,14 @@ import { createAPost, editPost, getListPosts, getNewPosts } from "../../../api/p
 import { router } from "expo-router";
 import * as ImagePick from 'expo-image-picker';
 import { ImagePicker } from "expo-image-multiple-picker";
-import { FlatList } from "react-native-gesture-handler";
 import { Video } from "expo-av";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default EditPost = () => {
-    const user = useSelector((state) => state.auth.login.currentUser)
     const post = useSelector((state) => state.post.is_post.post)
     // console.log("redux",post)  
     const post_Id = post.id;
 
-    const imageUrl = user.avatar;
     const dispatch = useDispatch();
     const [list_image, setListImage] = useState(post.image);
     const [status, setStatus] = useState(post.state);
@@ -35,6 +33,30 @@ export default EditPost = () => {
         index: "0",
         count: "20",
     });
+
+    const [user, setUserData] = useState(null);
+    const [userDataLoaded, setUserDataLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const jsonString = await AsyncStorage.getItem('user');
+                if (jsonString) {
+                    const userObject = JSON.parse(jsonString);
+                    console.log('Đối tượng lấy từ AsyncStorage:', userObject);
+                    setUserData(userObject);
+                    setUserDataLoaded(true);  // Cập nhật state với dữ liệu từ AsyncStorage
+                } else {
+                    setUserDataLoaded(true); 
+                    console.log('Không có đối tượng được lưu trong AsyncStorage.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy đối tượng:', error);
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi component được render
+    }, []);
 
     const state = [
         {
@@ -194,28 +216,31 @@ export default EditPost = () => {
 
     return(
         <View style={styles.container}>
-            <View style={styles.header}>
-                 <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.image}
-                />
-                <View>
-                    <Text style = {styles.text}>
-                        {user.username}    
-                    </Text> 
-                    {showState && 
-                        <Text style={{marginLeft:8}}>
-                            is feelling {status}
-                        </Text>
-                    }               
-                </View>
-                <TouchableOpacity 
-                    style={styles.button}
-                    onPress={handeleEditPost} 
-                >
-                    <Text style={styles.textButton}>Save</Text>
-                </TouchableOpacity>                               
-            </View>
+            {userDataLoaded && 
+                <View style={styles.header}>
+                    <Image
+                        source={{ uri: user.avatar }}
+                        style={styles.image}
+                    />
+                    <View>
+                        <Text style = {styles.text}>
+                            {user.username}    
+                        </Text> 
+                        {showState && 
+                            <Text style={{marginLeft:8}}>
+                                is feelling {status}
+                            </Text>
+                        }               
+                    </View>
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={handeleEditPost} 
+                    >
+                        <Text style={styles.textButton}>Save</Text>
+                    </TouchableOpacity>                               
+                </View>            
+            }
+
 
             <View style = {styles.slider}>
                 <View style={{flexDirection:"row"}}>
@@ -372,7 +397,7 @@ const styles = StyleSheet.create({
         padding: 12,
         flexDirection: 'row', 
         alignItems: 'center',
- 
+        marginTop: 40
     },
     text: {
         color: "#000",
