@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { getAvatarUri } from './utils/helper';
 import { color } from './style/color';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,6 +8,8 @@ export interface FriendProps {
   avatarUrl: string;
   id: string;
 }
+const screenWidth = Dimensions.get("window").width
+const itemWidth = (screenWidth-10*6)/3
 const FriendCard = (props: FriendProps) => {
   const routerFriend = () => {
     router.push({
@@ -28,18 +30,18 @@ const FriendCard = (props: FriendProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: 115,
-    height: 115,
+    width: itemWidth,
+    height: itemWidth,
     flexDirection: 'column',
     backgroundColor: 'white',
-    minWidth: 124,
-    minHeight: 170,
-    paddingHorizontal: 5,
-    marginBottom: 50
+    minWidth: itemWidth,
+    minHeight: (itemWidth + 30),
+    marginHorizontal: 5,
+    marginBottom: 12
   },
   avatar: {
-    width: 115,
-    height: 115,
+    width: itemWidth,
+    height: itemWidth,
     borderRadius: 7,
     marginBottom: 5
   },
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: color.textColor,
     fontWeight: 'bold',
-    marginHorizontal: 3
+    marginLeft: 3
   }
 });
 

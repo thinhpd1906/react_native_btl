@@ -72,15 +72,15 @@ export default Login = (props) => {
               //     }, ],
               //   );
               dispatch(setUserId(res.data.id))
-              if (res.data.username == "") {
+              if (res.data.username === "") {
                 router.push('/auth/sign-up/ChangeInfoAfterSignUpScreen');
               } else {
-                router.push({
-                  pathname: `/profile/${res.data.id}`,
-                  params: {
-                    userId: res.data.id
-                  }
-                })
+                // router.push({
+                //   pathname: `/profile/${res.data.id}`,
+                //   params: {
+                //     userId: res.data.id
+                //   }
+                // })
                 router.push("/homePage/home")
                 await AsyncStorage.setItem("userId", res.data.id)
               }

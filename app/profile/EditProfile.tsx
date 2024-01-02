@@ -16,9 +16,10 @@ import { color } from '../../components/profile/style/color';
 import { getAvatarUri, getCoverUri } from '../../components/profile/utils/helper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUserInfoApi, setUserInfor } from '../../api/profile/profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from '../../components/profile/interfaces/common.interface';
 import { useLocalSearchParams } from 'expo-router';
+import { loginSuccess } from '../../store/auth';
 
 interface auth {
   user: IUser
@@ -32,6 +33,7 @@ function EditProfile() {
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [link, setLink] = useState('');
+  const dispatch = useDispatch()
 
   const [auth, setAuth] = useState<auth>({
     user: {
@@ -61,6 +63,7 @@ function EditProfile() {
     setUserInfor(formData)
     .then((res) => {
       // console.log("set image profile")
+      dispatch(loginSuccess(res.data))
     })
     .catch((err) => {
       console.log("err set image profile")

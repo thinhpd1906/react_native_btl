@@ -28,7 +28,9 @@ export default function App() {
             console.log('Không có đối tượng được lưu trong AsyncStorage.');
         }
 
-        router.replace('/homePage/home');
+        // router.replace('/homePage/home');
+        router.replace('/auth/login');
+
 
       } else {
         router.replace('/auth/login');

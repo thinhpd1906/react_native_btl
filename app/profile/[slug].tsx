@@ -25,7 +25,7 @@ import { getUserFriendsApi } from '../../api/profile/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import {router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker';
-import { setAvatar } from '../../store/auth';
+import { loginSuccess, setAvatar } from '../../store/auth';
 
 
 function ProfileScreen() {
@@ -257,7 +257,6 @@ function ProfileScreen() {
     //   console.error('Error choosing video:', error);
     // }
     let response = await launchImageLibraryAsync(options)
-    console.log("sai gi", response?.assets[0])
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : profile.avatar;
     let newProfile;
     if(imageType == "avatar") {
@@ -281,11 +280,11 @@ function ProfileScreen() {
     if(newProfile.username){
       formData.append('username', newProfile.username);
     }
-    if(newProfile.avata){
+    if(newProfile.avatar){
       formData.append('avatar' , {
         uri: newProfile.avatar,
         type: 'image/png',
-        name: 'avatar.jpg'
+        name: 'avatar'
       } as never);      
     }
     if(newProfile.address){
@@ -301,7 +300,7 @@ function ProfileScreen() {
       formData.append('cover_image', {
         uri: newProfile.cover_image,
         type: 'image/png',
-        name: 'avatar.jpg'
+        name: 'cover'
       } as never);      
     }
     if(newProfile.link){
@@ -311,9 +310,11 @@ function ProfileScreen() {
     await setUserInfor(formData)
       .then((res) => {
         console.log("set image profile")
+        console.log("res change image", res)
+        dispatch(loginSuccess(res.data))
       })
       .catch((err) => {
-        console.log("err set image profile")
+        console.log("err set image profile", err.message)
       })
 
     
@@ -400,12 +401,13 @@ function ProfileScreen() {
         ></FriendField>
       </View>
       {/* Post Field */}
+      {isOwnProfile && 
       <View style={styles.section}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black', marginLeft: 20 }}>
-          Bài viết
-        </Text>
-        <CreatePostCard avatar={profile?.avatar as string} />
-      </View>
+      <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black', marginLeft: 20 }}>
+        Bài viết
+      </Text>
+      <CreatePostCard avatar={profile?.avatar as string} />
+    </View>}
       <Modal
         isVisible={modalAvatarVisible}
         animationIn='slideInUp'
