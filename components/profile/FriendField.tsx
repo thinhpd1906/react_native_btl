@@ -38,7 +38,8 @@ const FriendField = ({ friends, totalFriend, isOwnProfile }: FriendFieldProps) =
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
-          justifyContent: 'flex-start'
+          justifyContent: 'flex-start',
+          // backgroundColor: "red"
         }}
       >
         {friends.map((item, index) => (
@@ -82,7 +83,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: '#E9F1FE',
     padding: 10,
-    borderRadius: 7
+    borderRadius: 7,
+    marginTop: 60
   }
 });
 

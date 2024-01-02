@@ -11,6 +11,7 @@ import Navbar from "../../components/Navbar";
 
 export default home = () => {  
     const user = useSelector((state) => state.auth.login.currentUser)
+    // console.log(user)
     const avatar = useSelector((state) => state.auth.userInfor.avatar)
     const postNew = useSelector((state) => state.post.allPosts?.posts)
     const [userDataLoaded, setUserDataLoaded] = useState(true);
@@ -92,7 +93,7 @@ export default home = () => {
                 {userDataLoaded && 
                     <TouchableOpacity onPress={()=> handerProfile(user.id)}>
                         <Image
-                            source={{ uri: avatar.avatar || 'https://example.com/default-image.jpg'}}
+                            source={{ uri: user.avatar || 'https://example.com/default-image.jpg'}}
                             style={styles.avatar}
                         />                         
                     </TouchableOpacity>

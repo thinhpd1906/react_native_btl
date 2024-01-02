@@ -25,8 +25,10 @@ import { getUserFriendsApi } from '../../api/profile/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import {router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker';
-import { setAvatar } from '../../store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginSuccess, setAvatar } from '../../store/auth';
+import { getUserProfile } from '../../api/post/post';
+
 
 
 function ProfileScreen() {
@@ -126,16 +128,10 @@ function ProfileScreen() {
     //   setProfile(auth.user);
     // } else {
       const fetchUserData = async (data: { user_id: string | string[] }) => {
-        const my_id = await AsyncStorage.getItem("userId")
         try {
           await getUserInfoApi(data)
           .then((res: any) => {
             setProfile(res.data);
-            
-            if(my_id == user_id){
-              dispatch(setAvatar(res.data));
-              console.log(res.data)
-            }
           })
           .catch((err) => {
             console.log("err profile api")
@@ -263,7 +259,6 @@ function ProfileScreen() {
     //   console.error('Error choosing video:', error);
     // }
     let response = await launchImageLibraryAsync(options)
-    console.log("sai gi", response?.assets[0])
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : profile.avatar;
     let newProfile;
     if(imageType == "avatar") {
@@ -287,11 +282,11 @@ function ProfileScreen() {
     if(newProfile.username){
       formData.append('username', newProfile.username);
     }
-    if(newProfile.avata){
+    if(newProfile.avatar){
       formData.append('avatar' , {
         uri: newProfile.avatar,
         type: 'image/png',
-        name: 'avatar.jpg'
+        name: 'avatar'
       } as never);      
     }
     if(newProfile.address){
@@ -307,7 +302,7 @@ function ProfileScreen() {
       formData.append('cover_image', {
         uri: newProfile.cover_image,
         type: 'image/png',
-        name: 'avatar.jpg'
+        name: 'cover'
       } as never);      
     }
     if(newProfile.link){
@@ -315,11 +310,19 @@ function ProfileScreen() {
     }
     
     await setUserInfor(formData)
-      .then((res) => {
+      .then(async (res) => {
         console.log("set image profile")
+        console.log("res change image", res)
+        const my_id = await AsyncStorage.getItem("userId")
+        const req = {
+          user_id: my_id
+        }
+        await getUserProfile(req,dispatch)
+        
+        // dispatch(loginSuccess(result))
       })
       .catch((err) => {
-        console.log("err set image profile")
+        console.log("err set image profile", err.message)
       })
 
     
@@ -406,12 +409,13 @@ function ProfileScreen() {
         ></FriendField>
       </View>
       {/* Post Field */}
+      {isOwnProfile && 
       <View style={styles.section}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black', marginLeft: 20 }}>
-          Bài viết
-        </Text>
-        <CreatePostCard avatar={profile?.avatar as string} />
-      </View>
+      <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black', marginLeft: 20 }}>
+        Bài viết
+      </Text>
+      <CreatePostCard avatar={profile?.avatar as string} />
+    </View>}
       <Modal
         isVisible={modalAvatarVisible}
         animationIn='slideInUp'

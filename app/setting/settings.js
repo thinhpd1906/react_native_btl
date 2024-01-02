@@ -67,7 +67,7 @@ export default Settings = () => {
             {userDataLoaded && 
                 <View style={styles.header}>
                     <Image
-                        source={{ uri: avatar.avatar }}
+                        source={{ uri: user.avatar }}
                         style={styles.image}
                     />
                     <View>

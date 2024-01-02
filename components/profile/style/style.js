@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   section: {
+    margintop: 20,
     paddingTop: 20,
     borderTopWidth: 1,
     borderTopColor: '#ddd'

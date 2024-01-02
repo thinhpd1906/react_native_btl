@@ -29,6 +29,8 @@ export default function App() {
         }
 
         router.replace('/homePage/home');
+        // router.replace('/auth/login');
+
 
       } else {
         router.replace('/auth/login');

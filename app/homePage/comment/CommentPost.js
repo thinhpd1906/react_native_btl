@@ -207,19 +207,24 @@ export default CommentPost = ({ visible, onClose, post_Id }) => {
                             onChangeText={(inputText) => setTextCtextComment(inputText)}
                         />                            
                         <View>
-                            <TouchableOpacity onPress={handleSetMarkComment}>
+                            
                                 {textComment ? (
-                                <Image
-                                    source={require("../../../assets/images/home/send-blue.png")}
-                                    style = {styles.cameraComment}
-                                />
+                                <TouchableOpacity onPress={handleSetMarkComment}>
+                                    <Image
+                                        source={require("../../../assets/images/home/send-blue.png")}
+                                        style = {styles.cameraComment}
+                                    />                                    
+                                </TouchableOpacity>
+
                                 ):(
+                                 <TouchableOpacity>   
                                 <Image
                                     source={require("../../../assets/images/home/send-white.png")}
                                     style = {styles.cameraComment}
-                                />                             
+                                /> 
+                                </TouchableOpacity>                            
                                 )}                      
-                            </TouchableOpacity>                              
+                                                          
                         </View>
                     </View>
                 </View>

@@ -168,7 +168,7 @@ export default CreatePost = () => {
             {/* {userDataLoaded && */}
                 <View style={styles.header}>
                     <Image
-                        source={{ uri: avatar.avatar || 'https://example.com/default-image.jpg'}}
+                        source={{ uri: user.avatar || 'https://example.com/default-image.jpg'}}
                         style={styles.image}
                     />
                     <View>
@@ -181,12 +181,23 @@ export default CreatePost = () => {
                             </Text>
                         }               
                     </View>
-                    <TouchableOpacity 
+                    {status ==='' && described==='' && image.length == 0 && video ==null ? (
+                        <TouchableOpacity 
+                            style={styles.button}
+                            // onPress={handeleCreatePost} 
+                        >
+                            <Text style={styles.textButton}>POST</Text>
+                        </TouchableOpacity>   
+                                            
+                    ):(
+                        <TouchableOpacity 
                         style={styles.button}
                         onPress={handeleCreatePost} 
                     >
                         <Text style={styles.textButton}>POST</Text>
-                    </TouchableOpacity>                               
+                    </TouchableOpacity>
+                    )}
+                              
                 </View>            
             {/* } */}
 
