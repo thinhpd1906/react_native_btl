@@ -25,8 +25,8 @@ export default Login = (props) => {
       <Formik
         initialValues={{ 
           // name: '',
-          email: signUpInfor.email, 
-          password: signUpInfor.password 
+          email: '', 
+          password: ''
         }}
         onSubmit={ (values) => {
             let data = {
@@ -74,6 +74,7 @@ export default Login = (props) => {
               dispatch(setUserId(res.data.id))
               if (res.data.username == "") {
                 router.push('/auth/sign-up/ChangeInfoAfterSignUpScreen');
+                await AsyncStorage.setItem("userId", res.data.id)
               } else {
                 router.push({
                   pathname: `/profile/${res.data.id}`,

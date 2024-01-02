@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker';
 import { setAvatar } from '../../store/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function ProfileScreen() {
@@ -125,11 +126,16 @@ function ProfileScreen() {
     //   setProfile(auth.user);
     // } else {
       const fetchUserData = async (data: { user_id: string | string[] }) => {
+        const my_id = await AsyncStorage.getItem("userId")
         try {
           await getUserInfoApi(data)
           .then((res: any) => {
             setProfile(res.data);
-            dispatch(setAvatar(res.data));
+            
+            if(my_id == user_id){
+              dispatch(setAvatar(res.data));
+              console.log(res.data)
+            }
           })
           .catch((err) => {
             console.log("err profile api")

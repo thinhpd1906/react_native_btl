@@ -82,7 +82,7 @@ const RequestedFriend = () => {
     <View style={styles.container}>
       <Navbar/>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.buttonReturn}>
+        {/* <TouchableOpacity style={styles.buttonReturn}>
           <Ionicons
             style={{backgroundColor: '#fff'}}
             name="arrow-back"
@@ -90,7 +90,7 @@ const RequestedFriend = () => {
             color="black"
             onPress={() => navigation.goBack()}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.textHeader}>Lời mời kết bạn</Text>
         <TouchableOpacity style={styles.buttonSearch}>
           <Entypo
@@ -101,6 +101,7 @@ const RequestedFriend = () => {
             // onPress={}
           />
         </TouchableOpacity>
+        
       </View>
       <ScrollView style={styles.body}>
         <View style={styles.invite}>

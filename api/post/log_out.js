@@ -67,3 +67,25 @@ export const buyCoins = async(req) => {
       throw error;
   }  
 }
+
+export const changePass = async(req) => {
+  try {
+    const authToken = await AsyncStorage.getItem('token');
+    const response = await fetch(`${baseURL}change_password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`,
+      },
+      body: JSON.stringify(req), // Chuyển đối tượng JSON thành chuỗi
+    });
+
+    const data = await response.json();
+    console.log(data)
+    return data.data;
+
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+  }  
+}

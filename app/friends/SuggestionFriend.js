@@ -83,7 +83,7 @@ const SuggestionFriend = () => {
     <View style={styles.container}>
       <Navbar/>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.buttonReturn}>
+        {/* <TouchableOpacity style={styles.buttonReturn}>
           <Ionicons
             style={{backgroundColor: '#fff'}}
             name="arrow-back"
@@ -91,7 +91,7 @@ const SuggestionFriend = () => {
             color="black"
             // onPress={() => navigation.goBack()}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.textHeader}>Gợi ý</Text>
         <TouchableOpacity style={styles.buttonSearch}>
           <Ionicons

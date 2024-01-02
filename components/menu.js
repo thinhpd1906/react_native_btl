@@ -13,6 +13,11 @@ export default Menu = ({visible, onClose}) => {
         onClose();
     }
 
+    const handleOpenChangePasss = () => {
+        router.push('/setting/changePassword');
+        onClose();
+    }
+
     const handleOpenBlock = () => {
         router.push('/friends/ListBlock');
         onClose();
@@ -88,7 +93,7 @@ export default Menu = ({visible, onClose}) => {
                             <Text style = {styles.textSetting}>Buy coins</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleOpenChangePasss}>
                         <View style = {{flexDirection:"row", padding:5, marginBottom:10}}>
                             <Image
                                 source={require('../assets/images/home/change-password.png')}
