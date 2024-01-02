@@ -123,11 +123,15 @@ function EditProfile() {
       }
     }
     const options = {
-      mediaType: 'photo' as MediaTypeOptions,
-      includeBase64: true,
+      // mediaType: 'photo' as MediaTypeOptions,
+      // includeBase64: true,
+      // quality: 0.4,
+      // maxWidth: 800,
+      // maxHeight: 800
+      mediaType: MediaTypeOptions.Images,
       quality: 0.4,
-      maxWidth: 800,
-      maxHeight: 800
+      aspect: null, 
+      allowsEditing: true,
     };
     let response = await launchImageLibraryAsync(options)
     const src = response && response?.assets ? response?.assets[0]?.uri : avatar;
@@ -154,11 +158,15 @@ function EditProfile() {
       }
     }
     const options = {
-      mediaType: 'photo' as MediaTypeOptions,
-      includeBase64: true,
+      // mediaType: 'photo' as MediaTypeOptions,
+      // includeBase64: true,
+      // quality: 0.4,
+      // maxWidth: 800,
+      // maxHeight: 800
+      mediaType: MediaTypeOptions.Images,
       quality: 0.4,
-      maxWidth: 800,
-      maxHeight: 800
+      aspect: null, 
+      allowsEditing: true,
     };
     let response = await launchImageLibraryAsync(options)
     const src = response && response?.assets ? response?.assets[0]?.uri : cover;
@@ -177,7 +185,7 @@ function EditProfile() {
       {
         text: 'Đồng ý',
         onPress: () => {
-          console.log('ok');
+          console.log('ok', src);
           onChangeAvatar(src);
         }
       }
@@ -424,7 +432,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginBottom: 50,
+    marginBottom: 40,
+    marginTop:40,
     backgroundColor: color.white
   },
   detailsContainer: {

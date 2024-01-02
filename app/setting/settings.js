@@ -6,6 +6,7 @@ import { buyCoins } from "../../api/post/log_out"
 
 export default Settings = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
+    const avatar = useSelector((state) => state.auth.userInfor.avatar)
     const [showBuy, setShowBuy] = useState(false);
     const [showItem, setShowItem] = useState({});
     const [coins, setCoins] = useState('');
@@ -66,7 +67,7 @@ export default Settings = () => {
             {userDataLoaded && 
                 <View style={styles.header}>
                     <Image
-                        source={{ uri: user.avatar }}
+                        source={{ uri: avatar.avatar }}
                         style={styles.image}
                     />
                     <View>

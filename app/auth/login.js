@@ -81,7 +81,7 @@ export default Login = (props) => {
                     userId: res.data.id
                   }
                 })
-                // router.push("/homePage/home")
+                router.push("/homePage/home")
                 await AsyncStorage.setItem("userId", res.data.id)
               }
             })

@@ -11,6 +11,7 @@ import { Video } from "expo-av";
 
 export default EditPost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
+    const avatar = useSelector((state) => state.auth.userInfor.avatar)
     const post = useSelector((state) => state.post.is_post.post)
     // console.log("redux",post)  
     const post_Id = post.id;
@@ -197,7 +198,7 @@ export default EditPost = () => {
             {userDataLoaded && 
                 <View style={styles.header}>
                     <Image
-                        source={{ uri: user.avatar }}
+                        source={{ uri: avatar.avatar }}
                         style={styles.image}
                     />
                     <View>

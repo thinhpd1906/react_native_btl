@@ -11,6 +11,7 @@ import { Video } from "expo-av";
 
 export default CreatePost = () => {
     const user = useSelector((state) => state.auth.login.currentUser)
+    const avatar = useSelector((state) => state.auth.userInfor.avatar)
     const dispatch = useDispatch();
     const [status, setStatus] = useState('');
     const [described, setDescribed] = useState('');
@@ -167,7 +168,7 @@ export default CreatePost = () => {
             {/* {userDataLoaded && */}
                 <View style={styles.header}>
                     <Image
-                        source={{ uri: user.avatar || 'https://example.com/default-image.jpg'}}
+                        source={{ uri: avatar.avatar || 'https://example.com/default-image.jpg'}}
                         style={styles.image}
                     />
                     <View>

@@ -51,6 +51,10 @@ export const auth = createSlice({
         state.userInfor.userId = action.payload
         return state
     },
+    setAvatar: (state, action) => {
+      state.userInfor.avatar = action.payload
+      return state
+    }
   },
 })
 
@@ -61,7 +65,7 @@ export const {
     setUserSignInPassword,
     setUserSignInFirstName,
     setUserSignInLastName, setUserSignInBirthDay,
-    setToken, setUserId ,
+    setToken, setUserId , setAvatar,
     loginSuccess
 } = auth.actions
 

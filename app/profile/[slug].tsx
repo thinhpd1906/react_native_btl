@@ -22,12 +22,14 @@ import ButtonField3 from '../../components/profile/ButtonField3';
 import InforDetail from '../../components/profile/InforDetail';
 import { IGetUserFriends, IUserFriends } from '../../components/profile/interfaces/friends.interface';
 import { getUserFriendsApi } from '../../api/profile/profile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MediaTypeOptions, launchImageLibraryAsync } from 'expo-image-picker';
+import { setAvatar } from '../../store/auth';
 
 
 function ProfileScreen() {
+  const dispatch = useDispatch()
   const [modalAvatarVisible, setModalAvatarVisible] = useState(false);
   const [modalCoverVisible, setModalCoverVisible] = useState(false);
   const [profile, setProfile] = useState<IUser | null>(null);
@@ -127,6 +129,7 @@ function ProfileScreen() {
           await getUserInfoApi(data)
           .then((res: any) => {
             setProfile(res.data);
+            dispatch(setAvatar(res.data));
           })
           .catch((err) => {
             console.log("err profile api")
@@ -254,7 +257,7 @@ function ProfileScreen() {
     //   console.error('Error choosing video:', error);
     // }
     let response = await launchImageLibraryAsync(options)
-    console.log("sai gi", response)
+    console.log("sai gi", response?.assets[0])
     const srcUri = response && response?.assets ? response?.assets[0]?.uri : profile.avatar;
     let newProfile;
     if(imageType == "avatar") {
@@ -275,24 +278,39 @@ function ProfileScreen() {
       hideModalCover()     
     }
     const formData = new FormData();
-    formData.append('username', newProfile.username);
-    formData.append('avatar' , {
-      uri: newProfile.avatar,
-      type: 'image/png',
-      name: 'avatar.jpg'
-    } as never);
-    formData.append('address', newProfile.address);
-    formData.append('city', newProfile.city);
-    formData.append('country', newProfile.country);
-    formData.append('cover_image', {
-      uri: newProfile.cover_image,
-      type: 'image/png',
-      name: 'avatar.jpg'
-    } as never);
-    formData.append('link', newProfile.link);
+    if(newProfile.username){
+      formData.append('username', newProfile.username);
+    }
+    if(newProfile.avata){
+      formData.append('avatar' , {
+        uri: newProfile.avatar,
+        type: 'image/png',
+        name: 'avatar.jpg'
+      } as never);      
+    }
+    if(newProfile.address){
+      formData.append('address', newProfile.address);
+    }
+    if(newProfile.city){
+      formData.append('city', newProfile.city);
+    }
+    if(newProfile.country){
+      formData.append('country', newProfile.country);
+    }
+    if(newProfile.cover_image){
+      formData.append('cover_image', {
+        uri: newProfile.cover_image,
+        type: 'image/png',
+        name: 'avatar.jpg'
+      } as never);      
+    }
+    if(newProfile.link){
+      formData.append('link', newProfile.link);
+    }
+    
     await setUserInfor(formData)
       .then((res) => {
-        // console.log("set image profile")
+        console.log("set image profile")
       })
       .catch((err) => {
         console.log("err set image profile")
