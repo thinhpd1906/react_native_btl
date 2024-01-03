@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from '../../components/profile/interfaces/common.interface';
 import { useLocalSearchParams } from 'expo-router';
 import { loginSuccess } from '../../store/auth';
+import { getUserProfile } from '../../api/post/post';
 
 interface auth {
   user: IUser
@@ -59,11 +60,15 @@ function EditProfile() {
   const user_id: string | string[] = params.userId;
   const own_id = useSelector((state: any) => state.auth.userInfor.userId)
   const isOwn = (own_id === user_id)
-  const changeProfile = (formData) => {
+  const changeProfile =  (formData) => {
     setUserInfor(formData)
-    .then((res) => {
+    .then(async (res) => {
       // console.log("set image profile")
       dispatch(loginSuccess(res.data))
+      const req = {
+        user_id: user_id
+      }
+      await getUserProfile(req, dispatch)
     })
     .catch((err) => {
       console.log("err set image profile")
@@ -242,6 +247,33 @@ function EditProfile() {
         }
       }
     ]);
+    const confirmChangeUserName = (username: string) =>
+    Alert.alert('Xác nhận', 'Bạn có muốn thay đổi mô tả bản thân?', [
+      {
+        text: 'Hủy',
+        onPress: () => setDescription(auth.user?.username as string),
+        style: 'cancel'
+      },
+      {
+        text: 'Đồng ý',
+        onPress: () => {
+          console.log('ok');
+          onChangeUserName(username);
+        }
+      }
+    ]);
+    const onChangeUserName = (username: string) => {
+      const formData = new FormData();
+      formData.append('avatar', auth.user?.avatar as string);
+      formData.append('cover_image', auth.user?.cover_image as string);
+      formData.append('username', username as string);
+      formData.append('description',  auth.user?.description as string);
+      formData.append('address', auth.user?.address as string);
+      formData.append('city', auth.user?.city as string);
+      formData.append('country', auth.user?.country as string);
+      formData.append('link', auth.user?.link as string);
+      changeProfile(formData)
+    };
   const onChangeAvatar = (avatar: string) => {
     const formData = new FormData();
     if (avatar !== '') {
@@ -334,6 +366,28 @@ function EditProfile() {
       <TouchableOpacity style={styles.wrapAvatar} activeOpacity={0.8}>
         <Image source={getCoverUri(cover)} style={styles.cover}></Image>
       </TouchableOpacity>
+      <View style={styles.wrapText}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: color.textColor }}>Tên</Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            isOwn && confirmChangeDescription(description);
+          }}
+        >
+          {isOwn && <Text style={{ fontSize: 18, color: color.primary }}>Chỉnh sửa</Text> }
+        </TouchableOpacity>
+      </View>
+      <View style={styles.wrapAvatar}>
+        <TextInput
+          style={{ fontSize: 18 }}
+          placeholder={isOwn? "Tên": ""}
+          onChangeText={text => {
+            setUsername(text);
+          }}
+          editable = {isOwn}
+          defaultValue={username}
+        ></TextInput>
+      </View>
       <View style={styles.wrapText}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: color.textColor }}>Tiểu sử</Text>
         <TouchableOpacity

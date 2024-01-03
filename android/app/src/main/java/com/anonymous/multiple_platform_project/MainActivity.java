@@ -1,4 +1,4 @@
-package com.multipleplatformproject;
+package com.anonymous.multiple_platform_project;
 
 import android.os.Build;
 import android.os.Bundle;
