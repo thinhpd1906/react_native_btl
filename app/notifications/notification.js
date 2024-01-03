@@ -6,6 +6,7 @@ import {
     Avatar,
     ScrollView,
     FlatList,
+    TouchableOpacity,
   } from "react-native";
   import React, { useEffect, useState } from "react";
 import { getNotification } from "../../api/notification/notification";
@@ -19,7 +20,7 @@ export default function Notification({ route }) {
       const handGetNotification = async () =>{
         try{
           const result = await getNotification(requestData)
-          setNotifyData([...result])
+          setNotifyData(result)
         }
         catch(error){
           console.error("error", error);
@@ -67,36 +68,39 @@ export default function Notification({ route }) {
                 data = {notifyData}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) =>(
-                <View key={item.notification_id} style={styles.main}>
-                  <Image style={styles.img} source={{ uri: item.user.avatar || 'https://example.com/default-image.jpg'}} />
-                  {/* <Avatar style={styles.img} rounded source={{uri: ''}}/> */}
-                  <View style={styles.content}>
-                    <Text style={styles.item}>
-                      <Text style={styles.name}>{item.user.username}</Text> 
-                      {item.type == "1" ? (
-                        ' đã gửi lời mời kết bạn'
-                      ) : item.type == '2' ? (
-                        ' đã chấp nhận lời mời kết bạn'
-                      ) : item.type == '3' ? (
-                        ' đã thêm một bài viết mới'
-                      ) : item.type  == "4" ? (
-                        ' đã cập nhật lại bài viết'
-                      ) : item.type  == "5" ? (
-                        ' đã bày tỏ cảm xúc bài viết của bạn'
-                      ) : item.type  == "6" ? (
-                        ' đã bình luận bài viết của bạn'
-                      ) : item.type  == "7" ? (
-                        ' đã trả lời bình luận của bạn'
-                      ) : item.type  == "8" ? (
-                        ' đã thêm một video mới'
-                      ) : item.type  == "9" ? (
-                        ' đã bình luận bài viết của bạn'
-                      ) : ('')
-                    }
-                    </Text>
-                    <Text style={styles.time}>{getFormattedTimeAgo(item.created)}</Text>
-                  </View>
-                </View>                 
+                  <TouchableOpacity>
+                    <View key={item.notification_id} style={styles.main}>
+                      <Image style={styles.img} source={{ uri: item.user.avatar || 'https://example.com/default-image.jpg'}} />
+                      {/* <Avatar style={styles.img} rounded source={{uri: ''}}/> */}
+                      <View style={styles.content}>
+                        <Text style={styles.item}>
+                          <Text style={styles.name}>{item.user.username}</Text> 
+                          {item.type == "1" ? (
+                            ' đã gửi lời mời kết bạn'
+                          ) : item.type == '2' ? (
+                            ' đã chấp nhận lời mời kết bạn'
+                          ) : item.type == '3' ? (
+                            ' đã thêm một bài viết mới'
+                          ) : item.type  == "4" ? (
+                            ' đã cập nhật lại bài viết'
+                          ) : item.type  == "5" ? (
+                            ' đã bày tỏ cảm xúc bài viết của bạn'
+                          ) : item.type  == "6" ? (
+                            ' đã bình luận bài viết của bạn'
+                          ) : item.type  == "7" ? (
+                            ' đã trả lời bình luận của bạn'
+                          ) : item.type  == "8" ? (
+                            ' đã thêm một video mới'
+                          ) : item.type  == "9" ? (
+                            ' đã bình luận bài viết của bạn'
+                          ) : ('')
+                        }
+                        </Text>
+                        <Text style={styles.time}>{getFormattedTimeAgo(item.created)}</Text>
+                      </View>
+                    </View>                    
+                  </TouchableOpacity>
+                 
                 )}
           />
         </View>
