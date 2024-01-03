@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingTop: 20,
+    paddingTop: 35,
   },
   group: {
     backgroundColor: '#fff',
@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
 
   },
   selectFind: {
+    marginLeft: 30,
     marginTop: -10,
     flexDirection: 'row',
     marginBottom: 10,
@@ -342,10 +343,13 @@ const styles = StyleSheet.create({
   itemUser: {
     flexDirection: 'row',
     height: 70,
+    // width: '80%',
     // backgroundColor: '#431231',
     marginBottom: 10,
+    borderBottomWidth: 1,
   },
   avatarPeople: {
+    marginLeft: 15,
     height: 50,
     width: 50,
     borderRadius: 5,
