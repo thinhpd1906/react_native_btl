@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import GetListVideos from "./getListVideos";
 import { getListVideos } from "../../../api/post/video";
 import Navbar from "../../../components/Navbar";
@@ -15,6 +15,8 @@ export default getVideos = () => {
         count: "5",
     });
 
+    const [loadingMore, setLoadingMore] = useState(false);
+
     const handleGetVideos = async () => {
         try {
             const result = await getListVideos(requestData);
@@ -23,6 +25,26 @@ export default getVideos = () => {
             console.error('Error:', error);
         }
     }
+
+    const handleEndReached = () => {
+        if (!loadingMore) {
+          setLoadingMore(true);
+    
+          // Cập nhật index để load thêm
+          setRequestData((prevRequestData) => ({
+            ...prevRequestData,
+            index:( parseInt(prevRequestData.index) + parseInt(prevRequestData.count)).toString(),
+          }));
+        }
+    };
+
+        // Xử lý khi đã load thêm thành công
+    useEffect(() => {
+            if (loadingMore) {
+                handleGetVideos(); // Gọi lại hàm handleFetchData để load thêm bài viết
+                setLoadingMore(false); // Đặt loadingMore về false để có thể load thêm lần tiếp theo
+            }
+    }, [loadingMore]);
 
     useEffect(() => {
         handleGetVideos();
@@ -37,7 +59,9 @@ export default getVideos = () => {
                 data = {commentData}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <GetListVideos item={item}/> }
-                
+                onEndReached={handleEndReached} // Xác định sự kiện khi cuộn đến cuối trang
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={loadingMore && <ActivityIndicator style={styles.loadingIndicator} />}
             />
         </View>
     )
@@ -62,5 +86,8 @@ const styles = StyleSheet.create({
     iconContainer:{
         paddingLeft: 15,
         paddingRight: 15,
+    },
+    loadingIndicator: {
+        marginVertical: 10,
     },
 })

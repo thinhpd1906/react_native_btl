@@ -5,13 +5,14 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import CommentPost from "../comment/CommentPost";
 import SetFeel from "../comment/SetFeel";
 import GetListFeels from "../comment/GetListFeels";
+import { BlurView } from "expo-blur";
 
 export default getListVideos = ({item}) => {
 
     const [showComment, setShowComment] = useState(false);
     const [commentData, setCommentData] = useState([]);
     const [isFeel, setIsFeel] = useState('');
-    const [shouldPlay, setShouldPlay] = useState(true);
+    const [shouldPlay, setShouldPlay] = useState(false);
     const [showFeel, setShowFeel] = useState(false);
 
     const handleFell = () => {
@@ -69,16 +70,31 @@ export default getListVideos = ({item}) => {
             <TouchableOpacity onPress={() => {
                 setShouldPlay(!shouldPlay);
               }}>
-                <Video
-                source={{ uri: item.video.url }}
-                rate={1.0}
-                volume={0.0}
-                isMuted={false}
-                resizeMode="cover"
-                shouldPlay = {shouldPlay}
-                isLooping = {true}
-                style={{ width: "100%", height: 450 }}
-                />            
+                {/* <BlurView
+                    style={{ flex: 1 }}
+                    intensity={50} // Điều chỉnh mức độ mờ, tăng giảm giá trị theo nhu cầu
+                    tint="default"    // Chọn kiểu mờ, có thể là "light", "default", "dark"
+                > */}
+                    <Video
+                    source={{ uri: item.video.url }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="cover"
+                    shouldPlay = {shouldPlay}
+                    isLooping = {false}
+                    style={{ width: "100%", height: 450 ,}}
+                    />                    
+                {/* </BlurView> */}
+ 
+                {!shouldPlay &&
+                    <Image
+                        source={require('../../../assets/images/home/play.png')}
+                        style= {{
+                            width:40, height:40, position: 'absolute', top:"45%" , left:"45%"
+                        }}
+                    />
+                }           
             </TouchableOpacity>
 
 
@@ -167,6 +183,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 10,
         marginTop: 10,
+        marginLeft: 10
     },
     avatar: {
         width: 45,

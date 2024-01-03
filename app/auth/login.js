@@ -87,7 +87,18 @@ export default Login = (props) => {
               }
             })
             .catch((err) => {
-                console.log("err", err)
+                Alert.alert(
+                  "Login failed", // Tiêu đề của cửa sổ thông báo
+                  "Tài khoản hoặc mật khẩu không chính xác", // Nội dung của cửa sổ thông báo
+                  [{
+                    text: 'OK',
+                    onPress: () => {
+                      console.log("err", err)
+                    },
+                   
+                     // Hàm này sẽ được gọi khi người dùng nhấn "OK"
+                  }, ],
+                );
             })
         }}
         validationSchema={yup.object().shape({
